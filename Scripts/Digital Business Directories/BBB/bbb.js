@@ -20,7 +20,7 @@ function convertToNum(text) {
 
 var formattedItems = items.map(item => {
   var getText = setupText(item)
-  var companyName, description, bbbRating, phone, address, profileLink
+  var companyName, description, phone, address, profileLink, bbbRating
 
   companyName = getText(".eou9tt70")
   description = getText(".eou9tt71 + p")
@@ -30,8 +30,11 @@ var formattedItems = items.map(item => {
 
   profileLink = item.querySelector(".eou9tt70")
   profileLink = profileLink ? profileLink.href : ""
+
+  bbbRating = getText(".cluster > span.bds-body")
+  bbbRating = bbbRating ? bbbRating.replace("BBB Rating: ", "") : ""
   
-  return {companyName, description, bbbRating, phone, address, profileLink}
+  return {companyName, description, phone, address, profileLink, bbbRating}
 })
 
 copy(formattedItems)

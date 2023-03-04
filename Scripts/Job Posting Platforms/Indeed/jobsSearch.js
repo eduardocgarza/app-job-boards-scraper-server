@@ -41,6 +41,9 @@ var formattedItems = items.map(item => {
   salaryRange = getText(".salary-snippet-container")
   description = getText(".job-snippet")
   datePosted = getText(".date")
+  datePosted = datePosted ? datePosted.replace("Posted", "") : ""
+  datePosted = datePosted ? datePosted.replace("Posted", "") : ""
+  datePosted = datePosted.trim()
 
   easyApply = getText(".indeedApply")
   easyApply = easyApply.includes("Easily apply")
