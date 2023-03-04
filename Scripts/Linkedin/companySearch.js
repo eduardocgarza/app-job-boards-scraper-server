@@ -46,7 +46,7 @@ var formattedItems = items.map(item => {
 	jobs = convertToNum(jobs)
 	jobs = jobs.replace("NaN", "0")
 
-	companyPage = document.querySelector(".app-aware-link")
+	companyPage = document.querySelector(".entity-result__title-text a")
 	companyPage = companyPage ? companyPage.href : ""
 	
 	return { companyName, description, category, location, followers, jobs, companyPage }
