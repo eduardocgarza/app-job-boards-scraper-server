@@ -38,11 +38,12 @@ var formattedItems = items.map(item => {
 	followers = followers.replace(" followers", "")
 	followers = convertToNum(followers)	
 
-	jobs = getText(item, ".entity-result__simple-insight:nth-child(2)")
+	jobs = getText(item, ".entity-result__insights .entity-result__simple-insight:nth-child(2)")
 	if (jobs === "") {
 		jobs = getText(item, ".entity-result__simple-insight")
 	}
 	jobs = jobs.replace(" jobs", "")
+	jobs = jobs.replace(" job", "")
 	jobs = convertToNum(jobs)
 	jobs = jobs.replace("NaN", "0")
 
