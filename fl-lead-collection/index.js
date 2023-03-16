@@ -12,42 +12,67 @@ const SCRAPE_BASE_URL = `http://api.scraperapi.com?api_key=${SCRAPE_API_KEY}&url
 const GLASSDOOR_MAX_PAGES = 30
 const DEV_MODE = true
 const GLASSDOOR_NUM_PAGES = DEV_MODE ? 1 : GLASSDOOR_MAX_PAGES
+const HEADLESS_MODE = true
+
+const SEARCH_QUERY = "radius=100&jobType=fulltime&sortBy=date_desc"
 
 function createGlassdoorURL(pageNum) {
-  return `https://www.glassdoor.com/Job/vancouver-software-jobs-SRCH_IL.0,9_IC2278756_KO10,18_IP${pageNum}.htm`
+  return `https://www.glassdoor.com/Job/vancouver-software-jobs-SRCH_IL.0,9_IC2278756_KO10,18_IP${pageNum}.htm?${SEARCH_QUERY}`
 }
 
 function createScrapeAPIURL(url) {
   return SCRAPE_BASE_URL + url
 }
 
-async function main() {
+/**
+ * @getGlassdoorData
+ * 
+ * This function takes no @inputs
+ * This function returns no @outputs
+ * This function writes the output to a file called "output.json"
+ * 
+ * A standard Glassdoor job posting URL is provided, where the 
+ *  search is targeted based on (1) location and (2) job title.
+ * Glassdoor returns 30 items (job posts) per page and a maximum of 30 pages.
+ * 
+ * Other Search Settings:
+ * - Sort by: Date Posted
+ * - Job Type: Full Time
+ * - Radius: 100 miles
+ * - Dated Posted: Last Month (returns 1,300 items, capped at 900)
+ * 
+ * Workflow:
+ * 1. Get jobs, page by page until complete
+ * 2. Save jobs to "glassdoorJobs.json"
+ * 3. For each job post, get the company info
+ * 
+ */
+async function getGlassdoorData() {
   fs.writeFileSync("./output.json", JSON.stringify([]))
   
-  console.log("Starting... getAllJobsFromPostings()")
-  
   // 1. Get jobs from one page
-  await getAllJobsFromPostings(GLASSDOOR_NUM_PAGES)
-  console.log("Got jobs")
-  return
+  console.log("::Starting... getAllJobsFromPostings()")
+  const jobListings = await getAllJobsFromPostings(GLASSDOOR_NUM_PAGES)
 
-  const rawData = fs.readFileSync("./glassdoorJobs.json")
-  const data = JSON.parse(rawData)
-  console.log("Read file")
-
-  for(let i = 0; i < data.length; i++) {
-    const {companyName, jobLink: jobPage} = data[i]
-    
-    console.log(">> Getting: ", companyName)
-    const companyInfo = await getCompanyInfo(jobPage)
-
-    const completePost = {...data[i], ...companyInfo}
-    
-    const rawItems = fs.readFileSync("./output.json")
-    const currentItems = JSON.parse(rawItems)
-    currentItems.push(completePost)
-    fs.writeFileSync("./output.json", JSON.stringify(currentItems))
+  // 2. Save jobs to "glassdoorJobs.json"
+  fs.writeFileSync("./glassdoorJobs.json", JSON.stringify(jobListings))
+  console.log("::Saved jobs to glassdoorJobs.json")
+  
+  // 3. For each job post, get the company info
+  let finalDataItems = []
+  console.log("::Starting... getCompanyInfo()")
+  for(let i = 0; i < jobListings.length; i++) {
+    const {companyName, jobLink: jobPage} = jobListings[i]
+    const url = createScrapeAPIURL(jobPage)
+    console.log(":::Getting companyInfo for: ", companyName)
+    const companyInfo = await getCompanyInfo(url)
+    finalDataItems.push({...jobListings[i], ...companyInfo})
   }
+
+  console.log("::Completed getCompanyInfo()")
+  
+  fs.writeFileSync("./output.json", JSON.stringify(finalDataItems))
+  console.log("::Completed getGlassdoorData()")
 }
 
 async function getAllJobsFromPostings (NUM_PAGES) {
@@ -83,21 +108,15 @@ async function getAllJobsFromPostings (NUM_PAGES) {
     })
     console.log(`Glassdoor Jobs -- Completed page ${pageNumber} of ${NUM_PAGES}`)
   }
+
   console.log("-- Completed all pages --")
-
-  // const csv = new ObjectsToCsv(jobListings)
-  // await csv.toDisk("./glassdoorJobs.csv")
-  // console.log("Save to CSV")
-
-  // Save to JSON
-  fs.writeFileSync("./glassdoorJobs.json", JSON.stringify(jobListings))
-  console.log("Save to JSON")
+  return jobListings
 }
 
 async function getCompanyInfo(jobPage) {
   console.log("Getting job page...", jobPage)
 
-  const browser = await puppeteer.launch({ headless: !DEV_MODE, defaultViewport: null })
+  const browser = await puppeteer.launch({ headless: HEADLESS_MODE, defaultViewport: null })
   const page = await browser.newPage()
   console.log("New page created")
   
@@ -105,7 +124,10 @@ async function getCompanyInfo(jobPage) {
   console.log("Completed waiting for network idle")
 
   // Extract "Job" Description
-  const jobDescription = await page.$eval("#JobDescriptionContainer", el => el.textContent)
+  var jobDescription = ""
+  if (await page.$("#JobDescriptionContainer") != null) {
+    jobDescription = await page.$eval("#JobDescriptionContainer", el => el.textContent)
+  }
 
   if(await page.$(".link.py-xsm.px-std") == null) {
     console.log(">> Did not find button. Closing browser...")
@@ -153,6 +175,4 @@ async function getCompanyInfo(jobPage) {
   }
 
 }
-console.log("Before starting ... API Key = ", SCRAPE_API_KEY)
-console.log("URL: ", SCRAPE_BASE_URL)
-main()
+getGlassdoorData()
