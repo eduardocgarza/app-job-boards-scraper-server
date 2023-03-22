@@ -11,13 +11,16 @@ const SCRAPE_BASE_URL = `http://api.scraperapi.com?api_key=${SCRAPE_API_KEY}&url
 
 const GLASSDOOR_MAX_PAGES = 30
 const DEV_MODE = true
-const GLASSDOOR_NUM_PAGES = DEV_MODE ? 1 : GLASSDOOR_MAX_PAGES
-const HEADLESS_MODE = true
+const GLASSDOOR_NUM_PAGES = DEV_MODE ? 3 : GLASSDOOR_MAX_PAGES
+const HEADLESS_MODE = !DEV_MODE
 
 const SEARCH_QUERY = "radius=100&jobType=fulltime&sortBy=date_desc"
 
-function createGlassdoorURL(pageNum) {
-  return `https://www.glassdoor.com/Job/vancouver-software-jobs-SRCH_IL.0,9_IC2278756_KO10,18_IP${pageNum}.htm?${SEARCH_QUERY}`
+function createGlassdoorBaseURL(searchQuery) {
+  const baseURL = `https://www.glassdoor.com/Job/vancouver-software-jobs-SRCH_IL.0,9_IC2278756_KO10,18_IP`
+  return function (pageNum) {
+    return `${baseURL}${pageNum}.htm?${searchQuery}`
+  }
 }
 
 function createScrapeAPIURL(url) {
@@ -47,11 +50,17 @@ function createScrapeAPIURL(url) {
  * 3. For each job post, get the company info
  * 
  */
+async function Main() {
+
+
+
+}
+
 async function getGlassdoorData() {
   fs.writeFileSync("./output.json", JSON.stringify([]))
+  console.log("Step 1: Setting up output.json file, originally empty. \n")
   
   // 1. Get jobs from one page
-  console.log("::Starting... getAllJobsFromPostings()")
   const jobListings = await getAllJobsFromPostings(GLASSDOOR_NUM_PAGES)
 
   // 2. Save jobs to "glassdoorJobs.json"
@@ -60,11 +69,15 @@ async function getGlassdoorData() {
   
   // 3. For each job post, get the company info
   let finalDataItems = []
-  console.log("::Starting... getCompanyInfo()")
+  console.log("Step 5: Starting... getCompanyInfo()")
+
   for(let i = 0; i < jobListings.length; i++) {
     const {companyName, jobLink: jobPage} = jobListings[i]
-    const url = createScrapeAPIURL(jobPage)
-    console.log(":::Getting companyInfo for: ", companyName)
+    // const url = createScrapeAPIURL(jobPage)
+    const url = jobPage
+
+    console.log("Loop:: Getting companyInfo for: ", companyName)
+
     const companyInfo = await getCompanyInfo(url)
     finalDataItems.push({...jobListings[i], ...companyInfo})
   }
@@ -76,17 +89,23 @@ async function getGlassdoorData() {
 }
 
 async function getAllJobsFromPostings (NUM_PAGES) {
+  const createGlassdoorURL = createGlassdoorBaseURL(SEARCH_QUERY)
+  
   for (let pageNumber = 1; pageNumber < NUM_PAGES+1; pageNumber += 1) {
     const glassdoorURL = createGlassdoorURL(pageNumber)
     const url = createScrapeAPIURL(glassdoorURL)
+    console.log("Inside getAllJobsFromPostings() ", url)
 
     var companyName, roleName, location, salaryRange, jobLink, companyRating, easyApply, jobAge
 
     const page = await axios(url)
     const html = await page.data
+    console.log("Step 2: Received jobs from Axios. \n")
+    
     const $ = cheerio.load(html)
     const allJobs = $("[data-test='jobListing']")
 
+    console.log("Step 3: Starting Loop. \n")
     allJobs.each((_, element) => {
       companyName = $(element).find(".css-l2wjgv").text()
       roleName = $(element).find(".css-1rd3saf").text()
@@ -106,10 +125,10 @@ async function getAllJobsFromPostings (NUM_PAGES) {
 
       jobListings.push({ companyName, roleName, location, salaryRange, jobLink, companyRating, easyApply, jobAge })
     })
-    console.log(`Glassdoor Jobs -- Completed page ${pageNumber} of ${NUM_PAGES}`)
+    console.log(`::Glassdoor Jobs -- Completed page ${pageNumber} of ${NUM_PAGES}`)
   }
 
-  console.log("-- Completed all pages --")
+  console.log("Step 4: Completed all pages. \n")
   return jobListings
 }
 
