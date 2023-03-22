@@ -1,9 +1,9 @@
 import React from "react"
 
-export default function Settings() {
+export default function SettingsPage() {
   return (
     <div>
-      <h1>Settings</h1>
+      <h1>SettingsPage</h1>
     </div>
   )
 }
