@@ -1,3 +1,4 @@
+// AIRTABLE_TOKEN=patoX7ptGIvsZgwx1.04563f72a1fccefdd243ed4fd101670fbada6f697fd155906bc026a40d7e6b84
 require("dotenv").config();
 const airtable = require("airtable");
 const axios = require("axios");
