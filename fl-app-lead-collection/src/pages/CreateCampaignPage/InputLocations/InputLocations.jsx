@@ -13,7 +13,7 @@ export default function InputLocations() {
 
   return (
     <div>
-      <ul className="grid w-full gap-6 md:grid-cols-2">
+      <ul className="flex flex-wrap w-full p-4">
         {allCities.map((city) => (
           <RadioLocationItem key={city} city={city} />
         ))}

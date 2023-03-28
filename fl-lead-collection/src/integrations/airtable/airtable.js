@@ -1,10 +1,10 @@
-// AIRTABLE_TOKEN=patoX7ptGIvsZgwx1.04563f72a1fccefdd243ed4fd101670fbada6f697fd155906bc026a40d7e6b84
-require("dotenv").config();
-const airtable = require("airtable");
-const axios = require("axios");
+import dotenv from "dotenv"
+dotenv.config()
+import axios from "axios";
+import { pool } from "../../app.js";
+const { AIRTABLE_TOKEN, AIRTABLE_FL_BASE_ID } = process.env;
 
-const { AIRTABLE_TOKEN } = process.env;
-console.log(AIRTABLE_TOKEN);
+const BASE_URL = "https://api.airtable.com/v0";
 
 /**
  * Airtable Workflow
@@ -34,13 +34,152 @@ console.log(AIRTABLE_TOKEN);
  * 
  */
 
-// const baseUrl = "https://api.airtable.com/v0/";
 // const baseId = "YOUR_BASE_ID";
 // const tableName = "YOUR_TABLE_NAME";
 // const endpointUrl = `${baseUrl}${baseId}/${tableName}`;
 
-const endpointUrl = "https://api.airtable.com/v0/meta/bases"
+export async function addJobPostingsToAirtable(tableName, tableDescription, jobPostings) {
+  const createTableURL = `${BASE_URL}/meta/bases/${AIRTABLE_FL_BASE_ID}/tables`
+  const fields = [
+    { 
+      name: "Posting ID", 
+      description: "", 
+      type: "singleLineText" 
+    },
+    { 
+      name: "Role Name", 
+      description: "", 
+      type: "singleLineText" 
+    },
+    { 
+      name: "Role Location", 
+      description: "", 
+      type: "singleLineText" 
+    },
+    { 
+      name: "Salary Range", 
+      description: "", 
+      type: "singleLineText" 
+    },
+    { 
+      name: "Job Posting URL", 
+      description: "", 
+      type: "url" 
+    },
+    { 
+      name: "Date Posted", 
+      description: "", 
+      type: "date",
+      options: {
+        dateFormat: {
+          format: "M/D/YYYY",
+          name: "us"
+        }
+      }
+    },
+    { 
+      name: "Company ID", 
+      description: "", 
+      type: "singleLineText" 
+    },
+  ]
 
+  const payload = {
+    name: tableName,
+    description: tableDescription,
+    fields,
+  }
+  const options = {
+    headers: {
+      Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+  }
+  const response = await axios.post(createTableURL, payload, options);
+  const data = response.data
+  const { id, name, primaryFieldId } = data
+  console.log(`Created table ${name} with ID ${id} and primary field ID ${primaryFieldId}!`)
+  // console.log(`Added ${response.data.records.length} job postings to Airtable`);
+}
+
+function createJobPostingLists(jobPostings) {
+  const lists = []
+  const batchSize = 10
+  for (let index = 0; index < jobPostings.length; index += batchSize) {
+    lists.push(jobPostings.slice(index, index + batchSize))
+  }
+  return lists
+}
+
+export async function addRecordsToTable(jobPostings) {
+  // https://api.airtable.com/v0/{baseId}/{tableIdOrName}
+  const tableId = "tblDbkfsbmdMVUALa"
+  const primaryFieldId = "fldjjiGvAFDvxLegW"
+  const addRecordsURL = `${BASE_URL}/${AIRTABLE_FL_BASE_ID}/${tableId}`
+  console.log("addRecordsURL", addRecordsURL)
+
+  const jobPostingLists = createJobPostingLists(jobPostings)
+  for(const list of jobPostingLists) {
+    console.log("-- Loop")
+    const jobPostingRecords = list.map(v => ({
+      fields: {
+        "Posting ID": String(v.postingId),
+        "Role Name": v.roleName,
+        "Role Location": v.roleLocation,
+        "Salary Range": v.salaryRange,
+        "Job Posting URL": v.jobPostingURL,
+        // "Date Posted": v.datePosted,
+        "Date Posted": "05-01-2021",
+        "Company ID": String(v.companyId),
+      }
+    }))
+
+    const payload = { records: jobPostingRecords }
+    const options = {
+      headers: {
+        Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    }
+    const response = await axios.post(addRecordsURL, payload, options);
+    const data = response.data
+    console.log(`Added ${data} job postings to Airtable`)
+    console.log("-- Success")
+  }
+}
+
+export async function getJobPostings(tableName, tableDescription) {
+  const client = await pool.connect()
+
+  let { rows } = await client.query(`SELECT * FROM job_postings`)
+  const jobPostings = rows.map(rowItem => {
+    const { posting_id, role_name, role_location, salary_range, posting_url, date_posted, company_id } = rowItem
+    return {
+      postingId: posting_id,
+      roleName: role_name,
+      roleLocation: role_location,
+      salaryRange: salary_range,
+      jobPostingURL: posting_url,
+      datePosted: date_posted,
+      companyId: company_id,
+    }
+  })
+
+  // await addJobPostingsToAirtable(tableName, tableDescription, jobPostings)
+  return jobPostings
+}
+
+async function createVerificationCompaniesTable() {
+
+}
+
+export async function createVerificationTable(tableName, tableDescription) {
+  await getJobPostings(tableName, tableDescription)
+  await createVerificationCompaniesTable()
+}
+
+
+const url = `${BASE_URL}/meta/bases`
 const config = {
   headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
 };
@@ -62,9 +201,9 @@ async function createBase(baseName) {
       fields: [],
     }
   ]
-  
+
   const body = {
-    name: baseName, 
+    name: baseName,
     workspaceId: WORKSPACE_ID,
     tables: newTables,
   }
@@ -78,16 +217,62 @@ async function createBase(baseName) {
 
   await createBase("Gay Frogs")
 
-  try { 
+  try {
     // var bases = await axios.get(endpointUrl, config);
     // console.log(bases.data);
 
     // var schemas = await axios.get(`https://api.airtable.com/v0/meta/bases/${baseId}/tables`, config)
     // console.log(JSON.stringify(schemas.data))
-    
+
   }
-  catch(error) {
+  catch (error) {
     console.log(error);
   }
+
+})
+
+
+
+
+
+
+
+export async function getRecords() {
+  let offset = null;
+  let records = [];
   
-})()
+  // https://api.airtable.com/v0/{baseId}/{tableIdOrName}
+  const tableId = "tblDbkfsbmdMVUALa"
+  var fetchRecordsURL = `${BASE_URL}/${AIRTABLE_FL_BASE_ID}/${tableId}`
+
+  do {
+    if (offset) fetchRecordsURL += `?offset=${offset}`;
+    const response = await axios.get(fetchRecordsURL, {
+      headers: {
+        Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+      },
+    });
+
+    records = records.concat(response.data.records);
+    offset = response.data.offset;
+  } while (offset);
+  
+  return records
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

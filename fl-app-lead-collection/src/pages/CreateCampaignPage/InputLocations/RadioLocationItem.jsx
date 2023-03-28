@@ -3,7 +3,7 @@ import React from "react";
 export default function RadioLocationItem(props) {
   const { city } = props
   return (
-    <li key={city.cityKeyword}>
+    <li key={city.cityKeyword} className="w-1/6 px-1 py-1">
       <input
         type="radio"
         id="hosting-small"
@@ -17,8 +17,7 @@ export default function RadioLocationItem(props) {
         className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
       >
         <div className="block">
-          <div className="w-full text-lg font-semibold">{city.cityName}</div>
-          <div className="w-full">Temp</div>
+          <div className="w-full text-md font-semibold">{city.cityName}</div>
         </div>
         <svg
           aria-hidden="true"
