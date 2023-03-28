@@ -1,17 +1,20 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import reportWebVitals from './reportWebVitals'
-import { RouterProvider } from 'react-router-dom'
-import { appRouter } from './router/appRouter'
+import React from "react"
+import ReactDOM from "react-dom/client"
+import reportWebVitals from "./reportWebVitals"
+import { RouterProvider } from "react-router-dom"
+import { appRouter } from "./router/appRouter"
 import { ThemeProvider } from "@material-tailwind/react";
-import './index.css'
+import "./index.css"
+import { AppContextProvider } from "state/AppContext"
 
-const root = ReactDOM.createRoot(document.getElementById('root'))
+const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(
   <React.StrictMode>
-    <ThemeProvider>
-      <RouterProvider router={appRouter} />
-    </ThemeProvider>
+    <AppContextProvider>
+      <ThemeProvider>
+        <RouterProvider router={appRouter} />
+      </ThemeProvider>
+    </AppContextProvider>
   </React.StrictMode>,
 )
 
