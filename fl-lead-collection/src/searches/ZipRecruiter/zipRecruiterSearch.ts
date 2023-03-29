@@ -1,3 +1,5 @@
-export default async function execZipRecruiterSearch(locationName: string) {
+import { ISearchObject } from "@/controllers/search/executeSearches";
+
+export default async function execZipRecruiterSearch(searchObject: ISearchObject) {
   console.log("Inside - @execZipRecruiterSearch: ", locationName);
 }

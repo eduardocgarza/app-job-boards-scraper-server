@@ -1,40 +1,26 @@
+import { ISearchObject } from "@/controllers/search/executeSearches";
 import { pool } from "./dbConfig";
 import { DB_TABLE_NAMES } from "./dbConstants";
 import { populateDatabase } from "./test/dbTestPopulate";
 import { testJobPostings as jobPostings } from "./test/testJobPostings";
 
-const {
-  searchesTable,
-  companiesTable,
-  jobPostingsTable,
-  searchJobPostingsTable,
-  searchCompaniesTable
-} = DB_TABLE_NAMES;
+const { searchesTable, companiesTable, jobPostingsTable, searchJobPostingsTable, searchCompaniesTable } =
+  DB_TABLE_NAMES;
 
-export async function createSearchRecord(searchObject) {
+export async function createSearchRecord(searchObject: ISearchObject) {
   const client = await pool.connect();
   try {
-    const {
-      campaignName,
-      campaignDescription,
-      locationName,
-      roles,
-      platforms
-    } = searchObject;
+    const { campaignName, campaignDescription, locationName, roles, platforms } = searchObject;
     const query = `
     INSERT INTO ${DB_TABLE_NAMES.searchesTable} (
       campaign_name, campaign_description, location_name, roles, platforms) 
       VALUES ($1, $2, $3, $4, $5) 
       RETURNING *
     `;
-    const values = [
-      campaignName,
-      campaignDescription,
-      locationName,
-      roles,
-      platforms
-    ];
-    const { rows: [searchItem] } = await client.query(query, values);
+    const values = [campaignName, campaignDescription, locationName, roles, platforms];
+    const {
+      rows: [searchItem],
+    } = await client.query(query, values);
     return {
       searchId: searchItem.search_id,
       campaignName: searchItem.campaign_name,
@@ -42,14 +28,12 @@ export async function createSearchRecord(searchObject) {
       locationName: searchItem.location_name,
       roles: searchItem.roles,
       platforms: searchItem.platforms,
-      createdAt: searchItem.created_at
+      createdAt: searchItem.created_at,
     };
-  }
-  catch (e) {
+  } catch (e) {
     console.error("Error creating search record:", e);
     throw e;
-  }
-  finally {
+  } finally {
     client.release();
   }
 }
@@ -128,7 +112,8 @@ export async function dropTables() {
 }
 
 export async function clearTables() {
-  const { searchesTable, companiesTable, jobPostingsTable, searchJobPostingsTable, searchCompaniesTable } = DB_TABLE_NAMES;
+  const { searchesTable, companiesTable, jobPostingsTable, searchJobPostingsTable, searchCompaniesTable } =
+    DB_TABLE_NAMES;
   const searchCompaniesQuery = `DELETE FROM ${searchCompaniesTable};`;
   const searchPostingsQuery = `DELETE FROM ${searchJobPostingsTable};`;
   const jobPostingsQuery = `DELETE FROM ${jobPostingsTable};`;
@@ -147,8 +132,7 @@ export async function resetTables() {
     await createTables();
     await populateDatabase(jobPostings);
     console.log("Tables reset successfully");
-  }
-  catch (e) {
+  } catch (e) {
     console.error("Error resetting tables:", e);
     throw e;
   }

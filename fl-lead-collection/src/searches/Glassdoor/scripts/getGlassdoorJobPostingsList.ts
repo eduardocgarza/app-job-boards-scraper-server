@@ -1,4 +1,5 @@
 import { ISearchObject } from "@/controllers/search/executeSearches";
+import { Page } from "puppeteer";
 import PuppBrowser from "../../../helpers/PuppBrowser";
 import {
   GLASSDOOR_JOBS_COMPANY_SIZES,
@@ -12,7 +13,7 @@ import { insertPostingsData } from "./glassdoorDb";
 const GLASSDOOR_MAX_JOB_PAGES = 30;
 const GLASSDOOR_POSTS_PER_PAGE = 30;
 
-async function setInputValue(page, selector, value) {
+async function setInputValue(page: Page, selector: string, value: string) {
   await page.waitForSelector(selector);
   await page.focus(selector);
   // Select the current input content
@@ -25,7 +26,7 @@ async function setInputValue(page, selector, value) {
   await page.keyboard.type(value);
 }
 
-async function initJobBrowserSearch(page, locationName, roleName) {
+async function initJobBrowserSearch(page: Page, locationName: string, roleName: string) {
   const keywordSelector = ".universalSearch__UniversalSearchBarStyles__searchKeywordContainer input";
   const locationSelector = ".universalSearch__UniversalSearchBarStyles__searchInputContainer input";
   const searchButtonSelector = ".universalSearch__UniversalSearchBarStyles__searchButton";
@@ -53,10 +54,10 @@ async function initJobBrowserSearch(page, locationName, roleName) {
   }
 }
 
-function createGlassdoorURL(searchCode, options) {
+function createGlassdoorURL(searchCode: string, options: IJobSearch) {
   const { locationName, roleName, companySize } = options;
   const baseURL = "https://www.glassdoor.com/Job";
-  const urlEncode = (url) => url.replaceAll(" ", "-").toLowerCase();
+  const urlEncode = (url: string) => url.replaceAll(" ", "-").toLowerCase();
   const formattedLocationName = urlEncode(locationName);
   const formattedRoleName = urlEncode(roleName);
   const jobType = "fulltime";
@@ -68,14 +69,14 @@ function createGlassdoorURL(searchCode, options) {
   return `${baseURL}/${formattedLocationName}-${formattedRoleName}-jobs-${searchCode}.htm?jobType=${jobType}&fromAge=${datePosted}&radius=${distance}${easyApply}&employerSizes=${companySize}&sortBy=${sortBy}`;
 }
 
-function getJobPostingId(url) {
+function getJobPostingId(url: string) {
   const myURL = new URL(url);
   const regex = /jobListingId=(\d+)/;
   const match = regex.exec(myURL.search);
   return match ? match[1] : "";
 }
 
-async function getJobPostPage(page) {
+async function getJobPostPage(page: Page) {
   const jobListings = [];
   let companyName,
     roleName,
@@ -120,8 +121,8 @@ async function getJobPostPage(page) {
   return jobListings;
 }
 
-async function getJobsSearchSize(page) {
-  var numJobs, numPages;
+async function getJobsSearchSize(page: Page) {
+  let numJobs;
   const selector = "h1[data-test='jobCount-H1title']";
   const exists = await page.evaluate((selector) => document.querySelector(selector) !== null, selector);
   if (exists) {
@@ -130,11 +131,11 @@ async function getJobsSearchSize(page) {
     }, selector);
     numJobs = textContent ? textContent.split(" ")[0] : 0;
   }
-  numPages = Math.min(Math.ceil(numJobs / GLASSDOOR_POSTS_PER_PAGE), GLASSDOOR_MAX_JOB_PAGES);
+  const numPages = Math.min(Math.ceil(numJobs / GLASSDOOR_POSTS_PER_PAGE), GLASSDOOR_MAX_JOB_PAGES);
   return numPages;
 }
 
-async function getSearchResults(searchId, page, numPages) {
+async function getSearchResults(searchId: string, page: Page, numPages: number) {
   for (let index = 0; index < numPages; index++) {
     const pageNumber = index + 1;
     const jobPostings = await getJobPostPage(page);
@@ -152,7 +153,9 @@ async function getSearchResults(searchId, page, numPages) {
           await Promise.race([page.waitForSelector(modalParentSelector), page.waitForTimeout(5000)]);
           await page.click(modalSelector);
           await page.waitForTimeout(1000);
-        } catch (e) {}
+        } catch (e) {
+          // TODO -- Handle Error
+        }
       }
       await Promise.all([
         page.waitForSelector("button.nextButton"),
@@ -168,11 +171,11 @@ async function getSearchResults(searchId, page, numPages) {
 interface IJobSearch {
   locationName: string;
   roleName: string;
-  companySize: string;
+  companySize: number;
 }
 
 function createJobSearches(locationName: string): IJobSearch[] {
-  const searches = [];
+  const searches: IJobSearch[] = [];
   for (const roleName of SEARCH_ROLES) {
     for (const companySize of GLASSDOOR_JOBS_COMPANY_SIZES) {
       searches.push({ locationName, roleName, companySize: companySize.value });
@@ -181,7 +184,7 @@ function createJobSearches(locationName: string): IJobSearch[] {
   return searches;
 }
 
-async function execSingleSearch(searchId: string, options) {
+async function execSingleSearch(searchId: string, options: IJobSearch) {
   const { page, closeBrowser } = await PuppBrowser();
   const { locationName, roleName } = options;
   const searchCode = await initJobBrowserSearch(page, locationName, roleName);
@@ -194,7 +197,7 @@ async function execSingleSearch(searchId: string, options) {
 
 export default async function getGlassdoorJobPostingsSearchList(searchObject: ISearchObject) {
   const { searchId, locationName } = searchObject;
-  const searches = createJobSearches(locationName);
+  const searches: IJobSearch[] = createJobSearches(locationName);
   for (const searchOptions of searches) {
     await execSingleSearch(searchId, searchOptions);
   }

@@ -2,7 +2,8 @@
   "javascript.format.semicolons": "insert",
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "[typescript]": {
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "eslint.options": {
     "extensions": [".ts", ".js"]

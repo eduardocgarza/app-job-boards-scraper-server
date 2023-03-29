@@ -1,3 +1,3 @@
-export default async function execMonsterSearch(locationName: string) {
-  console.log("Inside - @execMonsterSearch: ", locationName);
-}
+import { ISearchObject } from "@/controllers/search/executeSearches";
+
+export default async function execMonsterSearch(searchObject: ISearchObject) {}

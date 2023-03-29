@@ -17,10 +17,10 @@ async function getJobDescriptionText(page: Page) {
 }
 
 async function getCompanyData(page: Page) {
-  const companyProfileURLElement = await page.$('a[data-test="employerLogo"]');
+  const companyProfileURLElement = await page.$("a[data-test='employerLogo]");
   const companyProfileURL = await page.evaluate((element) => element.href, companyProfileURLElement);
   const companyUsername = getCompanyUsername(companyProfileURL);
-  const locationElement = await page.$('[data-test="location"]');
+  const locationElement = await page.$("[data-test='location']");
   const hqLocation = await page.evaluate((element) => element.textContent.trim(), locationElement);
   return { companyProfileURL, companyUsername, hqLocation };
 }

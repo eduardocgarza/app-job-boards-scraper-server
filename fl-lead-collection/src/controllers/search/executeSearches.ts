@@ -1,14 +1,14 @@
-import { JOB_PLATFORMS } from "../../appConstants";
-import executeGlassdoorSearch from "../../searches/Glassdoor/scripts/executeGlassdoorSearch";
-import execIndeedSearch from "../../searches/Indeed/indeedSearch";
-import execLinkedinSearch from "../../searches/Linkedin/linkedinSearch";
-import execMonsterSearch from "../../searches/Monster/monsterSearch";
-import execZipRecruiterSearch from "../../searches/ZipRecruiter/zipRecruiterSearch";
+import { JOB_PLATFORMS } from "@/appConstants";
+import executeGlassdoorSearch from "@/searches/Glassdoor/scripts/executeGlassdoorSearch";
+import execIndeedSearch from "@/searches/Indeed/indeedSearch";
+import execLinkedinSearch from "@/searches/Linkedin/linkedinSearch";
+import execMonsterSearch from "@/searches/Monster/monsterSearch";
+import execZipRecruiterSearch from "@/searches/ZipRecruiter/zipRecruiterSearch";
 
 const jobPlatforms = JOB_PLATFORMS.getHashMap();
 
 export interface ISearchObject {
-  searchId: string;
+  searchId?: string;
   campaignName: string;
   campaignDescription: string;
   locationName: string;
