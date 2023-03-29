@@ -1,13 +1,12 @@
 {
   "name": "fl-lead-generation-scripts",
-  "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec babel-node src/app.js",
-    "start": "node --exec babel-node src/app.js"
+    "dev": "npx nodemon",
+    "start": "nodemon src/index.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -15,30 +14,22 @@
   "dependencies": {
     "airtable": "^0.11.6",
     "axios": "^1.3.4",
-    "babel-loader": "^9.1.2",
     "cheerio": "^1.0.0-rc.12",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "joi": "^17.9.1",
-    "objects-to-csv": "^1.3.6",
-    "optionator": "^0.9.1",
     "pg": "^8.10.0",
-    "puppeteer": "^19.7.4",
-    "webpack": "^5.76.3",
-    "webpack-cli": "^5.0.1"
+    "puppeteer": "^19.7.4"
   },
   "devDependencies": {
-    "@babel/cli": "^7.21.0",
-    "@babel/core": "^7.21.3",
-    "@babel/node": "^7.20.7",
-    "@babel/plugin-transform-modules-commonjs": "^7.21.2",
-    "@babel/preset-env": "^7.20.2",
-    "@babel/preset-react": "^7.18.6",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.15.11",
     "eslint": "^8.36.0",
     "eslint-plugin-import": "^2.27.5",
     "nodemon": "^2.0.22",
-    "nodemon-webpack-plugin": "^4.8.1",
-    "webpack-dev-server": "^4.13.1"
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.2"
   }
 }
