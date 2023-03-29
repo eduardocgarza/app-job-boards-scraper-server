@@ -1,7 +1,7 @@
 import dotenv from "dotenv"
 dotenv.config()
 import axios from "axios";
-import { pool } from "../../app.js";
+import { pool } from "../../db/dbConfig.js";
 const { AIRTABLE_TOKEN, AIRTABLE_FL_BASE_ID } = process.env;
 
 const BASE_URL = "https://api.airtable.com/v0";
@@ -41,34 +41,34 @@ const BASE_URL = "https://api.airtable.com/v0";
 export async function addJobPostingsToAirtable(tableName, tableDescription, jobPostings) {
   const createTableURL = `${BASE_URL}/meta/bases/${AIRTABLE_FL_BASE_ID}/tables`
   const fields = [
-    { 
-      name: "Posting ID", 
-      description: "", 
-      type: "singleLineText" 
+    {
+      name: "Posting ID",
+      description: "",
+      type: "singleLineText"
     },
-    { 
-      name: "Role Name", 
-      description: "", 
-      type: "singleLineText" 
+    {
+      name: "Role Name",
+      description: "",
+      type: "singleLineText"
     },
-    { 
-      name: "Role Location", 
-      description: "", 
-      type: "singleLineText" 
+    {
+      name: "Role Location",
+      description: "",
+      type: "singleLineText"
     },
-    { 
-      name: "Salary Range", 
-      description: "", 
-      type: "singleLineText" 
+    {
+      name: "Salary Range",
+      description: "",
+      type: "singleLineText"
     },
-    { 
-      name: "Job Posting URL", 
-      description: "", 
-      type: "url" 
+    {
+      name: "Job Posting URL",
+      description: "",
+      type: "url"
     },
-    { 
-      name: "Date Posted", 
-      description: "", 
+    {
+      name: "Date Posted",
+      description: "",
       type: "date",
       options: {
         dateFormat: {
@@ -77,10 +77,10 @@ export async function addJobPostingsToAirtable(tableName, tableDescription, jobP
         }
       }
     },
-    { 
-      name: "Company ID", 
-      description: "", 
-      type: "singleLineText" 
+    {
+      name: "Company ID",
+      description: "",
+      type: "singleLineText"
     },
   ]
 
@@ -119,7 +119,7 @@ export async function addRecordsToTable(jobPostings) {
   console.log("addRecordsURL", addRecordsURL)
 
   const jobPostingLists = createJobPostingLists(jobPostings)
-  for(const list of jobPostingLists) {
+  for (const list of jobPostingLists) {
     console.log("-- Loop")
     const jobPostingRecords = list.map(v => ({
       fields: {
@@ -237,10 +237,10 @@ async function createBase(baseName) {
 
 
 
-export async function getRecords() {
+export async function fetchAirtableRecords() {
   let offset = null;
   let records = [];
-  
+
   // https://api.airtable.com/v0/{baseId}/{tableIdOrName}
   const tableId = "tblDbkfsbmdMVUALa"
   var fetchRecordsURL = `${BASE_URL}/${AIRTABLE_FL_BASE_ID}/${tableId}`
@@ -256,7 +256,7 @@ export async function getRecords() {
     records = records.concat(response.data.records);
     offset = response.data.offset;
   } while (offset);
-  
+
   return records
 }
 

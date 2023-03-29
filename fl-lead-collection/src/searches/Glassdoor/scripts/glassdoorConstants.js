@@ -1,10 +1,10 @@
-export const JOBS_EASY_APPLY = { 
+export const GLASSDOOR_JOBS_EASY_APPLY = { 
   EASY: 1, 
   REGULAR: 0 
 }
 
 // Units in days
-export const JOBS_DATE_POSTED = {
+export const GLASSDOOR_JOBS_DATE_POSTED = {
   THREE: 3,
   SEVEN: 7,
   FOURTEEN: 14,
@@ -12,7 +12,7 @@ export const JOBS_DATE_POSTED = {
 }
 
 // Units in miles
-export const JOBS_DISTANCE = { 
+export const GLASSDOOR_JOBS_DISTANCE = { 
   FIVE: 5, 
   TEN: 10, 
   FIFTEETH: 15, 
@@ -22,7 +22,7 @@ export const JOBS_DISTANCE = {
 }
 
 // Units are generic numbers
-export const JOBS_COMPANY_SIZES = [
+export const GLASSDOOR_JOBS_COMPANY_SIZES = [
   {
     name: "1-200 employees",
     value: 1
@@ -41,7 +41,11 @@ export const JOBS_COMPANY_SIZES = [
   },
 ]
 
-export const ROLES = [
+export const COMPANY_SIZES = [
+
+]
+
+export const SEARCH_ROLES = [
   "frontend software engineer",
   "backend software engineer",
   "fullstack software engineer",

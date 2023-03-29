@@ -1,6 +1,6 @@
-import { insertData } from "../../../app.js";
-import { JOBS_COMPANY_SIZES, JOBS_DATE_POSTED, JOBS_DISTANCE, JOBS_EASY_APPLY, ROLES } from "./glassdoorConstants.js";
-import { PuppBrowser } from "./glassdoorSearch.js";
+import PuppBrowser from "../../../helpers/PuppBrowser.js";
+import { GLASSDOOR_JOBS_COMPANY_SIZES, GLASSDOOR_JOBS_DATE_POSTED, GLASSDOOR_JOBS_DISTANCE, GLASSDOOR_JOBS_EASY_APPLY, SEARCH_ROLES } from "./glassdoorConstants.js";
+import { glassdoorDBInsertJobPostings } from "./glassdoorDb.js";
 
 const GLASSDOOR_MAX_JOB_PAGES = 30
 const GLASSDOOR_POSTS_PER_PAGE = 30
@@ -50,18 +50,15 @@ async function initJobBrowserSearch(page, locationName, roleName) {
 function createGlassdoorURL(searchCode, options) {
   const { locationName, roleName, companySize } = options
   const baseURL = "https://www.glassdoor.com/Job"
-
   const urlEncode = url => url.replaceAll(" ", "-").toLowerCase()
   const formattedLocationName = urlEncode(locationName)
   const formattedRoleName = urlEncode(roleName)
-
   const jobType = "fulltime"
   const sortBy = "date_desc"
-  const datePosted = JOBS_DATE_POSTED.THIRTY
-  const distance = JOBS_DISTANCE.HUNDRED
-  const easyApplyState = JOBS_EASY_APPLY.REGULAR
+  const datePosted = GLASSDOOR_JOBS_DATE_POSTED.THIRTY
+  const distance = GLASSDOOR_JOBS_DISTANCE.HUNDRED
+  const easyApplyState = GLASSDOOR_JOBS_EASY_APPLY.REGULAR
   const easyApply = easyApplyState ? `&applicationType=${easyApplyState}` : ""
-
   return `${baseURL}/${formattedLocationName}-${formattedRoleName}-jobs-${searchCode}.htm?jobType=${jobType}&fromAge=${datePosted}&radius=${distance}${easyApply}&employerSizes=${companySize}&sortBy=${sortBy}`
 }
 
@@ -79,21 +76,22 @@ async function getJobPostPage(page) {
     roleLocation,
     salaryRange,
     jobPostingURL,
-    jobPostingId,
+    glassdoorJobPostingId,
     companyRating,
     easyApply,
     datePosted;
+
   const allJobs = await page.$$("[data-test='jobListing']");
   for (const element of allJobs) {
     companyName = (await element.$(".css-l2wjgv")) ? await element.$eval(".css-l2wjgv", el => el.textContent) : "";
     roleName = (await element.$(".css-1rd3saf")) ? await element.$eval(".css-1rd3saf", el => el.textContent) : "";
     roleLocation = (await element.$(".e1rrn5ka0")) ? await element.$eval(".e1rrn5ka0", el => el.textContent) : "";
     salaryRange = (await element.$(".css-1xe2xww")) ? await element.$eval(".css-1xe2xww", el => el.textContent.split("(")[0]) : "";
-    jobPostingURL = (await element.$(".css-l2wjgv")) ? await element.$eval(".css-l2wjgv", el => `https://glassdoor.com${el.href}`) : "";
-    jobPostingId = getJobPostingId(jobPostingURL);
+    jobPostingURL = (await element.$(".css-l2wjgv")) ? await element.$eval(".css-l2wjgv", el => el.href) : "";
     companyRating = (await element.$(".css-2lqh28")) ? await element.$eval(".css-2lqh28", el => el.textContent) : "";
     easyApply = (await element.$(".css-r3emcz")) ? await element.$eval(".css-r3emcz", el => el.textContent.includes("Easy Apply")) : false;
     datePosted = (await element.$("div[data-test='job-age']")) ? await element.$eval("div[data-test='job-age']", el => el.textContent) : "";
+    glassdoorJobPostingId = getJobPostingId(jobPostingURL);
 
     jobListings.push({
       companyName,
@@ -101,7 +99,7 @@ async function getJobPostPage(page) {
       roleLocation,
       salaryRange,
       jobPostingURL,
-      jobPostingId,
+      glassdoorJobPostingId,
       companyRating,
       easyApply,
       datePosted,
@@ -124,18 +122,16 @@ async function getJobsSearchSize(page) {
   return numPages
 }
 
-async function getSearchResults(page, numPages) {
+async function getSearchResults(searchId, page, numPages) {
   for (let index = 0; index < numPages; index++) {
     const pageNumber = index + 1
     const jobPostings = await getJobPostPage(page)
-    await insertData(jobPostings)
-
+    await glassdoorDBInsertJobPostings(searchId, jobPostings)
     if (index !== numPages - 1) {
       // If Modal, hide Modal first.
       if (index > 0) {
         const modalParentSelector = ".modal_main"
         const modalSelector = ".SVGInline.modal_closeIcon"
-        console.log("Waiting for Modal")
         await page.waitForSelector(modalParentSelector)
         await page.click(modalSelector)
         await page.waitForTimeout(500)
@@ -153,31 +149,33 @@ async function getSearchResults(page, numPages) {
 
 function createJobSearches(locationName) {
   const searches = []
-  for (const roleName of ROLES) {
-    for (const companySize of JOBS_COMPANY_SIZES) {
+  for (const roleName of SEARCH_ROLES) {
+    for (const companySize of GLASSDOOR_JOBS_COMPANY_SIZES) {
       searches.push({ locationName, roleName, companySize: companySize.value })
     }
   }
   return searches
 }
 
-async function execSingleSearch(options) {
+async function execSingleSearch(searchId, options) {
   const { page, closeBrowser } = await PuppBrowser()
   const { locationName, roleName } = options
   const searchCode = await initJobBrowserSearch(page, locationName, roleName)
   const glassdoorURL = createGlassdoorURL(searchCode, options)
   await page.goto(glassdoorURL, { waitUntil: "networkidle0" })
   const numPages = await getJobsSearchSize(page)
-  await getSearchResults(page, numPages)
+  await getSearchResults(searchId, page, numPages)
+  console.log("Completed: getSearchResults")
   await closeBrowser()
 }
 
-export default async function execGlassdoorJobPostingSearch(locationName) {
+export default async function getGlassdoorJobPostingsSearchList(searchObject) {
+  const { searchId, locationName } = searchObject
   const searches = createJobSearches(locationName)
   for (const search of searches) {
     const options = { ...search }
-    await execSingleSearch(options)
-    console.log("::Main - Completed Search")
+    await execSingleSearch(searchId, options)
+    console.log("Completed One Loop of Postings")
     break
   }
 }
