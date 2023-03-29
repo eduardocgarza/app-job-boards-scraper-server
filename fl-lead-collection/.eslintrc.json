@@ -1,26 +1,17 @@
 {
-  "env": {
-    "browser": true,
-    "es2021": true,
-    "node": true
-  },
-  "extends": ["eslint:recommended", "plugin:import/recommended"],
-  "overrides": [],
-  "parserOptions": {
-    "ecmaVersion": "latest",
-    "sourceType": "module"
-  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "import"],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   "rules": {
+    "no-console": "warn",
+    "@typescript-eslint/no-unused-vars": "warn",
     "import/no-extraneous-dependencies": [
       "error",
-      {
-        "devDependencies": ["**/*.test.js", "**/*.spec.js"],
-        "optionalDependencies": false,
-        "peerDependencies": false,
-        "packageDir": "./",
-        "exceptions": ["pg"]
-      }
+      { "devDependencies": false, "optionalDependencies": false, "peerDependencies": false }
     ],
-    "no-process-env": "off"
+    "quotes": ["error", "double"]
+  },
+  "env": {
+    "node": true
   }
 }

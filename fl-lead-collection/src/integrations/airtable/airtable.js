@@ -1,7 +1,7 @@
-import dotenv from "dotenv"
-dotenv.config()
+import dotenv from "dotenv";
+dotenv.config();
 import axios from "axios";
-import { pool } from "../../db/dbConfig.js";
+import { pool } from "../../db/dbConfig";
 const { AIRTABLE_TOKEN, AIRTABLE_FL_BASE_ID } = process.env;
 
 const BASE_URL = "https://api.airtable.com/v0";
@@ -39,7 +39,7 @@ const BASE_URL = "https://api.airtable.com/v0";
 // const endpointUrl = `${baseUrl}${baseId}/${tableName}`;
 
 export async function addJobPostingsToAirtable(tableName, tableDescription, jobPostings) {
-  const createTableURL = `${BASE_URL}/meta/bases/${AIRTABLE_FL_BASE_ID}/tables`
+  const createTableURL = `${BASE_URL}/meta/bases/${AIRTABLE_FL_BASE_ID}/tables`;
   const fields = [
     {
       name: "Posting ID",
@@ -82,45 +82,45 @@ export async function addJobPostingsToAirtable(tableName, tableDescription, jobP
       description: "",
       type: "singleLineText"
     },
-  ]
+  ];
 
   const payload = {
     name: tableName,
     description: tableDescription,
     fields,
-  }
+  };
   const options = {
     headers: {
       Authorization: `Bearer ${AIRTABLE_TOKEN}`,
       "Content-Type": "application/json",
     },
-  }
+  };
   const response = await axios.post(createTableURL, payload, options);
-  const data = response.data
-  const { id, name, primaryFieldId } = data
-  console.log(`Created table ${name} with ID ${id} and primary field ID ${primaryFieldId}!`)
+  const data = response.data;
+  const { id, name, primaryFieldId } = data;
+  console.log(`Created table ${name} with ID ${id} and primary field ID ${primaryFieldId}!`);
   // console.log(`Added ${response.data.records.length} job postings to Airtable`);
 }
 
 function createJobPostingLists(jobPostings) {
-  const lists = []
-  const batchSize = 10
+  const lists = [];
+  const batchSize = 10;
   for (let index = 0; index < jobPostings.length; index += batchSize) {
-    lists.push(jobPostings.slice(index, index + batchSize))
+    lists.push(jobPostings.slice(index, index + batchSize));
   }
-  return lists
+  return lists;
 }
 
 export async function addRecordsToTable(jobPostings) {
   // https://api.airtable.com/v0/{baseId}/{tableIdOrName}
-  const tableId = "tblDbkfsbmdMVUALa"
-  const primaryFieldId = "fldjjiGvAFDvxLegW"
-  const addRecordsURL = `${BASE_URL}/${AIRTABLE_FL_BASE_ID}/${tableId}`
-  console.log("addRecordsURL", addRecordsURL)
+  const tableId = "tblDbkfsbmdMVUALa";
+  const primaryFieldId = "fldjjiGvAFDvxLegW";
+  const addRecordsURL = `${BASE_URL}/${AIRTABLE_FL_BASE_ID}/${tableId}`;
+  console.log("addRecordsURL", addRecordsURL);
 
-  const jobPostingLists = createJobPostingLists(jobPostings)
+  const jobPostingLists = createJobPostingLists(jobPostings);
   for (const list of jobPostingLists) {
-    console.log("-- Loop")
+    console.log("-- Loop");
     const jobPostingRecords = list.map(v => ({
       fields: {
         "Posting ID": String(v.postingId),
@@ -132,28 +132,28 @@ export async function addRecordsToTable(jobPostings) {
         "Date Posted": "05-01-2021",
         "Company ID": String(v.companyId),
       }
-    }))
+    }));
 
-    const payload = { records: jobPostingRecords }
+    const payload = { records: jobPostingRecords };
     const options = {
       headers: {
         Authorization: `Bearer ${AIRTABLE_TOKEN}`,
         "Content-Type": "application/json",
       },
-    }
+    };
     const response = await axios.post(addRecordsURL, payload, options);
-    const data = response.data
-    console.log(`Added ${data} job postings to Airtable`)
-    console.log("-- Success")
+    const data = response.data;
+    console.log(`Added ${data} job postings to Airtable`);
+    console.log("-- Success");
   }
 }
 
 export async function getJobPostings(tableName, tableDescription) {
-  const client = await pool.connect()
+  const client = await pool.connect();
 
-  let { rows } = await client.query(`SELECT * FROM job_postings`)
+  let { rows } = await client.query(`SELECT * FROM job_postings`);
   const jobPostings = rows.map(rowItem => {
-    const { posting_id, role_name, role_location, salary_range, posting_url, date_posted, company_id } = rowItem
+    const { posting_id, role_name, role_location, salary_range, posting_url, date_posted, company_id } = rowItem;
     return {
       postingId: posting_id,
       roleName: role_name,
@@ -162,11 +162,11 @@ export async function getJobPostings(tableName, tableDescription) {
       jobPostingURL: posting_url,
       datePosted: date_posted,
       companyId: company_id,
-    }
-  })
+    };
+  });
 
   // await addJobPostingsToAirtable(tableName, tableDescription, jobPostings)
-  return jobPostings
+  return jobPostings;
 }
 
 async function createVerificationCompaniesTable() {
@@ -174,12 +174,12 @@ async function createVerificationCompaniesTable() {
 }
 
 export async function createVerificationTable(tableName, tableDescription) {
-  await getJobPostings(tableName, tableDescription)
-  await createVerificationCompaniesTable()
+  await getJobPostings(tableName, tableDescription);
+  await createVerificationCompaniesTable();
 }
 
 
-const url = `${BASE_URL}/meta/bases`
+const url = `${BASE_URL}/meta/bases`;
 const config = {
   headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
 };
@@ -188,10 +188,10 @@ async function createTable(tableName) {
 
 }
 
-const WORKSPACE_ID = "wspoKQFIFYFeH5eD1"
+const WORKSPACE_ID = "wspoKQFIFYFeH5eD1";
 
 async function createBase(baseName) {
-  const url = "https://api.airtable.com/v0/meta/bases"
+  const url = "https://api.airtable.com/v0/meta/bases";
 
   const newTables = [
     {
@@ -200,22 +200,22 @@ async function createBase(baseName) {
       // FieldConfig[]
       fields: [],
     }
-  ]
+  ];
 
   const body = {
     name: baseName,
     workspaceId: WORKSPACE_ID,
     tables: newTables,
-  }
-  const response = await axios.post(url, body, config)
-  console.log("Response: ", response)
+  };
+  const response = await axios.post(url, body, config);
+  console.log("Response: ", response);
 
 }
 
 (async function Main() {
-  const baseId = "appzgkk31i7oIWS5l"
+  const baseId = "appzgkk31i7oIWS5l";
 
-  await createBase("Gay Frogs")
+  await createBase("Gay Frogs");
 
   try {
     // var bases = await axios.get(endpointUrl, config);
@@ -229,7 +229,7 @@ async function createBase(baseName) {
     console.log(error);
   }
 
-})
+});
 
 
 
@@ -242,8 +242,8 @@ export async function fetchAirtableRecords() {
   let records = [];
 
   // https://api.airtable.com/v0/{baseId}/{tableIdOrName}
-  const tableId = "tblDbkfsbmdMVUALa"
-  var fetchRecordsURL = `${BASE_URL}/${AIRTABLE_FL_BASE_ID}/${tableId}`
+  const tableId = "tblDbkfsbmdMVUALa";
+  var fetchRecordsURL = `${BASE_URL}/${AIRTABLE_FL_BASE_ID}/${tableId}`;
 
   do {
     if (offset) fetchRecordsURL += `?offset=${offset}`;
@@ -257,7 +257,7 @@ export async function fetchAirtableRecords() {
     offset = response.data.offset;
   } while (offset);
 
-  return records
+  return records;
 }
 
 

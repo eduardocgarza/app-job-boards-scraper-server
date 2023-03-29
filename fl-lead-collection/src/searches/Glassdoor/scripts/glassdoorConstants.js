@@ -1,7 +1,7 @@
-export const GLASSDOOR_JOBS_EASY_APPLY = { 
-  EASY: 1, 
-  REGULAR: 0 
-}
+export const GLASSDOOR_JOBS_EASY_APPLY = {
+  EASY: 1,
+  REGULAR: 0
+};
 
 // Units in days
 export const GLASSDOOR_JOBS_DATE_POSTED = {
@@ -9,17 +9,17 @@ export const GLASSDOOR_JOBS_DATE_POSTED = {
   SEVEN: 7,
   FOURTEEN: 14,
   THIRTY: 30
-}
+};
 
 // Units in miles
-export const GLASSDOOR_JOBS_DISTANCE = { 
-  FIVE: 5, 
-  TEN: 10, 
-  FIFTEETH: 15, 
-  TWENTYFIVE: 25, 
-  FIFTY: 50, 
-  HUNDRED: 100 
-}
+export const GLASSDOOR_JOBS_DISTANCE = {
+  FIVE: 5,
+  TEN: 10,
+  FIFTEETH: 15,
+  TWENTYFIVE: 25,
+  FIFTY: 50,
+  HUNDRED: 100
+};
 
 // Units are generic numbers
 export const GLASSDOOR_JOBS_COMPANY_SIZES = [
@@ -39,11 +39,11 @@ export const GLASSDOOR_JOBS_COMPANY_SIZES = [
     name: "5001+ employees",
     value: 4
   },
-]
+];
 
 export const COMPANY_SIZES = [
 
-]
+];
 
 export const SEARCH_ROLES = [
   "frontend software engineer",
@@ -57,7 +57,7 @@ export const SEARCH_ROLES = [
   "sysops software engineer",
   "database software engineer",
   "business analyst",
-]
+];
 
 export const LOCATIONS = {
   canadaCities: {

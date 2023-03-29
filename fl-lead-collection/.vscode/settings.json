@@ -1,3 +1,34 @@
 {
-  "javascript.preferences.importModuleSpecifier": "relative"
+  "javascript.format.semicolons": "insert",
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "[typescript]": {
+    "editor.formatOnSave": true
+  },
+  "eslint.options": {
+    "extensions": [".ts", ".js"]
+  },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.alwaysShowStatus": true,
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "typescript.preferences.quoteStyle": "double",
+  "javascript.preferences.quoteStyle": "double",
+  "[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  },
+  "[sql]": {
+    "editor.defaultFormatter": "ms-mssql.mssql"
+  }
 }

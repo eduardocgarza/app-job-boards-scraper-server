@@ -268,11 +268,7 @@
       "show_intent": true,
       "revealed_for_current_team": true,
       "departments": ["c_suite", "master_engineering_technical"],
-      "subdepartments": [
-        "information_technology_executive",
-        "engineering_technical",
-        "technology_operations"
-      ],
+      "subdepartments": ["information_technology_executive", "engineering_technical", "technology_operations"],
       "functions": ["information_technology"],
       "seniority": "c_suite"
     },
@@ -356,11 +352,7 @@
       "show_intent": true,
       "revealed_for_current_team": true,
       "departments": ["c_suite", "master_engineering_technical"],
-      "subdepartments": [
-        "information_technology_executive",
-        "engineering_technical",
-        "technology_operations"
-      ],
+      "subdepartments": ["information_technology_executive", "engineering_technical", "technology_operations"],
       "functions": ["information_technology"],
       "seniority": "c_suite"
     },
@@ -604,11 +596,7 @@
       "show_intent": true,
       "revealed_for_current_team": true,
       "departments": ["c_suite", "master_engineering_technical"],
-      "subdepartments": [
-        "information_technology_executive",
-        "engineering_technical",
-        "technology_operations"
-      ],
+      "subdepartments": ["information_technology_executive", "engineering_technical", "technology_operations"],
       "functions": ["information_technology"],
       "seniority": "c_suite"
     },
@@ -732,11 +720,7 @@
       "show_intent": true,
       "revealed_for_current_team": true,
       "departments": ["c_suite", "master_engineering_technical"],
-      "subdepartments": [
-        "information_technology_executive",
-        "engineering_technical",
-        "technology_operations"
-      ],
+      "subdepartments": ["information_technology_executive", "engineering_technical", "technology_operations"],
       "functions": ["information_technology"],
       "seniority": "c_suite"
     },
@@ -900,11 +884,7 @@
       "show_intent": true,
       "revealed_for_current_team": true,
       "departments": ["c_suite", "master_engineering_technical"],
-      "subdepartments": [
-        "information_technology_executive",
-        "engineering_technical",
-        "technology_operations"
-      ],
+      "subdepartments": ["information_technology_executive", "engineering_technical", "technology_operations"],
       "functions": ["information_technology"],
       "seniority": "c_suite"
     },
@@ -1128,11 +1108,7 @@
       "show_intent": true,
       "revealed_for_current_team": true,
       "departments": ["c_suite", "master_engineering_technical"],
-      "subdepartments": [
-        "information_technology_executive",
-        "engineering_technical",
-        "technology_operations"
-      ],
+      "subdepartments": ["information_technology_executive", "engineering_technical", "technology_operations"],
       "functions": ["information_technology"],
       "seniority": "c_suite"
     },
@@ -1280,11 +1256,7 @@
       "show_intent": true,
       "revealed_for_current_team": true,
       "departments": ["c_suite", "master_engineering_technical"],
-      "subdepartments": [
-        "information_technology_executive",
-        "engineering_technical",
-        "technology_operations"
-      ],
+      "subdepartments": ["information_technology_executive", "engineering_technical", "technology_operations"],
       "functions": ["information_technology"],
       "seniority": "c_suite"
     },
@@ -1528,11 +1500,7 @@
       "show_intent": true,
       "revealed_for_current_team": true,
       "departments": ["c_suite", "master_engineering_technical"],
-      "subdepartments": [
-        "information_technology_executive",
-        "engineering_technical",
-        "technology_operations"
-      ],
+      "subdepartments": ["information_technology_executive", "engineering_technical", "technology_operations"],
       "functions": ["information_technology"],
       "seniority": "c_suite"
     },
@@ -1656,11 +1624,7 @@
       "show_intent": true,
       "revealed_for_current_team": true,
       "departments": ["c_suite", "master_engineering_technical"],
-      "subdepartments": [
-        "information_technology_executive",
-        "engineering_technical",
-        "technology_operations"
-      ],
+      "subdepartments": ["information_technology_executive", "engineering_technical", "technology_operations"],
       "functions": ["information_technology"],
       "seniority": "c_suite"
     },
@@ -1824,11 +1788,7 @@
       "show_intent": true,
       "revealed_for_current_team": true,
       "departments": ["c_suite", "master_engineering_technical"],
-      "subdepartments": [
-        "information_technology_executive",
-        "engineering_technical",
-        "technology_operations"
-      ],
+      "subdepartments": ["information_technology_executive", "engineering_technical", "technology_operations"],
       "functions": ["information_technology"],
       "seniority": "c_suite"
     }

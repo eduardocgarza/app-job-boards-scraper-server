@@ -1,6 +1,6 @@
-import { pool } from "../../../db/dbConfig.js";
-import PuppBrowser from "../../../helpers/PuppBrowser.js";
-import { glassdoorDBGetJobPostings } from "./glassdoorDb.js";
+import { pool } from "../../../db/dbConfig";
+import PuppBrowser from "../../../helpers/PuppBrowser";
+import { glassdoorDBGetJobPostings } from "./glassdoorDb";
 
 function getCompanyUsername(companyUrl) {
   const startIndex = companyUrl.indexOf('at-') + 3;
@@ -46,31 +46,31 @@ async function updateCompanyRecord(companyId, companyProfileURL, companyUsername
 }
 
 async function getSinglePostingDetails(companyId, jobPostingId, page) {
-  const jobDescriptionText = await getJobDescriptionText(page)
+  const jobDescriptionText = await getJobDescriptionText(page);
   const {
     companyProfileURL,
     companyUsername,
     hqLocation
-  } = await getCompanyData(page)
+  } = await getCompanyData(page);
   await updateJobPostingRecord(jobPostingId, jobDescriptionText);
-  await updateCompanyRecord(companyId, companyProfileURL, companyUsername, hqLocation)
+  await updateCompanyRecord(companyId, companyProfileURL, companyUsername, hqLocation);
 }
 
 export default async function getGlassdoorJobPostingsDetailedData(searchObject) {
-  console.log("Starting @getGlassdoorJobPostingsDetailedData()")
+  console.log("Starting @getGlassdoorJobPostingsDetailedData()");
   const { searchId } = searchObject;
-  const jobPostings = await glassdoorDBGetJobPostings(searchId)
-  const { page, closeBrowser } = await PuppBrowser()
+  const jobPostings = await glassdoorDBGetJobPostings(searchId);
+  const { page, closeBrowser } = await PuppBrowser();
   for (const jobPosting of jobPostings) {
-    console.log("jobPosting: ", jobPosting)
+    console.log("jobPosting: ", jobPosting);
     const {
       company_id: companyId,
       posting_id: jobPostingId,
       posting_url: jobPostingURL
-    } = jobPosting
-    await page.goto(jobPostingURL, { waitUntil: "networkidle0" })
-    await getSinglePostingDetails(companyId, jobPostingId, page)
+    } = jobPosting;
+    await page.goto(jobPostingURL, { waitUntil: "networkidle0" });
+    await getSinglePostingDetails(companyId, jobPostingId, page);
   }
-  console.log("Finished @getGlassdoorJobPostingsDetailedData()")
-  await closeBrowser()
+  console.log("Finished @getGlassdoorJobPostingsDetailedData()");
+  await closeBrowser();
 }

@@ -1,7 +1,7 @@
-import getCompanyProfiles from "./getCompanyProfiles.js"
-import getGlassdoorJobPostingsDetailedData from "./getGlassdoorJobPostingsDetailedData.js"
+import getCompanyProfiles from "./getCompanyProfiles";
+import getGlassdoorJobPostingsDetailedData from "./getGlassdoorJobPostingsDetailedData";
 
 export default async function getGlassdoorCompanyDetailedData(searchObject) {
-  await getCompanyProfiles(searchObject)
-  await getGlassdoorJobPostingsDetailedData(searchObject)
+  await getCompanyProfiles(searchObject);
+  await getGlassdoorJobPostingsDetailedData(searchObject);
 }

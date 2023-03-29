@@ -45,8 +45,8 @@ const fs = require("fs");
  * 
  */
 
-const ROCKETREACH_TOKEN = "eaa4d7k49ef4a2747f931ad86de6809470b3cda"
-const APOLLO_TOKEN = "7xcoiuQklsaEFfCpSbXRJg"
+const ROCKETREACH_TOKEN = "eaa4d7k49ef4a2747f931ad86de6809470b3cda";
+const APOLLO_TOKEN = "7xcoiuQklsaEFfCpSbXRJg";
 
 const jobTitles = [
   "CEO",
@@ -54,10 +54,10 @@ const jobTitles = [
   "COO",
   "director",
   "manager",
-]
+];
 
 function convertToStr(arr) {
-  return arr.join("\n")
+  return arr.join("\n");
 }
 
 const companyURLs = [
@@ -65,7 +65,7 @@ const companyURLs = [
   "facebook.com",
   "apple.com",
   "microsoft.com",
-]
+];
 
 const config = {
   headers: {
@@ -75,29 +75,29 @@ const config = {
 };
 
 async function apolloPeople() {
-  const url = "https://api.apollo.io/v1/mixed_people/search"
+  const url = "https://api.apollo.io/v1/mixed_people/search";
 
   const body = {
     api_key: APOLLO_TOKEN,
     person_titles: jobTitles,
     q_organization_domains: convertToStr(companyURLs),
     page: 1,
-  }
+  };
 
-  const response = await axios.post(url, body, config)
-  console.log("Response: ", response.data)
-  fs.writeFileSync("./apollo.json", JSON.stringify(response.data))
-  console.log("Done!")
+  const response = await axios.post(url, body, config);
+  console.log("Response: ", response.data);
+  fs.writeFileSync("./apollo.json", JSON.stringify(response.data));
+  console.log("Done!");
 }
 
-;(async function() {
-  const rawData = fs.readFileSync("./apollo.json")
-  const data = JSON.parse(rawData)
+; (async function () {
+  const rawData = fs.readFileSync("./apollo.json");
+  const data = JSON.parse(rawData);
 
-  const { people } = data
+  const { people } = data;
   // console.log("People: ", people.length)
-  console.log(people[0])
+  console.log(people[0]);
 
-  fs.writeFileSync("./apollo-people.json", JSON.stringify(people))
-  
+  fs.writeFileSync("./apollo-people.json", JSON.stringify(people));
+
 })();

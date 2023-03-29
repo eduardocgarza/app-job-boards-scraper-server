@@ -1,7 +1,7 @@
-import { pool } from "./dbConfig.js";
-import { DB_TABLE_NAMES } from "./dbConstants.js";
-import { populateDatabase } from "./test/dbTestPopulate.js";
-import { testJobPostings as jobPostings } from "./test/testJobPostings.js";
+import { pool } from "./dbConfig";
+import { DB_TABLE_NAMES } from "./dbConstants";
+import { populateDatabase } from "./test/dbTestPopulate";
+import { testJobPostings as jobPostings } from "./test/testJobPostings";
 
 const {
   searchesTable,
@@ -28,13 +28,13 @@ export async function createSearchRecord(searchObject) {
       RETURNING *
     `;
     const values = [
-      campaignName, 
-      campaignDescription, 
-      locationName, 
-      roles, 
+      campaignName,
+      campaignDescription,
+      locationName,
+      roles,
       platforms
     ];
-    const {rows: [searchItem]} = await client.query(query, values);
+    const { rows: [searchItem] } = await client.query(query, values);
     return {
       searchId: searchItem.search_id,
       campaignName: searchItem.campaign_name,
@@ -43,7 +43,7 @@ export async function createSearchRecord(searchObject) {
       roles: searchItem.roles,
       platforms: searchItem.platforms,
       createdAt: searchItem.created_at
-    }
+    };
   }
   catch (e) {
     console.error('Error creating search record:', e);
@@ -99,14 +99,14 @@ export async function createTables() {
       posting_id INTEGER REFERENCES job_postings(posting_id),
       PRIMARY KEY(search_id, posting_id)
     );
-  `
+  `;
   const searchCompaniesTable = `
     CREATE TABLE IF NOT EXISTS ${DB_TABLE_NAMES.searchCompaniesTable} (
       search_id INTEGER REFERENCES searches(search_id),
       company_id INTEGER REFERENCES companies(company_id),
       PRIMARY KEY(search_id, company_id)
     );
-  `
+  `;
   await pool.query(createSearchesTable);
   await pool.query(createCompaniesTable);
   await pool.query(createJobPostingsTable);

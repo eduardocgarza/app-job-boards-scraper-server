@@ -1,6 +1,6 @@
 import Joi from "joi";
-import { createSearchRecord } from "../../db/testTables.js";
-import { executeSearches } from "./executeSearches.js";
+import { createSearchRecord } from "../../db/testTables";
+import { executeSearches } from "./executeSearches";
 
 const searchSchema = Joi.object({
   campaignName: Joi.string().required(),
@@ -18,7 +18,7 @@ function createSearchObject(reqBody) {
     locationName: reqBody.locationName,
     roles: reqBody.roles,
     platforms: reqBody.platforms,
-  }
+  };
 }
 
 export default async function searchRouteHandler(req, res) {
@@ -26,14 +26,14 @@ export default async function searchRouteHandler(req, res) {
   if (error) {
     return res.status(400).json({ error: error.details[0].message });
   }
-  const searchObject = createSearchObject(req.body)
+  const searchObject = createSearchObject(req.body);
   const updatedSearchObject = await createSearchRecord(searchObject);
   res.status(201).json({ searchId: updatedSearchObject.searchId });
 
-  await executeSearches(updatedSearchObject)
-  console.log("Search complete")
-  return
-  await createRawDataAirtables(searchId)
+  await executeSearches(updatedSearchObject);
+  console.log("Search complete");
+  return;
+  await createRawDataAirtables(searchId);
 
   // Update progress table
   // --- 

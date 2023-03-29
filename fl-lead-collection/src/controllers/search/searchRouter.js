@@ -1,8 +1,8 @@
 import express from "express";
-import searchRouteHandler from "./searchRouteHandler.js";
+import searchRouteHandler from "./searchRouteHandler";
 
 const searchRouter = express.Router();
 
-searchRouter.post("/", searchRouteHandler)
+searchRouter.post("/", searchRouteHandler);
 
 export default searchRouter;

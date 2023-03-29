@@ -37,7 +37,7 @@ async function getGlassdoorCompanyProfiles(searchId) {
 }
 
 export default async function getGlassdoorCompaniesSearchData(searchObject) {
-  const { searchId } = searchObject
-  await getGlassdoorCompaniesSearchList(searchObject)
-  await getGlassdoorCompanyProfiles(searchId)
+  const { searchId } = searchObject;
+  await getGlassdoorCompaniesSearchList(searchObject);
+  await getGlassdoorCompanyProfiles(searchId);
 }

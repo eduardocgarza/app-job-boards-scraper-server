@@ -3,14 +3,14 @@ const { AIRTABLE_TOKEN, AIRTABLE_FL_BASE_ID } = process.env;
 
 
 async function createRawDataJobPostingsAirtable(searchId, jobPostings) {
-  const createTableURL = `${AIRTABLE_BASE_URL}/meta/bases/${AIRTABLE_FL_BASE_ID}/tables`
-  const tableName = ""
-  const tableDescription = ""
+  const createTableURL = `${AIRTABLE_BASE_URL}/meta/bases/${AIRTABLE_FL_BASE_ID}/tables`;
+  const tableName = "";
+  const tableDescription = "";
   const payload = {
     name: tableName,
     description: tableDescription,
     fields: RAW_DATA_POSTS_PAGE_FIELDS,
-  }
+  };
   const options = {
     headers: {
       Authorization: `Bearer ${AIRTABLE_TOKEN}`,
@@ -18,17 +18,17 @@ async function createRawDataJobPostingsAirtable(searchId, jobPostings) {
     },
     method: "POST",
     body: JSON.stringify(payload),
-  }
-  const response = await fetch(createTableURL, options)
-  const data = await response.json()
+  };
+  const response = await fetch(createTableURL, options);
+  const data = await response.json();
   // const { id: tableId } = data
 
   // How to return the table URL?
   // const tableURL = `https://airtable.com/${tableId}/viw${tableId}`
   // https://airtable.com/${baseId}/tblDbkfsbmdMVUALa/viwGCmXz3qCqdClzp
-  const baseId = "appMSWraP1Ejfz2O0"
-  const tableId = "tblDbkfsbmdMVUALa"
-  const tableURL = `https://airtable.com/${baseId}/${tableId}`
+  const baseId = "appMSWraP1Ejfz2O0";
+  const tableId = "tblDbkfsbmdMVUALa";
+  const tableURL = `https://airtable.com/${baseId}/${tableId}`;
 
 }
 
@@ -40,5 +40,5 @@ async function createRawDataAirtables(searchId) {
       INNER JOIN companies ON job_postings.company_id = companies.company_id
       WHERE job_postings.search_id = $1 AND job_postings.verified = true;
     `, [searchId]);
-  await createRawDataJobPostingsAirtable(searchId, jobPostings)
+  await createRawDataJobPostingsAirtable(searchId, jobPostings);
 }

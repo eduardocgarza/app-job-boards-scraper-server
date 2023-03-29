@@ -263,4 +263,4 @@ export const testJobPostings = [
     "easyApply": false,
     "datePosted": "28d"
   }
-]
+];

@@ -6,13 +6,13 @@ export const JOB_PLATFORMS = (() => {
     LINKEDIN: "Linkedin",
     MONSTER: "Monster",
     ZIPRECRUITER: "ZipRecruiter",
-  }
+  };
 
-  const getNames = () => Object.values(jobPlatforms)
-  const getHashMap = () => jobPlatforms
-  
+  const getNames = () => Object.values(jobPlatforms);
+  const getHashMap = () => jobPlatforms;
+
   return {
     getNames,
     getHashMap
-  }
-})()
+  };
+})();

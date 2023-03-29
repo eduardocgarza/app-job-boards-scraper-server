@@ -102,4 +102,4 @@ export const RAW_DATA_COMPANIES_PAGE_FIELDS = [
       }
     }
   },
-]
+];

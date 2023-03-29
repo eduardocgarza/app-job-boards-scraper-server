@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "npx nodemon",
+    "dev": "nodemon --exec 'eslint src/**/*.ts --fix && ts-node src/index.ts'",
     "start": "nodemon src/index.ts",
     "build": "tsc"
   },
@@ -26,9 +26,15 @@
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/node": "^18.15.11",
-    "eslint": "^8.36.0",
+    "@types/pg": "^8.6.6",
+    "@typescript-eslint/eslint-plugin": "^5.57.0",
+    "eslint": "^8.37.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-import-resolver-node": "^0.3.7",
     "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
     "nodemon": "^2.0.22",
+    "prettier": "^2.8.7",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.2"
   }
