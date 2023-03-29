@@ -30,6 +30,6 @@
     "editor.defaultFormatter": "ms-python.python"
   },
   "[sql]": {
-    "editor.defaultFormatter": "ms-mssql.mssql"
+    "editor.defaultFormatter": "mtxr.sqltools"
   }
 }

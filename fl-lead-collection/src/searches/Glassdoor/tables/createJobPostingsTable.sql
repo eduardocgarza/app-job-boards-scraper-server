@@ -1,5 +1,4 @@
-CREATE TABLE job_postings
-(
+CREATE TABLE job_postings (
   posting_id SERIAL PRIMARY KEY,
   role_name TEXT NOT NULL,
   role_location TEXT NOT NULL,

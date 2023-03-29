@@ -5,7 +5,7 @@ import {
   createSearchCompanyRecord,
   createSearchPostingRecord,
   getUniqueCompaniesByName,
-} from "../../../database/testDatabase/testPopulateDatabase";
+} from "../../../database/testDatabase/testPopulateDatabase/testPopulateDatabase";
 
 export async function glassdoorDBGetJobPostings(searchId: string) {
   const client = await pool.connect();

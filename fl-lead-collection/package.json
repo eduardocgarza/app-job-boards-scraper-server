@@ -4,10 +4,10 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "nodemon --exec 'eslint src/**/*.ts --fix && ts-node src/index.ts'",
+    "dev": "nodemon --exec 'eslint src/**/*.ts --fix && ts-node -r tsconfig-paths/register -r ./tsconfig-paths-bootstrap.js src/index.ts'",
     "start": "nodemon src/index.ts",
     "build": "tsc"
-  },
+  },  
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -30,12 +30,14 @@
     "@typescript-eslint/eslint-plugin": "^5.57.0",
     "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
+    "eslint-import-resolver-alias": "^1.1.2",
     "eslint-import-resolver-node": "^0.3.7",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
     "nodemon": "^2.0.22",
     "prettier": "^2.8.7",
     "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.0.2"
   }
 }

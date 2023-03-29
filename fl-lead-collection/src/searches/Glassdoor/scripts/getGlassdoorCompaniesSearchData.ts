@@ -1,4 +1,3 @@
-
 /** 
   @Part1 – Get Company Info
     1. Manually create the searches ahead of time to get the following properties
@@ -28,13 +27,9 @@
       - Repeat for All Locations, All Roles, removing duplicates along the way and at the end.
 */
 
-async function getGlassdoorCompaniesSearchList(searchObject) {
+async function getGlassdoorCompaniesSearchList(searchObject) {}
 
-}
-
-async function getGlassdoorCompanyProfiles(searchId) {
-
-}
+async function getGlassdoorCompanyProfiles(searchId) {}
 
 export default async function getGlassdoorCompaniesSearchData(searchObject) {
   const { searchId } = searchObject;

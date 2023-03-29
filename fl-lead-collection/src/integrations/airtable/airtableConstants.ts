@@ -4,27 +4,27 @@ export const RAW_DATA_POSTS_PAGE_FIELDS = [
   {
     name: "Job Posting ID",
     description: "The unique identifier for each job posting",
-    type: "singleLineText"
+    type: "singleLineText",
   },
   {
     name: "Role Name",
     description: "The name of the job position",
-    type: "singleLineText"
+    type: "singleLineText",
   },
   {
     name: "Role Location",
     description: "The location of the job position",
-    type: "singleLineText"
+    type: "singleLineText",
   },
   {
     name: "Salary Range",
     description: "The range of salary offered for the job position",
-    type: "singleLineText"
+    type: "singleLineText",
   },
   {
     name: "Job Posting URL",
     description: "The URL to the job posting page",
-    type: "url"
+    type: "url",
   },
   {
     name: "Date Posted",
@@ -33,63 +33,62 @@ export const RAW_DATA_POSTS_PAGE_FIELDS = [
     options: {
       dateFormat: {
         format: "M/D/YYYY",
-        name: "us"
-      }
-    }
+        name: "us",
+      },
+    },
   },
   {
     name: "Company ID",
     description: "The unique identifier for the company of the job posting",
-    type: "singleLineText"
+    type: "singleLineText",
   },
   {
     name: "Company Name",
     description: "The name of the company of the job posting",
-    type: "singleLineText"
+    type: "singleLineText",
   },
   {
     name: "Company URL",
     description: "The URL to the company profile page",
-    type: "url"
+    type: "url",
   },
   {
     name: "Headquarters Location",
     description: "The location of the company headquarters",
-    type: "singleLineText"
+    type: "singleLineText",
   },
   {
     name: "Number of Company Job Postings",
     description: "The number of job postings from the company",
-    type: "number"
+    type: "number",
   },
 ];
-
 
 export const RAW_DATA_COMPANIES_PAGE_FIELDS = [
   {
     name: "Company ID",
     description: "The unique identifier for the company of the job posting",
-    type: "singleLineText"
+    type: "singleLineText",
   },
   {
     name: "Company Name",
     description: "The name of the company of the job posting",
-    type: "singleLineText"
+    type: "singleLineText",
   },
   {
     name: "Company URL",
     description: "The URL to the company profile page",
-    type: "url"
+    type: "url",
   },
   {
     name: "Headquarters Location",
     description: "The location of the company headquarters",
-    type: "singleLineText"
+    type: "singleLineText",
   },
   {
     name: "Number of Company Job Postings",
     description: "The number of job postings from the company",
-    type: "number"
+    type: "number",
   },
   {
     name: "Date of Most Recent Job Posting",
@@ -98,8 +97,8 @@ export const RAW_DATA_COMPANIES_PAGE_FIELDS = [
     options: {
       dateFormat: {
         format: "M/D/YYYY",
-        name: "us"
-      }
-    }
+        name: "us",
+      },
+    },
   },
 ];

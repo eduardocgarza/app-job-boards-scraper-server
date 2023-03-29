@@ -1,14 +1,14 @@
-import { ISearchObject } from "@/controllers/search/executeSearches";
 import { Page } from "puppeteer";
-import PuppBrowser from "../../../helpers/PuppBrowser";
 import {
   GLASSDOOR_JOBS_COMPANY_SIZES,
   GLASSDOOR_JOBS_DATE_POSTED,
   GLASSDOOR_JOBS_DISTANCE,
   GLASSDOOR_JOBS_EASY_APPLY,
   SEARCH_ROLES,
-} from "./glassdoorConstants";
+} from "../glassdoorConstants";
 import { insertPostingsData } from "./glassdoorDb";
+import PuppBrowser from "@/helpers/PuppBrowser";
+import { ISearchObject } from "@/routers/searchRouter/executeSearches";
 
 const GLASSDOOR_MAX_JOB_PAGES = 30;
 const GLASSDOOR_POSTS_PER_PAGE = 30;
@@ -27,11 +27,13 @@ async function setInputValue(page: Page, selector: string, value: string) {
 }
 
 async function initJobBrowserSearch(page: Page, locationName: string, roleName: string) {
-  const keywordSelector = ".universalSearch__UniversalSearchBarStyles__searchKeywordContainer input";
+  const keywordSelector =
+    ".universalSearch__UniversalSearchBarStyles__searchKeywordContainer input";
   const locationSelector = ".universalSearch__UniversalSearchBarStyles__searchInputContainer input";
   const searchButtonSelector = ".universalSearch__UniversalSearchBarStyles__searchButton";
   // Any URL used as base for generating the new URL
-  const ANY_URL = "https://www.glassdoor.com/Job/vancouver-software-engineer-jobs-SRCH_IL.0,9_IC2278756_KO10,27.htm";
+  const ANY_URL =
+    "https://www.glassdoor.com/Job/vancouver-software-engineer-jobs-SRCH_IL.0,9_IC2278756_KO10,27.htm";
   await page.goto(ANY_URL, { waitUntil: "networkidle0" });
   try {
     await setInputValue(page, keywordSelector, roleName);
@@ -90,14 +92,24 @@ async function getJobPostPage(page: Page) {
 
   const allJobs = await page.$$("[data-test='jobListing']");
   for (const element of allJobs) {
-    companyName = (await element.$(".css-l2wjgv")) ? await element.$eval(".css-l2wjgv", (el) => el.textContent) : "";
-    roleName = (await element.$(".css-1rd3saf")) ? await element.$eval(".css-1rd3saf", (el) => el.textContent) : "";
-    roleLocation = (await element.$(".e1rrn5ka0")) ? await element.$eval(".e1rrn5ka0", (el) => el.textContent) : "";
+    companyName = (await element.$(".css-l2wjgv"))
+      ? await element.$eval(".css-l2wjgv", (el) => el.textContent)
+      : "";
+    roleName = (await element.$(".css-1rd3saf"))
+      ? await element.$eval(".css-1rd3saf", (el) => el.textContent)
+      : "";
+    roleLocation = (await element.$(".e1rrn5ka0"))
+      ? await element.$eval(".e1rrn5ka0", (el) => el.textContent)
+      : "";
     salaryRange = (await element.$(".css-1xe2xww"))
       ? await element.$eval(".css-1xe2xww", (el) => el.textContent.split("(")[0])
       : "";
-    jobPostingURL = (await element.$(".css-l2wjgv")) ? await element.$eval(".css-l2wjgv", (el) => el.href) : "";
-    companyRating = (await element.$(".css-2lqh28")) ? await element.$eval(".css-2lqh28", (el) => el.textContent) : "";
+    jobPostingURL = (await element.$(".css-l2wjgv"))
+      ? await element.$eval(".css-l2wjgv", (el) => el.href)
+      : "";
+    companyRating = (await element.$(".css-2lqh28"))
+      ? await element.$eval(".css-2lqh28", (el) => el.textContent)
+      : "";
     easyApply = (await element.$(".css-r3emcz"))
       ? await element.$eval(".css-r3emcz", (el) => el.textContent.includes("Easy Apply"))
       : false;
@@ -124,7 +136,10 @@ async function getJobPostPage(page: Page) {
 async function getJobsSearchSize(page: Page) {
   let numJobs;
   const selector = "h1[data-test='jobCount-H1title']";
-  const exists = await page.evaluate((selector) => document.querySelector(selector) !== null, selector);
+  const exists = await page.evaluate(
+    (selector) => document.querySelector(selector) !== null,
+    selector,
+  );
   if (exists) {
     const textContent = await page.evaluate((selector) => {
       return document.querySelector(selector).textContent;
@@ -150,7 +165,10 @@ async function getSearchResults(searchId: string, page: Page, numPages: number) 
         const modalParentSelector = ".modal_main";
         const modalSelector = ".SVGInline.modal_closeIcon";
         try {
-          await Promise.race([page.waitForSelector(modalParentSelector), page.waitForTimeout(5000)]);
+          await Promise.race([
+            page.waitForSelector(modalParentSelector),
+            page.waitForTimeout(5000),
+          ]);
           await page.click(modalSelector);
           await page.waitForTimeout(1000);
         } catch (e) {

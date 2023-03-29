@@ -16,5 +16,5 @@ async function getCompany() {
   console.log("gotCompany");
 
   // Print the whole html content to an html file
-  fs.writeFileSync('./company.html', html);
+  fs.writeFileSync("./company.html", html);
 }

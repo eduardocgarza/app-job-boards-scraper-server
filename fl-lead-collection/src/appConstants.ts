@@ -1,4 +1,3 @@
-
 export const JOB_PLATFORMS = (() => {
   const jobPlatforms = {
     GLASSDOOR: "Glassdoor",
@@ -13,6 +12,6 @@ export const JOB_PLATFORMS = (() => {
 
   return {
     getNames,
-    getHashMap
+    getHashMap,
   };
 })();

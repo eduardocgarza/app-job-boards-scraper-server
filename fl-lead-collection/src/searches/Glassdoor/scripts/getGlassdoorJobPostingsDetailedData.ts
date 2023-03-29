@@ -11,13 +11,19 @@ function getCompanyUsername(companyUrl: string) {
 
 async function getJobDescriptionText(page: Page) {
   const jobDescriptionElement = await page.$("#JobDescriptionContainer .desc");
-  const jobDescription = await page.evaluate((element) => element.textContent, jobDescriptionElement);
+  const jobDescription = await page.evaluate(
+    (element) => element.textContent,
+    jobDescriptionElement,
+  );
   return jobDescription.trim();
 }
 
 async function getCompanyData(page: Page) {
   const companyProfileURLElement = await page.$("a[data-test='employerLogo]");
-  const companyProfileURL = await page.evaluate((element) => element.href, companyProfileURLElement);
+  const companyProfileURL = await page.evaluate(
+    (element) => element.href,
+    companyProfileURLElement,
+  );
   const companyUsername = getCompanyUsername(companyProfileURL);
   const locationElement = await page.$("[data-test='location']");
   const hqLocation = await page.evaluate((element) => element.textContent.trim(), locationElement);
@@ -31,7 +37,7 @@ async function updateJobPostingRecord(jobPostingId: string, jobDescriptionText: 
       SET job_description = $1, verified = true
       WHERE posting_id = $2
     `,
-    [jobDescriptionText, jobPostingId]
+    [jobDescriptionText, jobPostingId],
   );
 }
 
@@ -39,7 +45,7 @@ async function updateCompanyRecord(
   companyId: string,
   companyProfileURL: string,
   companyUsername: string,
-  hqLocation: string
+  hqLocation: string,
 ) {
   const query = `
     UPDATE companies 
@@ -64,7 +70,11 @@ export default async function getGlassdoorJobPostingsDetailedData(searchId: stri
   const { page, closeBrowser } = await PuppBrowser();
   for (const jobPosting of jobPostings) {
     console.log("jobPosting: ", jobPosting);
-    const { company_id: companyId, posting_id: jobPostingId, posting_url: jobPostingURL } = jobPosting;
+    const {
+      company_id: companyId,
+      posting_id: jobPostingId,
+      posting_url: jobPostingURL,
+    } = jobPosting;
     await page.goto(jobPostingURL, { waitUntil: "networkidle0" });
     await getSinglePostingDetails(companyId, jobPostingId, page);
   }

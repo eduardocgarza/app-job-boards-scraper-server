@@ -1,6 +1,6 @@
 export const GLASSDOOR_JOBS_EASY_APPLY = {
   EASY: 1,
-  REGULAR: 0
+  REGULAR: 0,
 };
 
 // Units in days
@@ -8,7 +8,7 @@ export const GLASSDOOR_JOBS_DATE_POSTED = {
   THREE: 3,
   SEVEN: 7,
   FOURTEEN: 14,
-  THIRTY: 30
+  THIRTY: 30,
 };
 
 // Units in miles
@@ -18,32 +18,30 @@ export const GLASSDOOR_JOBS_DISTANCE = {
   FIFTEETH: 15,
   TWENTYFIVE: 25,
   FIFTY: 50,
-  HUNDRED: 100
+  HUNDRED: 100,
 };
 
 // Units are generic numbers
 export const GLASSDOOR_JOBS_COMPANY_SIZES = [
   {
     name: "1-200 employees",
-    value: 1
+    value: 1,
   },
   {
     name: "201-500 employees",
-    value: 2
+    value: 2,
   },
   {
     name: "1001-5000 employees",
-    value: 3
+    value: 3,
   },
   {
     name: "5001+ employees",
-    value: 4
+    value: 4,
   },
 ];
 
-export const COMPANY_SIZES = [
-
-];
+export const COMPANY_SIZES = [];
 
 export const SEARCH_ROLES = [
   "frontend software engineer",

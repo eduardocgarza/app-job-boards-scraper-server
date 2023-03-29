@@ -1,4 +1,4 @@
-import puppeteer, { Browser, Page } from "puppeteer";
+import puppeteer, { Browser } from "puppeteer";
 
 export default async function PuppBrowser() {
   let browser: Browser;
