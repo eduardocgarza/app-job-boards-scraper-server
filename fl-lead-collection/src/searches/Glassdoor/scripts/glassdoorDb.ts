@@ -1,11 +1,11 @@
-import { pool } from "../../../db/dbConfig";
+import { pool } from "../../../database/databaseConfiguration";
 import {
   createCompanyRecords,
   createJobPostingRecords,
   createSearchCompanyRecord,
   createSearchPostingRecord,
   getUniqueCompaniesByName,
-} from "../../../db/test/dbTestPopulate";
+} from "../../../database/testDatabase/testPopulateDatabase";
 
 export async function glassdoorDBGetJobPostings(searchId: string) {
   const client = await pool.connect();

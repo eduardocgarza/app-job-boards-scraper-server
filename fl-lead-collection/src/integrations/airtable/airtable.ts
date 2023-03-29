@@ -1,37 +1,37 @@
 import dotenv from "dotenv";
 dotenv.config();
 import axios from "axios";
-import { pool } from "../../db/dbConfig";
+import { pool } from "../../database/databaseConfiguration";
 const { AIRTABLE_TOKEN, AIRTABLE_FL_BASE_ID } = process.env;
 
 const BASE_URL = "https://api.airtable.com/v0";
 
 /**
  * Airtable Workflow
- * 
+ *
  * 1. Get Job Postings + Companies, Round 1
  * 2. Store them as Jobs Table -- To select the relevant jobs
- * 
+ *
  * 3. Use the CLIENT to go to the next step
  * 4. The Bad Leads and Duplicates and removed
  * 5. Decision-makers are collected using Snovio/Apollo API
  * 6. Store them as a Decision-Makers Table -- To select relevant people
- * 
+ *
  * 4. Use the CLIENT to go to the next step
  * 5. The Bad Leads are removed
  * 5. Decision-makers kept are data-enriched
  * 6. Personalized sequences are created for each contact
  * 7. Segment the leads into different campaigns based on Lead Type/Rank
  * 8. Store them as a final Table -- To qualify leads
- * 
+ *
  * 9. Use CLIENT to have leads ready for download as a CSV/XLS,
  *  or to import directly to the outbound system or Hubspot (API).
  * 10. Leads are "Qualified" and ready for manual/automated outreach
- * 
+ *
  * 11. TODO -- Find an analytics tracking software that can connect
  *  to Instantly or see if Instantly can create analytics views
  *  based on some "Column ID"
- * 
+ *
  */
 
 // const baseId = "YOUR_BASE_ID";
@@ -44,27 +44,27 @@ export async function addJobPostingsToAirtable(tableName, tableDescription, jobP
     {
       name: "Posting ID",
       description: "",
-      type: "singleLineText"
+      type: "singleLineText",
     },
     {
       name: "Role Name",
       description: "",
-      type: "singleLineText"
+      type: "singleLineText",
     },
     {
       name: "Role Location",
       description: "",
-      type: "singleLineText"
+      type: "singleLineText",
     },
     {
       name: "Salary Range",
       description: "",
-      type: "singleLineText"
+      type: "singleLineText",
     },
     {
       name: "Job Posting URL",
       description: "",
-      type: "url"
+      type: "url",
     },
     {
       name: "Date Posted",
@@ -73,14 +73,14 @@ export async function addJobPostingsToAirtable(tableName, tableDescription, jobP
       options: {
         dateFormat: {
           format: "M/D/YYYY",
-          name: "us"
-        }
-      }
+          name: "us",
+        },
+      },
     },
     {
       name: "Company ID",
       description: "",
-      type: "singleLineText"
+      type: "singleLineText",
     },
   ];
 
@@ -121,7 +121,7 @@ export async function addRecordsToTable(jobPostings) {
   const jobPostingLists = createJobPostingLists(jobPostings);
   for (const list of jobPostingLists) {
     console.log("-- Loop");
-    const jobPostingRecords = list.map(v => ({
+    const jobPostingRecords = list.map((v) => ({
       fields: {
         "Posting ID": String(v.postingId),
         "Role Name": v.roleName,
@@ -131,7 +131,7 @@ export async function addRecordsToTable(jobPostings) {
         // "Date Posted": v.datePosted,
         "Date Posted": "05-01-2021",
         "Company ID": String(v.companyId),
-      }
+      },
     }));
 
     const payload = { records: jobPostingRecords };
@@ -151,9 +151,17 @@ export async function addRecordsToTable(jobPostings) {
 export async function getJobPostings(tableName, tableDescription) {
   const client = await pool.connect();
 
-  let { rows } = await client.query(`SELECT * FROM job_postings`);
-  const jobPostings = rows.map(rowItem => {
-    const { posting_id, role_name, role_location, salary_range, posting_url, date_posted, company_id } = rowItem;
+  const { rows } = await client.query("SELECT * FROM job_postings");
+  const jobPostings = rows.map((rowItem) => {
+    const {
+      posting_id,
+      role_name,
+      role_location,
+      salary_range,
+      posting_url,
+      date_posted,
+      company_id,
+    } = rowItem;
     return {
       postingId: posting_id,
       roleName: role_name,
@@ -169,24 +177,19 @@ export async function getJobPostings(tableName, tableDescription) {
   return jobPostings;
 }
 
-async function createVerificationCompaniesTable() {
-
-}
+async function createVerificationCompaniesTable() {}
 
 export async function createVerificationTable(tableName, tableDescription) {
   await getJobPostings(tableName, tableDescription);
   await createVerificationCompaniesTable();
 }
 
-
 const url = `${BASE_URL}/meta/bases`;
 const config = {
   headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
 };
 
-async function createTable(tableName) {
-
-}
+async function createTable(tableName) {}
 
 const WORKSPACE_ID = "wspoKQFIFYFeH5eD1";
 
@@ -199,7 +202,7 @@ async function createBase(baseName) {
       description: "Optional Table Description",
       // FieldConfig[]
       fields: [],
-    }
+    },
   ];
 
   const body = {
@@ -209,7 +212,6 @@ async function createBase(baseName) {
   };
   const response = await axios.post(url, body, config);
   console.log("Response: ", response);
-
 }
 
 (async function Main() {
@@ -220,22 +222,12 @@ async function createBase(baseName) {
   try {
     // var bases = await axios.get(endpointUrl, config);
     // console.log(bases.data);
-
     // var schemas = await axios.get(`https://api.airtable.com/v0/meta/bases/${baseId}/tables`, config)
     // console.log(JSON.stringify(schemas.data))
-
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error);
   }
-
 });
-
-
-
-
-
-
 
 export async function fetchAirtableRecords() {
   let offset = null;
@@ -243,7 +235,7 @@ export async function fetchAirtableRecords() {
 
   // https://api.airtable.com/v0/{baseId}/{tableIdOrName}
   const tableId = "tblDbkfsbmdMVUALa";
-  var fetchRecordsURL = `${BASE_URL}/${AIRTABLE_FL_BASE_ID}/${tableId}`;
+  let fetchRecordsURL = `${BASE_URL}/${AIRTABLE_FL_BASE_ID}/${tableId}`;
 
   do {
     if (offset) fetchRecordsURL += `?offset=${offset}`;
@@ -259,20 +251,3 @@ export async function fetchAirtableRecords() {
 
   return records;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

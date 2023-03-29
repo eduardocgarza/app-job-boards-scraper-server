@@ -1,7 +1,6 @@
-import { ISearchObject } from "@/controllers/search/executeSearches";
 import { glassdoorDBGetJobPostings } from "./glassdoorDb";
 import { Page } from "puppeteer";
-import { pool } from "@/db/dbConfig";
+import { pool } from "@/database/dbConfig";
 import PuppBrowser from "@/helpers/PuppBrowser";
 
 function getCompanyUsername(companyUrl: string) {
@@ -59,9 +58,8 @@ async function getSinglePostingDetails(companyId: string, jobPostingId: string, 
   await updateCompanyRecord(companyId, companyProfileURL, companyUsername, hqLocation);
 }
 
-export default async function getGlassdoorJobPostingsDetailedData(searchObject: ISearchObject) {
+export default async function getGlassdoorJobPostingsDetailedData(searchId: string) {
   console.log("Starting @getGlassdoorJobPostingsDetailedData()");
-  const { searchId } = searchObject;
   const jobPostings = await glassdoorDBGetJobPostings(searchId);
   const { page, closeBrowser } = await PuppBrowser();
   for (const jobPosting of jobPostings) {
