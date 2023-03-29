@@ -18,7 +18,7 @@ function createRandomSearches(numSearches) {
     campaignDescription: `Search for campaign ${i + 1}`,
     locationName: `Location ${i + 1}`,
     roles: SEARCH_ROLES,
-    platforms: JOB_PLATFORMS
+    platforms: JOB_PLATFORMS.getNames()
   }));
 }
 
@@ -56,7 +56,7 @@ function getUniqueCompanies(postings, key) {
   }, []);
 }
 
-function getUniqueCompaniesByName(postings) {
+export function getUniqueCompaniesByName(postings) {
   return getUniqueCompanies(postings, 'companyName');
 }
 
@@ -64,14 +64,15 @@ function getUniqueCompaniesById(postings) {
   return getUniqueCompanies(postings, 'companyId')
 }
 
-async function insertCompanyRecords(allCompanies) {
+async function insertCompanyRecords(allCompaniesStringList) {
   const query = `
     INSERT INTO ${DB_TABLE_NAMES.companiesTable} (company_name)
     SELECT unnest($1::text[]) AS company_name
-    ON CONFLICT (company_name) DO UPDATE SET company_name = EXCLUDED.company_name
+    ON CONFLICT (company_name) 
+    DO UPDATE SET company_name = EXCLUDED.company_name
     RETURNING *
   `;
-  const { rows } = await pool.query(query, [allCompanies]);
+  const { rows } = await pool.query(query, [allCompaniesStringList]);
   return rows.map(company => ({
     companyId: company.company_id,
     companyName: company.company_name
@@ -91,14 +92,14 @@ async function createSearchRecords() {
   return await insertSearchRecords(searches)
 }
 
-async function createCompanyRecords(jobPostings) {
+export async function createCompanyRecords(jobPostings) {
   const uniqueCompanies = getUniqueCompaniesByName(jobPostings);
-  const allCompanies = uniqueCompanies.map(company => company.companyName);
-  const companyRecords = await insertCompanyRecords(allCompanies);
+  const allCompaniesStringList = uniqueCompanies.map(company => company.companyName);
+  const companyRecords = await insertCompanyRecords(allCompaniesStringList);
   return createCompanyMap(companyRecords);
 }
 
-async function createJobPostingRecords(jobPostings, companiesHashMap) {
+export async function createJobPostingRecords(jobPostings, companiesHashMap) {
   try {
     const values = jobPostings.map(posting => [
       posting.roleName,
@@ -121,6 +122,13 @@ async function createJobPostingRecords(jobPostings, companiesHashMap) {
         glassdoor_posting_id
       )
       VALUES ${values.map((_, i) => `($${7 * i + 1}, $${7 * i + 2}, $${7 * i + 3}, $${7 * i + 4}, $${7 * i + 5}, $${7 * i + 6}, $${7 * i + 7})`).join(",")}
+      ON CONFLICT (glassdoor_posting_id)
+      DO UPDATE SET
+        role_location = excluded.role_location,
+        salary_range = excluded.salary_range,
+        posting_url = excluded.posting_url,
+        date_posted = excluded.date_posted,
+        glassdoor_posting_id = excluded.glassdoor_posting_id
       RETURNING *
     `;
     const { rows } = await pool.query(query, values.flat());
@@ -132,23 +140,44 @@ async function createJobPostingRecords(jobPostings, companiesHashMap) {
   }
 }
 
-async function createSearchPostingRecord(searchId, jobPostings) {
-  const searchPostingsValues = jobPostings.map(posting => [posting.postingId, searchId]);
+export async function createSearchPostingRecord(searchId, jobPostings) {
+  console.log("** Inside: createSearchPostingRecord: searchId: ", searchId)
+
+  const searchPostingsValues = jobPostings.map(posting => 
+    [posting.postingId, searchId]
+  );
   const insertSearchPostingsQuery = `
-    INSERT INTO ${DB_TABLE_NAMES.searchJobPostingsTable} (posting_id, search_id)
+    INSERT INTO ${DB_TABLE_NAMES.searchJobPostingsTable} 
+      (posting_id, search_id)
     VALUES ${searchPostingsValues.map((_, i) => `($${2 * i + 1}, $${2 * i + 2})`).join(",")}
+    ON CONFLICT (posting_id, search_id)
+    DO UPDATE SET
+      posting_id = excluded.posting_id,
+      search_id = excluded.search_id
   `;
   await pool.query(insertSearchPostingsQuery, searchPostingsValues.flat());
 }
 
-async function createSearchCompanyRecord(searchId, jobPostings) {
+export async function createSearchCompanyRecord(searchId, jobPostings) {
   const searchCompanies = getUniqueCompaniesById(jobPostings)
+  // console.log("@@@ searchCompanies: ", searchCompanies)
+
+
+  
+  
   const searchCompaniesValues = searchCompanies.map(company => [company.companyId, searchId]);
   const insertSearchCompaniesQuery = `
     INSERT INTO ${DB_TABLE_NAMES.searchCompaniesTable} (company_id, search_id)
     VALUES ${searchCompaniesValues.map((_, i) => `($${2 * i + 1}, $${2 * i + 2})`).join(",")}
+    ON CONFLICT 
+      (company_id, search_id)
+    DO UPDATE SET
+      company_id = excluded.company_id,
+      search_id = excluded.search_id
   `;
+  
   await pool.query(insertSearchCompaniesQuery, searchCompaniesValues.flat());
+  console.log("Succeeded ??? ")
 }
 
 export async function populateDatabase(jobPostings) {

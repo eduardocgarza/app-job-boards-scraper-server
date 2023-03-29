@@ -62,6 +62,7 @@ export default async function getGlassdoorJobPostingsDetailedData(searchObject) 
   const jobPostings = await glassdoorDBGetJobPostings(searchId)
   const { page, closeBrowser } = await PuppBrowser()
   for (const jobPosting of jobPostings) {
+    console.log("jobPosting: ", jobPosting)
     const {
       company_id: companyId,
       posting_id: jobPostingId,

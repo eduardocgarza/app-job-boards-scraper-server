@@ -27,7 +27,13 @@ export async function createSearchRecord(searchObject) {
       VALUES ($1, $2, $3, $4, $5) 
       RETURNING *
     `;
-    const values = [campaignName, campaignDescription, locationName, roles, platforms];
+    const values = [
+      campaignName, 
+      campaignDescription, 
+      locationName, 
+      roles, 
+      platforms
+    ];
     const {rows: [searchItem]} = await client.query(query, values);
     return {
       searchId: searchItem.search_id,

@@ -1,4 +1,5 @@
 import { pool } from "../../../db/dbConfig.js";
+import { createCompanyRecords, createJobPostingRecords, createSearchCompanyRecord, createSearchPostingRecord, getUniqueCompaniesByName } from "../../../db/test/dbTestPopulate.js";
 
 export async function glassdoorDBGetJobPostings(searchId) {
   const client = await pool.connect();
@@ -17,46 +18,76 @@ export async function glassdoorDBGetJobPostings(searchId) {
   }
 }
 
-
-export async function glassdoorDBInsertJobPostings(searchId, jobPostings) {
-  console.log("Starting @insertData()")
+export async function insertPostingsData(searchId, jobPostings) {
+  // orderId: 13 {
+  //   companyName: 'British Columbia Utilities Commission',
+  //   roleName: 'Webmaster - Communications/Information Technology',
+  //   roleLocation: 'Vancouver',
+  //   salaryRange: 'CA$69K - CA$114K ',
+  //   jobPostingURL: 'https://www.glassdoor.com/partner/jobListing.htm?pos=201&ao=1136043&s=58&guid=000001872c0966d089e20739690b5ad9&src=GD_JOB_AD&t=SR&vt=w&ea=1&cs=1_c82b3169&cb=1680071026576&jobListingId=1008526008144&jrtk=3-0-1gsm0ipnjg2oi801-1gsm0ipo7pke2800-7591e8ccdefbd9b5-',
+  //   glassdoorJobPostingId: '1008526008144',
+  //   companyRating: '4.6',
+  //   easyApply: true,
+  //   datePosted: '15d'
+  // }
+  
   const client = await pool.connect();
-  try {
+  // 1. Get unique companies
+  // 2. Store unique companies and return their company_id's
+  // { [companyName]: companyId] }
+  // 3. Associate the company_id's with the job postings
+  try{
     await client.query("BEGIN");
-    for (const jobPosting of jobPostings) {
-      const { companyName, ...postingData } = jobPosting;
-      let { rows } = await client.query(
-        `
-          INSERT INTO companies (company_name, search_id)
-          VALUES ($1, $2)
-          ON CONFLICT (company_name, search_id) DO UPDATE SET company_name = EXCLUDED.company_name
-          RETURNING company_id
-        `,
-        [companyName, searchId]
-      );
-      const companyId = rows[0].company_id;
-      await client.query(
-        `
-          INSERT INTO job_postings (role_name, role_location, salary_range, posting_url, date_posted, company_id, search_id)
-          VALUES ($1, $2, $3, $4, $5, $6, $7)
-        `,
-        [
-          postingData.roleName,
-          postingData.roleLocation,
-          postingData.salaryRange,
-          postingData.jobPostingURL,
-          postingData.datePosted,
-          companyId,
-          searchId,
-        ]
-      );
-    }
-    console.log("Completed @insertData()")
+    console.log(">> Started: @createCompanyRecords")
+    // Returns a hashmap of { [companyName]: companyId] }
+    const companiesHashMap = await createCompanyRecords(jobPostings);  
+    
+    // 4. Store the job postings
+    console.log(">> Started: @createJobPostingRecords")
+    const updatedPostings = await createJobPostingRecords(jobPostings, companiesHashMap)
+    console.log(">> Completed: @createJobPostingRecords")
+
+
+
+
+
+    
+    // 5. Associate the job postings with the search_id
+    console.log("--Started: $createSearchPostingRecord: ", searchId)
+    await createSearchPostingRecord(searchId, updatedPostings)
+    console.log("--Finished: $createSearchPostingRecord")
+
+
+    
+    
+    
+    
+    
+    
+    
+
+    // 6. Associate the job postings with the company_id
+    console.log("--Started: $createSearchCompanyRecord")
+    await createSearchCompanyRecord(searchId, updatedPostings)
+    console.log("--Finished: $createSearchCompanyRecord")
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
     await client.query("COMMIT");
   }
   catch (e) {
     await client.query("ROLLBACK");
-    console.log("-- ERROR in GLASSDOOR @insertData() --", error)
+    console.log("-- ERROR in GLASSDOOR @insertData() --", e)
     throw e;
   }
   finally {
