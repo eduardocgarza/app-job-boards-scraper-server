@@ -1,6 +1,7 @@
 import Joi from "joi";
 import { createSearchRecord } from "../../db/testTables";
-import { executeSearches } from "./executeSearches";
+import { ISearchObject, executeSearches } from "./executeSearches";
+import { Request, Response } from "express";
 
 const searchSchema = Joi.object({
   campaignName: Joi.string().required(),
@@ -10,18 +11,31 @@ const searchSchema = Joi.object({
   platforms: Joi.array().items(Joi.string()).required(),
 });
 
-function createSearchObject(reqBody) {
+function createSearchObject(body: ISearchRouteBody): ISearchObject {
   return {
-    searchId: reqBody.searchId,
-    campaignName: reqBody.campaignName,
-    campaignDescription: reqBody.campaignDescription,
-    locationName: reqBody.locationName,
-    roles: reqBody.roles,
-    platforms: reqBody.platforms,
+    searchId: body.searchId,
+    campaignName: body.campaignName,
+    campaignDescription: body.campaignDescription,
+    locationName: body.locationName,
+    roles: body.roles,
+    platforms: body.platforms,
   };
 }
 
-export default async function searchRouteHandler(req, res) {
+interface ISearchRouteBody {
+  searchId: string;
+  campaignName: string;
+  campaignDescription: string;
+  locationName: string;
+  roles: string[];
+  platforms: string[];
+}
+
+interface ISearchRoute extends Request {
+  body: ISearchRouteBody;
+}
+
+export default async function searchRouteHandler(req: ISearchRoute, res: Response) {
   const { error } = searchSchema.validate(req.body);
   if (error) {
     return res.status(400).json({ error: error.details[0].message });
@@ -33,8 +47,8 @@ export default async function searchRouteHandler(req, res) {
   await executeSearches(updatedSearchObject);
   console.log("Search complete");
   return;
-  await createRawDataAirtables(searchId);
+  // await createRawDataAirtables(searchId);
 
   // Update progress table
-  // --- 
+  // ---
 }

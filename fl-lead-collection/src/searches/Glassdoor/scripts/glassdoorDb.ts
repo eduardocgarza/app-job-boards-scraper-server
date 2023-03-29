@@ -1,7 +1,13 @@
 import { pool } from "../../../db/dbConfig";
-import { createCompanyRecords, createJobPostingRecords, createSearchCompanyRecord, createSearchPostingRecord, getUniqueCompaniesByName } from "../../../db/test/dbTestPopulate";
+import {
+  createCompanyRecords,
+  createJobPostingRecords,
+  createSearchCompanyRecord,
+  createSearchPostingRecord,
+  getUniqueCompaniesByName,
+} from "../../../db/test/dbTestPopulate";
 
-export async function glassdoorDBGetJobPostings(searchId) {
+export async function glassdoorDBGetJobPostings(searchId: string) {
   const client = await pool.connect();
   try {
     const query = `
@@ -12,13 +18,12 @@ export async function glassdoorDBGetJobPostings(searchId) {
     `;
     const { rows } = await client.query(query, [searchId]);
     return rows;
-  }
-  finally {
+  } finally {
     client.release();
   }
 }
 
-export async function insertPostingsData(searchId, jobPostings) {
+export async function insertPostingsData(searchId: string, jobPostings) {
   // orderId: 13 {
   //   companyName: 'British Columbia Utilities Commission',
   //   roleName: 'Webmaster - Communications/Information Technology',
@@ -47,50 +52,22 @@ export async function insertPostingsData(searchId, jobPostings) {
     const updatedPostings = await createJobPostingRecords(jobPostings, companiesHashMap);
     console.log(">> Completed: @createJobPostingRecords");
 
-
-
-
-
-
     // 5. Associate the job postings with the search_id
     console.log("--Started: $createSearchPostingRecord: ", searchId);
     await createSearchPostingRecord(searchId, updatedPostings);
     console.log("--Finished: $createSearchPostingRecord");
-
-
-
-
-
-
-
-
-
 
     // 6. Associate the job postings with the company_id
     console.log("--Started: $createSearchCompanyRecord");
     await createSearchCompanyRecord(searchId, updatedPostings);
     console.log("--Finished: $createSearchCompanyRecord");
 
-
-
-
-
-
-
-
-
-
-
-
-
     await client.query("COMMIT");
-  }
-  catch (e) {
+  } catch (e) {
     await client.query("ROLLBACK");
     console.log("-- ERROR in GLASSDOOR @insertData() --", e);
     throw e;
-  }
-  finally {
+  } finally {
     client.release();
     console.log("Successful Write.");
   }

@@ -7,7 +7,16 @@ import execZipRecruiterSearch from "../../searches/ZipRecruiter/zipRecruiterSear
 
 const jobPlatforms = JOB_PLATFORMS.getHashMap();
 
-export async function executeSearches(searchObject) {
+export interface ISearchObject {
+  searchId: string;
+  campaignName: string;
+  campaignDescription: string;
+  locationName: string;
+  roles: string[];
+  platforms: string[];
+}
+
+export async function executeSearches(searchObject: ISearchObject) {
   const { platforms } = searchObject;
   if (platforms.includes(jobPlatforms.GLASSDOOR)) {
     await executeGlassdoorSearch(searchObject);

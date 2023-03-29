@@ -1,18 +1,18 @@
 function getMillis(unit) {
   switch (unit) {
-    case 's':
+    case "s":
       return 1000;
-    case 'm':
+    case "m":
       return 60000;
-    case 'h':
+    case "h":
       return 3600000;
-    case 'd':
+    case "d":
       return 86400000;
-    case 'w':
+    case "w":
       return 604800000;
-    case 'mo':
+    case "mo":
       return 2592000000;
-    case 'y':
+    case "y":
       return 31536000000;
     default:
       return 0;

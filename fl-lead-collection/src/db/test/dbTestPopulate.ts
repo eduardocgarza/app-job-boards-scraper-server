@@ -6,8 +6,7 @@ import { createSearchRecord } from "../testTables";
 
 function convertToCamelCase(obj) {
   return Object.keys(obj).reduce(
-    (acc, key) =>
-      Object.assign(acc, { [key.replace(/_([a-z])/g, g => g[1].toUpperCase())]: obj[key] }),
+    (acc, key) => Object.assign(acc, { [key.replace(/_([a-z])/g, (g) => g[1].toUpperCase())]: obj[key] }),
     {}
   );
 }
@@ -18,22 +17,19 @@ function createRandomSearches(numSearches) {
     campaignDescription: `Search for campaign ${i + 1}`,
     locationName: `Location ${i + 1}`,
     roles: SEARCH_ROLES,
-    platforms: JOB_PLATFORMS.getNames()
+    platforms: JOB_PLATFORMS.getNames(),
   }));
 }
 
 async function insertSearchRecords(searches) {
-  return await Promise.all(
-    searches.map(search => createSearchRecord(search))
-  );
+  return await Promise.all(searches.map((search) => createSearchRecord(search)));
 }
 
 function groupPostingsByCompany(jobPostings) {
   return jobPostings.reduce((acc, posting) => {
     if (acc[posting.companyName]) {
       acc[posting.companyName].push(posting);
-    }
-    else {
+    } else {
       acc[posting.companyName] = [posting];
     }
     return acc;
@@ -57,11 +53,11 @@ function getUniqueCompanies(postings, key) {
 }
 
 export function getUniqueCompaniesByName(postings) {
-  return getUniqueCompanies(postings, 'companyName');
+  return getUniqueCompanies(postings, "companyName");
 }
 
 function getUniqueCompaniesById(postings) {
-  return getUniqueCompanies(postings, 'companyId');
+  return getUniqueCompanies(postings, "companyId");
 }
 
 async function insertCompanyRecords(allCompaniesStringList) {
@@ -73,15 +69,15 @@ async function insertCompanyRecords(allCompaniesStringList) {
     RETURNING *
   `;
   const { rows } = await pool.query(query, [allCompaniesStringList]);
-  return rows.map(company => ({
+  return rows.map((company) => ({
     companyId: company.company_id,
-    companyName: company.company_name
+    companyName: company.company_name,
   }));
 }
 
 function createCompanyMap(companies) {
   const companyMap = {};
-  companies.forEach(company => {
+  companies.forEach((company) => {
     companyMap[company.companyName] = company.companyId;
   });
   return companyMap;
@@ -94,21 +90,21 @@ async function createSearchRecords() {
 
 export async function createCompanyRecords(jobPostings) {
   const uniqueCompanies = getUniqueCompaniesByName(jobPostings);
-  const allCompaniesStringList = uniqueCompanies.map(company => company.companyName);
+  const allCompaniesStringList = uniqueCompanies.map((company) => company.companyName);
   const companyRecords = await insertCompanyRecords(allCompaniesStringList);
   return createCompanyMap(companyRecords);
 }
 
 export async function createJobPostingRecords(jobPostings, companiesHashMap) {
   try {
-    const values = jobPostings.map(posting => [
+    const values = jobPostings.map((posting) => [
       posting.roleName,
       posting.roleLocation,
       posting.salaryRange,
       posting.jobPostingURL,
       posting.datePosted,
       companiesHashMap[posting.companyName],
-      posting.glassdoorJobPostingId
+      posting.glassdoorJobPostingId,
     ]);
     const query = `
       INSERT INTO ${DB_TABLE_NAMES.jobPostingsTable} 
@@ -121,7 +117,12 @@ export async function createJobPostingRecords(jobPostings, companiesHashMap) {
         company_id, 
         glassdoor_posting_id
       )
-      VALUES ${values.map((_, i) => `($${7 * i + 1}, $${7 * i + 2}, $${7 * i + 3}, $${7 * i + 4}, $${7 * i + 5}, $${7 * i + 6}, $${7 * i + 7})`).join(",")}
+      VALUES ${values
+        .map(
+          (_, i) =>
+            `($${7 * i + 1}, $${7 * i + 2}, $${7 * i + 3}, $${7 * i + 4}, $${7 * i + 5}, $${7 * i + 6}, $${7 * i + 7})`
+        )
+        .join(",")}
       ON CONFLICT (glassdoor_posting_id)
       DO UPDATE SET
         role_location = excluded.role_location,
@@ -133,19 +134,16 @@ export async function createJobPostingRecords(jobPostings, companiesHashMap) {
     `;
     const { rows } = await pool.query(query, values.flat());
     return rows.map(convertToCamelCase);
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Error creating job posting records: ", error);
     throw error;
   }
 }
 
-export async function createSearchPostingRecord(searchId, jobPostings) {
+export async function createSearchPostingRecord(searchId: string, jobPostings) {
   console.log("** Inside: createSearchPostingRecord: searchId: ", searchId);
 
-  const searchPostingsValues = jobPostings.map(posting =>
-    [posting.postingId, searchId]
-  );
+  const searchPostingsValues = jobPostings.map((posting) => [posting.postingId, searchId]);
   const insertSearchPostingsQuery = `
     INSERT INTO ${DB_TABLE_NAMES.searchJobPostingsTable} 
       (posting_id, search_id)
@@ -158,14 +156,11 @@ export async function createSearchPostingRecord(searchId, jobPostings) {
   await pool.query(insertSearchPostingsQuery, searchPostingsValues.flat());
 }
 
-export async function createSearchCompanyRecord(searchId, jobPostings) {
+export async function createSearchCompanyRecord(searchId: string, jobPostings) {
   const searchCompanies = getUniqueCompaniesById(jobPostings);
   // console.log("@@@ searchCompanies: ", searchCompanies)
 
-
-
-
-  const searchCompaniesValues = searchCompanies.map(company => [company.companyId, searchId]);
+  const searchCompaniesValues = searchCompanies.map((company) => [company.companyId, searchId]);
   const insertSearchCompaniesQuery = `
     INSERT INTO ${DB_TABLE_NAMES.searchCompaniesTable} (company_id, search_id)
     VALUES ${searchCompaniesValues.map((_, i) => `($${2 * i + 1}, $${2 * i + 2})`).join(",")}
@@ -192,8 +187,7 @@ export async function populateDatabase(jobPostings) {
       await createSearchCompanyRecord(searchId, searchPostings);
     }
     console.log("Database populated successfully.");
-  }
-  catch (e) {
+  } catch (e) {
     console.error("Error populating database:", e);
     throw e;
   }

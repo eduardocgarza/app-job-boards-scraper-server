@@ -46,7 +46,7 @@ export async function createSearchRecord(searchObject) {
     };
   }
   catch (e) {
-    console.error('Error creating search record:', e);
+    console.error("Error creating search record:", e);
     throw e;
   }
   finally {
@@ -146,10 +146,10 @@ export async function resetTables() {
     await dropTables();
     await createTables();
     await populateDatabase(jobPostings);
-    console.log('Tables reset successfully');
+    console.log("Tables reset successfully");
   }
   catch (e) {
-    console.error('Error resetting tables:', e);
+    console.error("Error resetting tables:", e);
     throw e;
   }
 }

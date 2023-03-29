@@ -1,17 +1,17 @@
-import puppeteer from "puppeteer";
+import puppeteer, { Browser, Page } from "puppeteer";
 
 export default async function PuppBrowser() {
-  var browser, page;
+  let browser: Browser;
   async function launchBrowser() {
     browser = await puppeteer.launch({
       headless: false,
       defaultViewport: null,
     });
-    page = await browser.newPage();
+    return await browser.newPage();
   }
   async function closeBrowser() {
     await browser.close();
   }
-  await launchBrowser();
+  const page = await launchBrowser();
   return { closeBrowser, page };
 }
