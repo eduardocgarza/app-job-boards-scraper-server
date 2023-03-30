@@ -10,6 +10,8 @@ export const getLocationsRoute = "/locations";
 
 // Routes - Search Router
 export const executeSearchRoute = "/";
+export const executePeoplePopulateRoute = "/populate";
+export const executeLeadsPreparationRoute = "/prepare";
 
 // Routes - Test Router
 export const resetDatabaseRoute = "/reset-database";
