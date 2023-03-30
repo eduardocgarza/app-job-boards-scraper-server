@@ -1,15 +1,11 @@
 import { pool } from "../databaseConfiguration";
 import { DB_TABLE_NAMES } from "../dbConstants";
 
-export default async function insertCompanies(companies: string[]) {
+async function insertCompanies(companies: string[]) {
   const query = `
     INSERT INTO ${DB_TABLE_NAMES.companiesTable} 
       (company_name)
     SELECT unnest($1::text[]) AS company_name
-    ON CONFLICT 
-      (company_name) 
-    DO UPDATE 
-      SET company_name = EXCLUDED.company_name
     RETURNING *
   `;
   const { rows } = await pool.query(query, [companies]);
@@ -18,4 +14,13 @@ export default async function insertCompanies(companies: string[]) {
     companyName: company.company_name,
     verified: company.verified,
   }));
+}
+
+export async function insertCompaniesFromNames(companyNames: string[]) {
+  return await insertCompanies(companyNames);
+}
+
+export async function insertCompaniesFromTeams(teams: string[]) {
+  const rawCompanies = teams.map((_) => "");
+  return await insertCompanies(rawCompanies);
 }

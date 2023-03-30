@@ -4,21 +4,9 @@ import execIndeedSearch from "@/searches/Indeed/indeedSearch";
 import execLinkedinSearch from "@/searches/Linkedin/linkedinSearch";
 import execMonsterSearch from "@/searches/Monster/monsterSearch";
 import execZipRecruiterSearch from "@/searches/ZipRecruiter/zipRecruiterSearch";
+import { ISearchObject } from "@/types/appInterfaces";
 
 const jobPlatforms = JOB_PLATFORMS.getHashMap();
-
-export interface IRawSearchObject {
-  campaignName: string;
-  campaignDescription: string;
-  locationName: string;
-  roles: string[];
-  platforms: string[];
-}
-
-export interface ISearchObject extends IRawSearchObject {
-  searchId: string;
-  createdAt: string;
-}
 
 export async function executeSearches(searchObject: ISearchObject) {
   const { platforms } = searchObject;

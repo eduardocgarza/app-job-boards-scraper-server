@@ -1,3 +1,6 @@
+export const GLASSDOOR_MAX_JOB_PAGES = 30;
+export const GLASSDOOR_POSTS_PER_PAGE = 30;
+
 export const GLASSDOOR_JOBS_EASY_APPLY = {
   EASY: 1,
   REGULAR: 0,

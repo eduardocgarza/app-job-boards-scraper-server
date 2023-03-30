@@ -1,5 +1,5 @@
-import { ISearchObject } from "@/controllers/search/executeSearches";
+import { ISearchObject } from "@/types/appInterfaces";
 
 export default async function execLinkedinSearch(searchObject: ISearchObject) {
-  console.log("Inside - @execLinkedinSearch: ", locationName);
+  console.log("Inside - @execLinkedinSearch: ", searchObject);
 }

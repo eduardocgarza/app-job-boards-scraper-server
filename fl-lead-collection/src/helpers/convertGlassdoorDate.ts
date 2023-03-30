@@ -1,4 +1,4 @@
-function getMillis(unit) {
+function getMillis(unit: string) {
   switch (unit) {
     case "s":
       return 1000;
@@ -19,7 +19,7 @@ function getMillis(unit) {
   }
 }
 
-export function convertGlassdoorDate(originalDate) {
+export function convertGlassdoorDate(originalDate: string) {
   const time = originalDate.match(/(\d+)\s*([a-z]+)/i);
   let datePosted = originalDate;
   if (time) {

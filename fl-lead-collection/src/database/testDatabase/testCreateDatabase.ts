@@ -5,6 +5,7 @@ import {
   createCompaniesTableQuery,
   createJobPostingsTableQuery,
   createSearchesTableQuery,
+  createTeamsTableQuery,
   searchCompaniesTableQuery,
   searchPostingsTableQuery,
 } from "./queries/createTablesQueries";
@@ -14,16 +15,19 @@ import {
   deleteSearchCompaniesQuery,
   deleteSearchPostingsQuery,
   deleteSearchesQuery,
+  deleteTeamsQuery,
   dropCompaniesQuery,
   dropJobPostingsQuery,
   dropSearchCompaniesQuery,
   dropSearchPostingsQuery,
   dropSearchesQuery,
+  dropTeamsQuery,
 } from "./queries/dropTablesQueries";
 
 async function createTables() {
   await pool.query(createSearchesTableQuery);
   await pool.query(createCompaniesTableQuery);
+  await pool.query(createTeamsTableQuery);
   await pool.query(createJobPostingsTableQuery);
   await pool.query(searchPostingsTableQuery);
   await pool.query(searchCompaniesTableQuery);
@@ -32,6 +36,7 @@ async function createTables() {
 async function dropTables() {
   await pool.query(dropSearchCompaniesQuery);
   await pool.query(dropSearchPostingsQuery);
+  await pool.query(dropTeamsQuery);
   await pool.query(dropJobPostingsQuery);
   await pool.query(dropCompaniesQuery);
   await pool.query(dropSearchesQuery);
@@ -42,6 +47,7 @@ export async function clearTables() {
   await pool.query(deleteSearchPostingsQuery);
   await pool.query(deleteJobPostingsQuery);
   await pool.query(deleteCompaniesQuery);
+  await pool.query(deleteTeamsQuery);
   await pool.query(deleteSearchesQuery);
 }
 

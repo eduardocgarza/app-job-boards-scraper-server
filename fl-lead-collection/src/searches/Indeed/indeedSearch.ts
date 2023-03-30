@@ -1,3 +1,5 @@
-import { ISearchObject } from "@/controllers/search/executeSearches";
+import { ISearchObject } from "@/types/appInterfaces";
 
-export default async function execIndeedSearch(searchObject: ISearchObject) {}
+export default async function execIndeedSearch(searchObject: ISearchObject) {
+  console.log(`Inside - @execIndeedSearch: ${searchObject}`);
+}

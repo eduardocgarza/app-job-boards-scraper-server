@@ -2,6 +2,7 @@ import { DB_TABLE_NAMES } from "../../dbConstants";
 const {
   searchCompaniesTable,
   searchJobPostingsTable,
+  teamsTable,
   jobPostingsTable,
   companiesTable,
   searchesTable,
@@ -22,11 +23,20 @@ export const createSearchesTableQuery = `
 export const createCompaniesTableQuery = `
   CREATE TABLE IF NOT EXISTS ${companiesTable} (
     company_id SERIAL PRIMARY KEY,
-    company_name TEXT UNIQUE NOT NULL,
+    company_name TEXT,
     company_username TEXT UNIQUE,
     company_profile_url TEXT,
     headquarters_location TEXT,
     verified BOOLEAN DEFAULT FALSE
+  );
+`;
+
+export const createTeamsTableQuery = `
+  CREATE TABLE IF NOT EXISTS ${teamsTable} (
+    team_id SERIAL PRIMARY KEY,
+    team_name TEXT UNIQUE NOT NULL,
+    company_id INTEGER REFERENCES ${companiesTable} 
+      (company_id)
   );
 `;
 
@@ -41,8 +51,10 @@ export const createJobPostingsTableQuery = `
     date_posted TEXT,
     verified BOOLEAN DEFAULT FALSE,
     job_description TEXT DEFAULT '',
-    company_id INTEGER REFERENCES ${jobPostingsTable}
-      (company_id)
+    company_id INTEGER
+      REFERENCES ${companiesTable} (company_id),
+    team_id INTEGER
+      references ${teamsTable} (team_id)    
   );
 `;
 

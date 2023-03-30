@@ -1,4 +1,4 @@
-import { IRawSearchObject, ISearchObject } from "@/controllers/search/executeSearches";
+import { IRawSearchObject, ISearchObject } from "@/types/appInterfaces";
 import { pool } from "../databaseConfiguration";
 import { DB_TABLE_NAMES } from "../dbConstants";
 

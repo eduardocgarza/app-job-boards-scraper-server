@@ -1,10 +1,10 @@
 import { ISearchObject } from "@/types/appInterfaces";
-import getCompanyProfiles from "./getCompanyProfiles";
 import getGlassdoorPostingsDetailedData from "./glassdoorPostingsDetailed/getGlassdoorPostingsDetailedData";
+import getGlassdoorJobPostingsSearchList from "./glassdoorPostingsSearch/getGlassdoorJobPostingsList";
 
-export default async function getGlassdoorCompanyDetailedData(
+export default async function getGlassdoorPostingsSearchData(
   searchObject: ISearchObject,
 ) {
-  await getCompanyProfiles(searchObject);
+  await getGlassdoorJobPostingsSearchList(searchObject);
   await getGlassdoorPostingsDetailedData(searchObject.searchId);
 }

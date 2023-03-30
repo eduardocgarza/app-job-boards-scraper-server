@@ -7,6 +7,7 @@ import { createAirtableRoute, getJobPostingsRoute, resetDatabaseRoute } from "..
 const testRouter = express.Router();
 
 testRouter.get(resetDatabaseRoute, resetDatabaseHandler);
+// TODO
 testRouter.post(getJobPostingsRoute, getJobPostingsHandler);
 testRouter.get(createAirtableRoute, createAirtableHandler);
 

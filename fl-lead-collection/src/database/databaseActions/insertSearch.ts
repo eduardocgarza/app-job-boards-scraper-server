@@ -1,14 +1,17 @@
-import { IRawSearchObject, ISearchObject } from "@/controllers/search/executeSearches";
+import { IRawSearchObject, ISearchObject } from "@/types/appInterfaces";
 import { pool } from "../databaseConfiguration";
 import { DB_TABLE_NAMES } from "../dbConstants";
 
-export default async function insertSearch(searchObject: IRawSearchObject): Promise<ISearchObject> {
+export default async function insertSearch(
+  searchObject: IRawSearchObject,
+): Promise<ISearchObject> {
   const client = await pool.connect();
   try {
-    const { campaignName, campaignDescription, locationName, roles, platforms } = searchObject;
+    const { campaignName, campaignDescription, locationName, roles, platforms } =
+      searchObject;
     const query = `
-    INSERT INTO ${DB_TABLE_NAMES.searchesTable} (
-      campaign_name, campaign_description, location_name, roles, platforms) 
+      INSERT INTO ${DB_TABLE_NAMES.searchesTable} 
+        (campaign_name, campaign_description, location_name, roles, platforms) 
       VALUES ($1, $2, $3, $4, $5) 
       RETURNING *
     `;

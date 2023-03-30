@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es5",                          
-    "module": "commonjs",                    
-    "lib": ["es2021"],                     
+    "target": "es2015",
+    "module": "commonjs",
+    "lib": ["es2021", "DOM"],
     "allowJs": true,
-    "outDir": "./build",                          
+    "outDir": "./build",
     "rootDir": "./src",
-    "strict": true,         
+    "strict": true,
     "noImplicitAny": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,

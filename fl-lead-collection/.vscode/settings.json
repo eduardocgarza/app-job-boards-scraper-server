@@ -31,5 +31,8 @@
   },
   "[sql]": {
     "editor.defaultFormatter": "mtxr.sqltools"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }

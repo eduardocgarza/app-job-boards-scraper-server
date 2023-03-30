@@ -7,7 +7,7 @@ function createValuesMap(values: TValuesMap) {
   return values.map((_, i) => `($${2 * i + 1}, $${2 * i + 2})`).join(",");
 }
 
-export default async function testPopulateSearchCompanyRecords(
+export default async function populateSearchCompanyRecords(
   searchId: string,
   companyIds: string[],
 ) {

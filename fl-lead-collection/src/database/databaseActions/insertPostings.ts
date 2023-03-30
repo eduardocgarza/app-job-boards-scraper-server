@@ -9,6 +9,7 @@ function convertToCamelCase(obj: any): IJobPosting {
     jobPostingURL: obj.posting_url,
     glassdoorJobPostingId: obj.glassdoor_posting_id,
     companyId: obj.company_id,
+    teamId: obj.team_id,
     roleName: obj.role_name,
     roleLocation: obj.role_location,
     salaryRange: obj.salary_range,
@@ -24,9 +25,9 @@ function createValuesMap(values: TPostingsValues) {
   return values
     .map(
       (_, i) =>
-        `($${7 * i + 1}, $${7 * i + 2}, $${7 * i + 3}, $${7 * i + 4}, $${7 * i + 5}, $${
-          7 * i + 6
-        }, $${7 * i + 7})`,
+        `($${8 * i + 1}, $${8 * i + 2}, $${8 * i + 3}, $${8 * i + 4}, $${8 * i + 5}, $${
+          8 * i + 6
+        }, $${8 * i + 7}, $${8 * i + 8})`,
     )
     .join(",");
 }
@@ -39,6 +40,7 @@ export default async function insertPostings(postings: IPreStoreJobPosting[]) {
     posting.jobPostingURL,
     posting.datePosted,
     posting.companyId,
+    posting.teamId,
     posting.glassdoorJobPostingId,
   ]);
   const query = `
@@ -49,17 +51,21 @@ export default async function insertPostings(postings: IPreStoreJobPosting[]) {
       salary_range, 
       posting_url, 
       date_posted, 
-      company_id, 
+      company_id,
+      team_id,
       glassdoor_posting_id
     )
     VALUES ${createValuesMap(values)}
     ON CONFLICT 
       (glassdoor_posting_id)
     DO UPDATE SET
+      role_name = excluded.role_name,
       role_location = excluded.role_location,
       salary_range = excluded.salary_range,
       posting_url = excluded.posting_url,
       date_posted = excluded.date_posted,
+      company_id = excluded.company_id,
+      team_id = excluded.team_id,
       glassdoor_posting_id = excluded.glassdoor_posting_id
     RETURNING *
   `;

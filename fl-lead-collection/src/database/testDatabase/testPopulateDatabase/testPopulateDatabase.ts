@@ -1,9 +1,11 @@
+import { IJobPosting, IRawJobPosting } from "@/types/appInterfaces";
 import testPopulateSearches from "./testPopulateSearches";
-import testPopulateCompanies from "./testPopulateCompanies";
-import testPopulateJobPostings from "./testPopulateJobPostings";
-import testPopulateSearchCompanyRecords from "./testPopulateSearchCompanyRecords";
+import populateCompanies from "./populateCompanies";
+import populateJobPostings from "./populateJobPostings";
+import populateSearchCompanyRecords from "./populateSearchCompanyRecords";
 import testPopulateSearchPostingRecords from "./testPopulateSearchPostingRecords";
-import { ICompany, ICompanyHashMap, IJobPosting, IRawJobPosting } from "@/types/appInterfaces";
+import populateTeams from "./populateTeams";
+import createTeamsHashMap from "@/database/helpers/createTeamsHashMap";
 
 const TEST_SEARCHES = 10;
 const TEST_NUM_SEARCH_POSTS = 15;
@@ -13,15 +15,7 @@ function getRandomPostings(postings: IJobPosting[], size: number) {
   return shuffled.slice(0, size);
 }
 
-function createCompaniesMap(uniqueCompanies: ICompany[]): ICompanyHashMap {
-  const hashMap: ICompanyHashMap = {};
-  for (const company of uniqueCompanies) {
-    hashMap[company.companyName] = company;
-  }
-  return hashMap;
-}
-
-function getUniqueCompanyIds(jobPostings: IJobPosting[]) {
+export function getUniqueCompanyIds(jobPostings: IJobPosting[]) {
   const companyIds: string[] = [];
   jobPostings.forEach((posting) => {
     if (!companyIds.includes(posting.companyId)) {
@@ -31,7 +25,17 @@ function getUniqueCompanyIds(jobPostings: IJobPosting[]) {
   return companyIds;
 }
 
-function getUniquePostingIds(jobPostings: IJobPosting[]) {
+export function getUniqueTeamNames(jobPostings: IRawJobPosting[]): string[] {
+  const uniqueCompanyNames: string[] = [];
+  jobPostings.forEach((company) => {
+    if (!uniqueCompanyNames.includes(company.teamName)) {
+      uniqueCompanyNames.push(company.teamName);
+    }
+  });
+  return uniqueCompanyNames;
+}
+
+export function getUniquePostingIds(jobPostings: IJobPosting[]) {
   return jobPostings.map((v) => v.postingId);
 }
 
@@ -39,18 +43,17 @@ export default async function populateDatabase(rawPostings: IRawJobPosting[]) {
   const numPosts = TEST_NUM_SEARCH_POSTS;
   try {
     const searchRecords = await testPopulateSearches(TEST_SEARCHES);
-    const companies = await testPopulateCompanies(rawPostings);
-    const companiesMap = createCompaniesMap(companies);
-    const jobPostings = await testPopulateJobPostings(companiesMap, rawPostings);
-
+    const companies = await populateCompanies(rawPostings);
+    const teams = await populateTeams(rawPostings, companies);
+    const teamsMap = createTeamsHashMap(teams);
+    const jobPostings = await populateJobPostings(teamsMap, rawPostings);
     for (const { searchId } of searchRecords) {
       const searchPostings = getRandomPostings(jobPostings, numPosts);
       const uniqueCompanyIds = getUniqueCompanyIds(searchPostings);
       const uniquePostingIds = getUniquePostingIds(searchPostings);
-      await testPopulateSearchCompanyRecords(searchId, uniqueCompanyIds);
+      await populateSearchCompanyRecords(searchId, uniqueCompanyIds);
       await testPopulateSearchPostingRecords(searchId, uniquePostingIds);
     }
-    console.log("Database populated successfully.");
     return searchRecords;
   } catch (e) {
     console.error("Error populating database:", e);
