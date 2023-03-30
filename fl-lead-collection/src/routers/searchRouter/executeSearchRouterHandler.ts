@@ -3,6 +3,7 @@ import { IRawSearchObject, ISearchRoute, ISearchRouteBody } from "@/types/appInt
 import { searchSchema } from "./searchValidation";
 import { Response } from "express";
 import { executeSearches } from "./executeSearches";
+import createSearchAirtables from "@/integrations/airtable/actions/createSearchAirtables/createSearchAirtables";
 
 function createSearchObject(body: ISearchRouteBody): IRawSearchObject {
   return {
@@ -24,11 +25,7 @@ export default async function executeSearchRouterHandler(
   }
   const rawSearchObject = createSearchObject(req.body);
   const searchObject = await insertSearch(rawSearchObject);
-
   res.status(201).json(searchObject);
   await executeSearches(searchObject);
-  return;
-  // await createRawDataAirtables(searchId);
-  // Update progress table
-  // ---
+  await createSearchAirtables(searchObject.searchId);
 }

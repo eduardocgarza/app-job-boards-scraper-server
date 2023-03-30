@@ -1,26 +1,9 @@
-import { IJobPosting, IPreStoreJobPosting } from "@/types/appInterfaces";
+import { IPreStoreJobPosting } from "@/types/appInterfaces";
 import { DB_TABLE_NAMES } from "../dbConstants";
 import { pool } from "../databaseConfiguration";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function convertToCamelCase(obj: any): IJobPosting {
-  return {
-    postingId: obj.posting_id,
-    jobPostingURL: obj.posting_url,
-    glassdoorJobPostingId: obj.glassdoor_posting_id,
-    companyId: obj.company_id,
-    teamId: obj.team_id,
-    roleName: obj.role_name,
-    roleLocation: obj.role_location,
-    salaryRange: obj.salary_range,
-    datePosted: obj.date_posted,
-    verified: obj.verified,
-    jobDescription: obj.job_description,
-  };
-}
+import postingsToCamelCase from "../databaseDataConverters/postingsToCamelCase";
 
 type TPostingsValues = Array<string | number>[];
-
 function createValuesMap(values: TPostingsValues) {
   return values
     .map(
@@ -70,6 +53,5 @@ export default async function insertPostings(postings: IPreStoreJobPosting[]) {
     RETURNING *
   `;
   const { rows } = await pool.query(query, values.flat());
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return rows.map(convertToCamelCase);
+  return rows.map(postingsToCamelCase);
 }

@@ -1,5 +1,6 @@
-import { pool } from "../databaseConfiguration";
 import { DB_TABLE_NAMES } from "../dbConstants";
+import { pool } from "../databaseConfiguration";
+import companiesToCamelCase from "../databaseDataConverters/companiesToCamelCase";
 
 async function insertCompanies(companies: string[]) {
   const query = `
@@ -9,11 +10,7 @@ async function insertCompanies(companies: string[]) {
     RETURNING *
   `;
   const { rows } = await pool.query(query, [companies]);
-  return rows.map((company) => ({
-    companyId: company.company_id,
-    companyName: company.company_name,
-    verified: company.verified,
-  }));
+  return rows.map(companiesToCamelCase);
 }
 
 export async function insertCompaniesFromNames(companyNames: string[]) {

@@ -16,7 +16,15 @@ export const createSearchesTableQuery = `
     location_name VARCHAR(255),
     roles TEXT[],
     platforms TEXT[],
-    created_at TIMESTAMP DEFAULT NOW()
+    created_at TIMESTAMP DEFAULT NOW(),
+    search_companies_airtable_id TEXT,  
+    search_companies_airtable_primary_field_id TEXT,
+    search_postings_airtable_id TEXT,
+    search_postings_airtable_primary_field_id TEXT,
+    people_airtable_id TEXT,
+    people_airtable_primary_field_id TEXT,
+    leads_airtable_id TEXT,
+    leads_airtable_primary_field_id TEXT
   );
 `;
 
