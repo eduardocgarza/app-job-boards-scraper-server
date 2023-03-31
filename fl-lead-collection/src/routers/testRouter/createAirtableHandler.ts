@@ -1,26 +1,19 @@
+import createSearchAirtables from "@/integrations/airtable/actions/createSearchAirtables/createSearchAirtables";
+import { ISearchAirtableIds } from "@/integrations/airtable/config/airtableInterfaces";
 import { Request, Response } from "express";
 
+const { AIRTABLE_FL_BASE_ID } = process.env;
+
+function convertAirtableIdsToURL(airtableIds: ISearchAirtableIds) {
+  const { companiesAirtableId, postingsAirtableId } = airtableIds;
+  const { airtableId: companyAirtalbeId } = companiesAirtableId;
+  const { airtableId: postingAirtableId } = postingsAirtableId;
+  const companyAirtableURL = `https://airtable.com/${AIRTABLE_FL_BASE_ID}/${companyAirtalbeId}`;
+  const postingAirtableURL = `https://airtable.com/${AIRTABLE_FL_BASE_ID}/${postingAirtableId}`;
+  return { companyAirtableURL, postingAirtableURL };
+}
+
 export default async function createAirtableHandler(req: Request, res: Response) {
-  const tableName = "Test Table on API";
-  const tableDescription =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget aliquam tincidunt, nisl nisl aliquam nisl, nec aliquam nisl nisl sit amet nisl.";
-
-  /** @Test 1 -- Create table */
-  // await createVerificationTable(tableName, tableDescription)
-
-  /**
-   * @Test 2-- Add records to table
-   */
-  // const jobPostings = await getJobPostings()
-  // await addRecordsToTable(jobPostings)
-
-  /** @Test 3 -- Get Airtable records */
-  // const records = await fetchAirtableRecords()
-  // const records = await fetchAirtableRecords();
-  // const records = [1];
-  // console.log("records", records);
-  // console.log("---");
-  // console.log("records[0]", records[0]);
-
-  return res.send("Added Job Postings to Airtable");
+  const airtableIds = await createSearchAirtables("10");
+  return res.send(convertAirtableIdsToURL(airtableIds));
 }

@@ -53,9 +53,9 @@ export default async function getSearchPostings(
     JOIN ${DB_TABLE_NAMES.searchJobPostingsTable} AS sjp
       ON jp.posting_id = sjp.posting_id
     WHERE 
-      sjp.search_id = $1 AND 
-      jp.verified=true;
-  `;
+      sjp.search_id = $1;
+      `;
+  // jp.verified=true;
   const jobPostingsResult = await client.query(jobPostingsQuery, [searchId]);
   return formatPostings(jobPostingsResult.rows);
 }

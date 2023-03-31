@@ -15,8 +15,8 @@ import getSnovioDataHandler from "./getSnovioDataHandler";
 const testRouter = express.Router();
 
 testRouter.get(resetDatabaseRoute, resetDatabaseHandler);
-testRouter.post(getJobPostingsRoute, getJobPostingsHandler);
 testRouter.get(createAirtableRoute, createAirtableHandler);
+testRouter.post(getJobPostingsRoute, getJobPostingsHandler);
 testRouter.post(getApolloDataRoute, getApolloDataHandler);
 testRouter.post(getSnovioDataRoute, getSnovioDataHandler);
 

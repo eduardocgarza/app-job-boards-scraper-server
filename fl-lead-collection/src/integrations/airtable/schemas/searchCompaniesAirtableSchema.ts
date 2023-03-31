@@ -28,11 +28,17 @@ export const companiesFieldNames = {
     name: "No. Teams",
     description: "The number of teams from the company",
     type: "number",
+    options: {
+      precision: 0,
+    },
   },
   numPostings: {
     name: "No. Job Postings",
     description: "The number of job postings from the company",
     type: "number",
+    options: {
+      precision: 0,
+    },
   },
   latestPostingDate: {
     name: "Latest Job Posting Date",

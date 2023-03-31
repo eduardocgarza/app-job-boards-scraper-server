@@ -12,6 +12,7 @@ import {
   IAirtableIds,
   IPreStoreSearchPostingAirtable,
 } from "../../../config/airtableInterfaces";
+import convertToAirtableDate from "@/integrations/airtable/helpers/convertToAirtableDate";
 
 function createJobPostingLists(postings: IPreStoreSearchPostingAirtable[]) {
   const lists = [];
@@ -26,6 +27,36 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function clean(obj: any) {
+  return obj ? String(obj) : "";
+}
+
+function convertToAirtableFormat(list: IPreStoreSearchPostingAirtable[]) {
+  return list.map((v) => ({
+    fields: {
+      [postingsFieldNames.jobPostingID.name]: clean(v.jobPostingId),
+      [postingsFieldNames.glassdoorJobPostingID.name]: clean(v.glassdoorJobPostingId),
+      [postingsFieldNames.roleName.name]: clean(v.roleName),
+      [postingsFieldNames.roleLocation.name]: clean(v.roleLocation),
+      [postingsFieldNames.salaryRange.name]: clean(v.salaryRange),
+      [postingsFieldNames.jobPostingURL.name]: clean(v.jobPostingURL),
+      [postingsFieldNames.datePosted.name]: convertToAirtableDate(clean(v.datePosted)),
+      [postingsFieldNames.teamID.name]: clean(v.teamId),
+      [companiesFieldNames.companyId.name]: clean(v.companyId),
+      [companiesFieldNames.companyName.name]: clean(v.companyName),
+      [companiesFieldNames.companyUsername.name]: clean(v.companyUsername),
+      [companiesFieldNames.companyProfileURL.name]: clean(v.companyProfileURL),
+      [companiesFieldNames.headquartersLocation.name]: clean(v.headquartersLocation),
+      [companiesFieldNames.numTeams.name]: Number(v.numTeams),
+      [companiesFieldNames.numPostings.name]: Number(v.numPostings),
+      [companiesFieldNames.latestPostingDate.name]: convertToAirtableDate(
+        clean(v.latestPostingDate),
+      ),
+    },
+  }));
+}
+
 export default async function addRecordsSearchPostingsTable(
   airtableIds: IAirtableIds,
   postings: IPreStoreSearchPostingAirtable[],
@@ -34,26 +65,7 @@ export default async function addRecordsSearchPostingsTable(
   const addRecordsURL = `${AIRTABLE_API.baseURL}/${AIRTABLE_BASE_ID}/${airtableId}`;
   const jobPostingLists = createJobPostingLists(postings);
   for (const list of jobPostingLists) {
-    const jobPostingRecords = list.map((v) => ({
-      fields: {
-        [postingsFieldNames.jobPostingID.name]: v.jobPostingId,
-        [postingsFieldNames.glassdoorJobPostingID.name]: v.glassdoorJobPostingId,
-        [postingsFieldNames.roleName.name]: v.roleName,
-        [postingsFieldNames.roleLocation.name]: v.roleLocation,
-        [postingsFieldNames.salaryRange.name]: v.salaryRange,
-        [postingsFieldNames.jobPostingURL.name]: v.jobPostingURL,
-        [postingsFieldNames.datePosted.name]: v.datePosted,
-        [postingsFieldNames.teamID.name]: v.teamId,
-        [companiesFieldNames.companyId.name]: v.companyId,
-        [companiesFieldNames.companyName.name]: v.companyName,
-        [companiesFieldNames.companyUsername.name]: v.companyUsername,
-        [companiesFieldNames.companyProfileURL.name]: v.companyProfileURL,
-        [companiesFieldNames.headquartersLocation.name]: v.headquartersLocation,
-        [companiesFieldNames.numTeams.name]: v.numTeams,
-        [companiesFieldNames.numPostings.name]: v.numPostings,
-        [companiesFieldNames.latestPostingDate.name]: v.latestPostingDate,
-      },
-    }));
+    const jobPostingRecords = convertToAirtableFormat(list);
     const payload = { records: jobPostingRecords };
     const options = {
       headers: {

@@ -34,4 +34,5 @@ export default async function createSearchAirtables(searchId: string) {
   );
   const airtableIds = { companiesAirtableId, postingsAirtableId };
   await updateSearchAirtableIds(searchId, airtableIds);
+  return airtableIds;
 }
