@@ -7,8 +7,8 @@ export default async function executeGlassdoorSearch(searchObject: ISearchObject
   console.log("Starting @getGlassdoorPostingsSearchData");
   await getGlassdoorPostingsSearchData(searchObject);
   console.log("Completed @getGlassdoorPostingsSearchData");
-
   return;
+  // Future Implementation
   console.log("Starting @getGlassdoorCompaniesSearchData");
   await getGlassdoorCompaniesSearchData(searchObject);
   console.log("Completed @getGlassdoorCompaniesSearchData");

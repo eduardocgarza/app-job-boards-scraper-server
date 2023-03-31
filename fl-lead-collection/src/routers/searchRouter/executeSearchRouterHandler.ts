@@ -26,6 +26,12 @@ export default async function executeSearchRouterHandler(
   const rawSearchObject = createSearchObject(req.body);
   const searchObject = await insertSearch(rawSearchObject);
   res.status(201).json(searchObject);
+
+  console.log("Starting ... executeSearches");
   await executeSearches(searchObject);
+  console.log("Completed ... executeSearches");
+
+  console.log("Starting ... createSearchAirtables");
   await createSearchAirtables(searchObject.searchId);
+  console.log("Completed ... createSearchAirtables");
 }
