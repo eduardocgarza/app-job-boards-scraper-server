@@ -1,11 +1,11 @@
 import insertSearch from "@/database/databaseActions/insertSearch";
-import { IRawSearchObject, ISearchRoute, ISearchRouteBody } from "@/types/appInterfaces";
+import { IRawSearchObject, ISearchRoute } from "@/types/appInterfaces";
 import { searchSchema } from "./searchValidation";
 import { Response } from "express";
 import { executeSearches } from "./executeSearches";
 import createSearchAirtables from "@/integrations/airtable/actions/createSearchAirtables/createSearchAirtables";
 
-function createSearchObject(body: ISearchRouteBody): IRawSearchObject {
+function createSearchObject(body: IRawSearchObject): IRawSearchObject {
   return {
     campaignName: body.campaignName,
     campaignDescription: body.campaignDescription,

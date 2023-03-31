@@ -17,3 +17,5 @@ export const executeLeadsPreparationRoute = "/prepare";
 export const resetDatabaseRoute = "/reset-database";
 export const getJobPostingsRoute = "/postings";
 export const createAirtableRoute = "/airtable";
+export const getApolloDataRoute = "/apollo";
+export const getSnovioDataRoute = "/snovio";

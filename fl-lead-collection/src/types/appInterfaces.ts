@@ -56,8 +56,7 @@ export interface ICompany {
 }
 
 // Search Router
-export interface ISearchRouteBody {
-  searchId: string;
+export interface IRawSearchObject {
   campaignName: string;
   campaignDescription: string;
   locationName: string;
@@ -66,7 +65,7 @@ export interface ISearchRouteBody {
 }
 
 export interface ISearchRoute extends Request {
-  body: ISearchRouteBody;
+  body: IRawSearchObject;
 }
 
 export interface IRawTeam {
@@ -78,14 +77,6 @@ export interface ITeam {
   teamId: string;
   teamName: string;
   companyId: string;
-}
-
-export interface IRawSearchObject {
-  campaignName: string;
-  campaignDescription: string;
-  locationName: string;
-  roles: string[];
-  platforms: string[];
 }
 
 export interface ISearchObject extends IRawSearchObject {

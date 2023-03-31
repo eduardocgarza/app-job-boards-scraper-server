@@ -19,6 +19,7 @@ export async function createAirtableBase(workspaceId: string, baseOptions: IBase
   };
   const config = {
     headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
+    "Content-Type": "application/json",
   };
   try {
     const response = await axios.post(endpointUrl, apiBody, config);
