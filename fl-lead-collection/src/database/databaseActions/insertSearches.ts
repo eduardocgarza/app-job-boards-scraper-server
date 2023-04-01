@@ -1,6 +1,7 @@
 import { IRawSearchObject, ISearchObject } from "@/types/appInterfaces";
 import { pool } from "../databaseConfiguration";
-import { DB_TABLE_NAMES } from "../dbConstants";
+import { searchesTable } from "../dbConstants";
+import { DB_SEARCH_STATUSES_HASHMAP } from "@/appConstants";
 
 export default async function insertSearches(
   searchObjects: IRawSearchObject[],
@@ -17,9 +18,9 @@ export default async function insertSearches(
       ],
     );
     const query = `
-    INSERT INTO ${DB_TABLE_NAMES.searchesTable} (
-      campaign_name, campaign_description, location_name, roles, platforms) 
-      VALUES ($1, $2, $3, $4, $5) 
+    INSERT INTO ${searchesTable} (
+      campaign_name, campaign_description, location_name, roles, platforms, search_status_id) 
+      VALUES ($1, $2, $3, $4, $5, $6) 
       RETURNING *
     `;
     const results = await Promise.all(values.map((v) => client.query(query, v)));
@@ -31,6 +32,7 @@ export default async function insertSearches(
       roles: searchItem.roles,
       platforms: searchItem.platforms,
       createdAt: searchItem.created_at,
+      searchStatus: DB_SEARCH_STATUSES_HASHMAP[searchItem.search_status_id],
     }));
   } catch (e) {
     console.error("Error creating search records:", e);

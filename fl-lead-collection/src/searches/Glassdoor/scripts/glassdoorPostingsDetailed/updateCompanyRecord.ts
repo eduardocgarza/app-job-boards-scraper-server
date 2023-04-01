@@ -1,12 +1,12 @@
 import { pool } from "@/database/databaseConfiguration";
-import { DB_TABLE_NAMES } from "@/database/dbConstants";
+import { companiesTable } from "@/database/dbConstants";
 import { ICompanyDetailsInput } from "@/types/appInterfaces";
 
 export default async function updateCompanyRecord(companyDetails: ICompanyDetailsInput) {
   const { companyName, companyProfileURL, companyUsername, hqLocation, companyId } =
     companyDetails;
   const query = `
-    UPDATE ${DB_TABLE_NAMES.companiesTable}
+    UPDATE ${companiesTable}
     SET 
       company_name = $1,
       company_profile_url = $2,

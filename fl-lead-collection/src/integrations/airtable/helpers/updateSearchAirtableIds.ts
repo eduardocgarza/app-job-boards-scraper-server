@@ -1,4 +1,4 @@
-import { DB_TABLE_NAMES } from "@/database/dbConstants";
+import { searchesTable } from "@/database/dbConstants";
 import { ISearchAirtableIds } from "../config/airtableInterfaces";
 import { pool } from "@/database/databaseConfiguration";
 
@@ -8,7 +8,7 @@ export default async function updateSearchAirtableIds(
 ) {
   const { companiesAirtableId, postingsAirtableId } = airtableIds;
   const query = `
-    UPDATE ${DB_TABLE_NAMES.searchesTable}
+    UPDATE ${searchesTable}
     SET 
       search_companies_airtable_id = $1,
       search_companies_airtable_primary_field_id = $2,

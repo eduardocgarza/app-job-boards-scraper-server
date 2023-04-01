@@ -1,0 +1,24 @@
+{
+  "data": {
+      "success": true,
+      "data": {
+          "firstName": "Chip",
+          "lastName": "Wilson",
+          "emails": [
+              {
+                  "email": "wilson@amersports.com",
+                  "emailStatus": "valid"
+              }
+          ]
+      },
+      "params": {
+          "firstName": "Chip",
+          "lastName": "Wilson",
+          "domain": "https://www.amersports.com"
+      },
+      "status": {
+          "identifier": "complete",
+          "description": "Emails search is completed"
+      }
+  }
+}

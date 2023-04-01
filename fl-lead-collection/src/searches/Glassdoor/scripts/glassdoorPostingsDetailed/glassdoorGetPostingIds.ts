@@ -1,6 +1,6 @@
 import { pool } from "@/database/databaseConfiguration";
-import { DB_TABLE_NAMES } from "@/database/dbConstants";
 import { IPostingDetailsInput } from "./getGlassdoorPostingsDetailedData";
+import { jobPostingsTable, searchJobPostingsTable } from "@/database/dbConstants";
 
 export default async function glassdoorGetPostingIds(
   searchId: string,
@@ -8,8 +8,8 @@ export default async function glassdoorGetPostingIds(
   const client = await pool.connect();
   const query = `
     SELECT jp.posting_id, jp.posting_url, company_id
-    FROM ${DB_TABLE_NAMES.jobPostingsTable} jp
-    JOIN ${DB_TABLE_NAMES.searchJobPostingsTable} sjp 
+    FROM ${jobPostingsTable} jp
+    JOIN ${searchJobPostingsTable} sjp 
       ON jp.posting_id = sjp.posting_id
     WHERE 
       sjp.search_id = $1 AND 

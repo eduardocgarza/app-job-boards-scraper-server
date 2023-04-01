@@ -1,0 +1,78 @@
+{
+  "success": true,
+  "id": "75a7d365dc77637f81e9be847578ae89810f55c2ddab5bf58c8836c90201db33e5482cfb",
+  "source": "linkedIn",
+  "name": "Chip Wilson",
+  "firstName": "Chip",
+  "lastName": "Wilson",
+  "locality": "Vancouver, British Columbia, Canada",
+  "lastUpdateDate": "2023-01-18 19:39:03",
+  "industry": "Design",
+  "country": "Canada",
+  "social": [
+      {
+          "link": "https://www.linkedin.com/in/chipyvr/",
+          "type": "linkedIn"
+      }
+  ],
+  "currentJobs": [
+      {
+          "companyName": "Hold It All Inc.",
+          "position": "Executive Director",
+          "socialLink": "https://www.linkedin.com/company/10006354",
+          "site": "https://www.holditall.com/about",
+          "locality": "Vancouver, British Columbia, Canada",
+          "state": "BC",
+          "city": "Vancouver",
+          "street": "21 Water Street",
+          "street2": "600",
+          "postal": "V6B 1A1",
+          "founded": "2010",
+          "startDate": "2014-07-31",
+          "endDate": null,
+          "size": "11-50",
+          "industry": "Executive Office",
+          "companyType": "Privately Held",
+          "country": "Canada"
+      },
+      {
+          "companyName": "Facio Therapies",
+          "position": "Board Member",
+          "socialLink": "https://www.linkedin.com/company/5379379",
+          "site": "http://www.facio-therapies.com",
+          "locality": null,
+          "state": null,
+          "city": null,
+          "street": null,
+          "street2": null,
+          "postal": null,
+          "founded": "2014",
+          "startDate": null,
+          "endDate": null,
+          "size": "1-10",
+          "industry": "Pharmaceuticals",
+          "companyType": "Privately Held",
+          "country": null
+      },
+      {
+          "companyName": "Amer Sports Corporation",
+          "position": "Private Investor",
+          "socialLink": "https://www.linkedin.com/company/162409",
+          "site": "https://www.amersports.com",
+          "locality": "Helsinki, Uusimaa, Finland",
+          "state": null,
+          "city": "Helsinki",
+          "street": "Konepajankuja 6",
+          "street2": null,
+          "postal": "00511",
+          "founded": "1950",
+          "startDate": null,
+          "endDate": null,
+          "size": "5001-10000",
+          "industry": "Retail",
+          "companyType": "Privately Held",
+          "country": "Finland"
+      }
+  ],
+  "previousJobs": []
+}

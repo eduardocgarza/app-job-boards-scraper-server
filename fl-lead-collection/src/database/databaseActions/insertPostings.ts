@@ -1,7 +1,7 @@
 import { IPreStoreJobPosting } from "@/types/appInterfaces";
-import { DB_TABLE_NAMES } from "../dbConstants";
 import { pool } from "../databaseConfiguration";
 import postingsToCamelCase from "../databaseDataConverters/postingsToCamelCase";
+import { jobPostingsTable } from "../dbConstants";
 
 type TPostingsValues = Array<string | number>[];
 function createValuesMap(values: TPostingsValues) {
@@ -27,7 +27,7 @@ export default async function insertPostings(postings: IPreStoreJobPosting[]) {
     posting.glassdoorJobPostingId,
   ]);
   const query = `
-    INSERT INTO ${DB_TABLE_NAMES.jobPostingsTable} 
+    INSERT INTO ${jobPostingsTable} 
     (
       role_name, 
       role_location, 

@@ -1,5 +1,5 @@
 import { pool } from "@/database/databaseConfiguration";
-import { DB_TABLE_NAMES } from "@/database/dbConstants";
+import { searchCompaniesTable } from "@/database/dbConstants";
 
 type TValuesMap = Array<string | number>[];
 
@@ -14,7 +14,7 @@ export default async function populateSearchCompanyRecords(
   const values: TValuesMap = companyIds.map((companyId) => [companyId, searchId]);
   const valuesMap = createValuesMap(values);
   const searchCompaniesQuery = `
-    INSERT INTO ${DB_TABLE_NAMES.searchCompaniesTable} 
+    INSERT INTO ${searchCompaniesTable} 
       (company_id, search_id)
     VALUES ${valuesMap}
     ON CONFLICT 

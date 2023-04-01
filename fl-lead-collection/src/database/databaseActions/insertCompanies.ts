@@ -1,10 +1,10 @@
-import { DB_TABLE_NAMES } from "../dbConstants";
 import { pool } from "../databaseConfiguration";
 import companiesToCamelCase from "../databaseDataConverters/companiesToCamelCase";
+import { companiesTable } from "../dbConstants";
 
 async function insertCompanies(companies: string[]) {
   const query = `
-    INSERT INTO ${DB_TABLE_NAMES.companiesTable} 
+    INSERT INTO ${companiesTable} 
       (company_name)
     SELECT unnest($1::text[]) AS company_name
     RETURNING *
@@ -18,6 +18,6 @@ export async function insertCompaniesFromNames(companyNames: string[]) {
 }
 
 export async function insertCompaniesFromTeams(teams: string[]) {
-  const rawCompanies = teams.map((_) => "");
+  const rawCompanies = teams.map(() => "");
   return await insertCompanies(rawCompanies);
 }

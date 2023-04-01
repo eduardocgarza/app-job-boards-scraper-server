@@ -1,6 +1,6 @@
 import { IRawTeam, ITeam } from "@/types/appInterfaces";
 import { pool } from "../databaseConfiguration";
-import { DB_TABLE_NAMES } from "../dbConstants";
+import { teamsTable } from "../dbConstants";
 
 type TTeamsValues = Array<string>[];
 
@@ -23,7 +23,7 @@ export default async function insertTeams(teams: IRawTeam[]) {
     companyId,
   ]);
   const query = `
-    INSERT INTO ${DB_TABLE_NAMES.teamsTable} 
+    INSERT INTO ${teamsTable} 
       (team_name, company_id)
     VALUES ${createValuesMap(values)}
     ON CONFLICT 

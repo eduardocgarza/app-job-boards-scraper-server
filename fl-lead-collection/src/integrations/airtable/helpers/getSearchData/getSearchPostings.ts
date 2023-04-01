@@ -1,6 +1,11 @@
 import { PoolClient } from "pg";
 import { IPreStoreSearchPostingAirtable } from "../../config/airtableInterfaces";
-import { DB_TABLE_NAMES } from "@/database/dbConstants";
+import {
+  companiesTable,
+  jobPostingsTable,
+  searchJobPostingsTable,
+  teamsTable,
+} from "@/database/dbConstants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function formatPostings(postings: any[]) {
@@ -45,12 +50,12 @@ export default async function getSearchPostings(
         (PARTITION BY c.company_id) AS "numTeams",
       MAX(jp.date_posted) OVER 
         (PARTITION BY c.company_id) AS "latestPostingDate"
-    FROM ${DB_TABLE_NAMES.jobPostingsTable} AS jp
-    JOIN ${DB_TABLE_NAMES.companiesTable} AS c
+    FROM ${jobPostingsTable} AS jp
+    JOIN ${companiesTable} AS c
       ON jp.company_id = c.company_id
-    JOIN ${DB_TABLE_NAMES.teamsTable} AS t
+    JOIN ${teamsTable} AS t
       ON jp.team_id = t.team_id
-    JOIN ${DB_TABLE_NAMES.searchJobPostingsTable} AS sjp
+    JOIN ${searchJobPostingsTable} AS sjp
       ON jp.posting_id = sjp.posting_id
     WHERE 
       sjp.search_id = $1 AND

@@ -4,10 +4,10 @@ import testDataJobPostings from "./data/testDataJobPostings";
 import {
   createCompaniesTableQuery,
   createJobPostingsTableQuery,
+  createSearchCompaniesTableQuery,
+  createSearchPostingsTableQuery,
   createSearchesTableQuery,
   createTeamsTableQuery,
-  searchCompaniesTableQuery,
-  searchPostingsTableQuery,
 } from "./queries/createTablesQueries";
 import {
   deleteCompaniesQuery,
@@ -29,8 +29,8 @@ async function createTables() {
   await pool.query(createCompaniesTableQuery);
   await pool.query(createTeamsTableQuery);
   await pool.query(createJobPostingsTableQuery);
-  await pool.query(searchPostingsTableQuery);
-  await pool.query(searchCompaniesTableQuery);
+  await pool.query(createSearchPostingsTableQuery);
+  await pool.query(createSearchCompaniesTableQuery);
 }
 
 async function dropTables() {

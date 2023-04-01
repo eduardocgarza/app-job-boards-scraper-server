@@ -1,1 +1,3 @@
-export default function insertCompany() {}
+export default function insertCompany() {
+  console.log("insertCompany");
+}

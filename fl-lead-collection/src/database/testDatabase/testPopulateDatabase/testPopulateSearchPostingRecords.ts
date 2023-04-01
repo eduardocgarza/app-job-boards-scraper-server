@@ -1,5 +1,5 @@
 import { pool } from "@/database/databaseConfiguration";
-import { DB_TABLE_NAMES } from "@/database/dbConstants";
+import { searchJobPostingsTable } from "@/database/dbConstants";
 
 type TValuesMap = Array<string | number>[];
 
@@ -14,7 +14,7 @@ export default async function testPopulateSearchPostingRecords(
   const values = postingIds.map((postingId) => [postingId, searchId]);
   const valuesMap = createValuesMap(values);
   const searchPostingsQuery = `
-    INSERT INTO ${DB_TABLE_NAMES.searchJobPostingsTable} 
+    INSERT INTO ${searchJobPostingsTable} 
       (posting_id, search_id)
     VALUES ${valuesMap}
     ON CONFLICT 

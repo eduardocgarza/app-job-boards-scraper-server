@@ -1,6 +1,10 @@
 import { PoolClient } from "pg";
 import { IPreStoreSearchCompanyAirtable } from "../../config/airtableInterfaces";
-import { DB_TABLE_NAMES } from "@/database/dbConstants";
+import {
+  companiesTable,
+  jobPostingsTable,
+  searchCompaniesTable,
+} from "@/database/dbConstants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function formatCompanies(companies: any[]) {
@@ -21,8 +25,8 @@ export default async function getSearchCompanies(
 ): Promise<IPreStoreSearchCompanyAirtable[]> {
   const companiesQuery = `
     SELECT c.* 
-    FROM ${DB_TABLE_NAMES.companiesTable} AS c
-    JOIN ${DB_TABLE_NAMES.searchCompaniesTable} AS sc 
+    FROM ${companiesTable} AS c
+    JOIN ${searchCompaniesTable} AS sc 
       ON c.company_id = sc.company_id
     WHERE 
       sc.search_id = $1 AND
@@ -37,7 +41,7 @@ export default async function getSearchCompanies(
       COUNT(DISTINCT posting_id) AS "numPostings",
       COUNT(DISTINCT team_id) AS "numTeams",
       MAX(date_posted) AS "latestPostingDate"
-    FROM ${DB_TABLE_NAMES.jobPostingsTable}
+    FROM ${jobPostingsTable}
     WHERE company_id = ANY($1)
     GROUP BY company_id;
   `;

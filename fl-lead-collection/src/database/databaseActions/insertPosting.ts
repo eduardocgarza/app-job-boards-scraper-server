@@ -1,1 +1,3 @@
-export default function insertPosting() {}
+export default function insertPosting() {
+  console.log("insertPosting");
+}

@@ -81,6 +81,7 @@ export interface ITeam {
 
 export interface ISearchObject extends IRawSearchObject {
   searchId: string;
+  searchStatus: { statusId: number; statusName: string };
   createdAt: string;
 }
 

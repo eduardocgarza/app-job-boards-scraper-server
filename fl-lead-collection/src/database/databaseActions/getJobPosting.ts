@@ -1,6 +1,7 @@
 import { pool } from "../databaseConfiguration";
 
 export default async function getJobPosting(postingId: string) {
+  console.log("postingId:", postingId);
   const client = await pool.connect();
   try {
     return [];

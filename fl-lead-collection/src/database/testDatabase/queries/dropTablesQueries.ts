@@ -1,12 +1,11 @@
-import { DB_TABLE_NAMES } from "../../dbConstants";
-const {
+import {
+  companiesTable,
+  jobPostingsTable,
   searchCompaniesTable,
   searchJobPostingsTable,
-  teamsTable,
-  jobPostingsTable,
-  companiesTable,
   searchesTable,
-} = DB_TABLE_NAMES;
+  teamsTable,
+} from "@/database/dbConstants";
 
 export const dropSearchCompaniesQuery = `
   DROP TABLE IF EXISTS ${searchCompaniesTable} CASCADE;
@@ -33,19 +32,19 @@ export const dropSearchesQuery = `
 `;
 
 export const deleteSearchCompaniesQuery = `
-  DELETE FROM ${DB_TABLE_NAMES.searchCompaniesTable};
+  DELETE FROM ${searchCompaniesTable};
 `;
 
 export const deleteSearchPostingsQuery = `
-  DELETE FROM ${DB_TABLE_NAMES.searchJobPostingsTable};
+  DELETE FROM ${searchJobPostingsTable};
 `;
 
 export const deleteJobPostingsQuery = `
-  DELETE FROM ${DB_TABLE_NAMES.jobPostingsTable};
+  DELETE FROM ${jobPostingsTable};
 `;
 
 export const deleteCompaniesQuery = `
-  DELETE FROM ${DB_TABLE_NAMES.companiesTable};
+  DELETE FROM ${companiesTable};
 `;
 
 export const deleteTeamsQuery = `
@@ -53,5 +52,5 @@ export const deleteTeamsQuery = `
 `;
 
 export const deleteSearchesQuery = `
-  DELETE FROM ${DB_TABLE_NAMES.searchesTable};
+  DELETE FROM ${searchesTable};
 `;
