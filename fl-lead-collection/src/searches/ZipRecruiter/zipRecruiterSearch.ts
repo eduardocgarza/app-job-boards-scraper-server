@@ -1,5 +1,5 @@
-import { ISearchObject } from "@/types/appInterfaces";
+import { IExecuteSearchObject } from "@/types/appInterfaces";
 
-export default async function execZipRecruiterSearch(searchObject: ISearchObject) {
+export default async function execZipRecruiterSearch(searchObject: IExecuteSearchObject) {
   console.log("Inside - @execZipRecruiterSearch: ", searchObject);
 }

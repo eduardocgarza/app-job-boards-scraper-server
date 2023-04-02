@@ -1,9 +1,9 @@
-import { ISearchObject } from "@/types/appInterfaces";
+import { IExecuteSearchObject } from "@/types/appInterfaces";
 import getGlassdoorCompaniesSearchData from "./getGlassdoorCompaniesSearchData";
 import getGlassdoorCompanyDetailedData from "./getGlassdoorCompanyDetailedData";
 import getGlassdoorPostingsSearchData from "./getGlassdoorPostingsSearchData";
 
-export default async function executeGlassdoorSearch(searchObject: ISearchObject) {
+export default async function executeGlassdoorSearch(searchObject: IExecuteSearchObject) {
   console.log("Starting @getGlassdoorPostingsSearchData");
   await getGlassdoorPostingsSearchData(searchObject);
   console.log("Completed @getGlassdoorPostingsSearchData");

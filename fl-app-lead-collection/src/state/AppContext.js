@@ -9,6 +9,8 @@ export function AppContextProvider(props) {
   const [locations, setLocations] = useState([])
   const [roles, setRoles] = useState([])
 
+  console.log("appContext: ", locations, roles )
+
   useEffect(() => {
     async function fetchData() {
       const locationsData = await fetchLocations()

@@ -1,6 +1,7 @@
 import insertSearch from "@/database/databaseActions/insertSearch";
 import { IRawSearchObject, ISearchRoute } from "@/types/appInterfaces";
 import { Response } from "express";
+import { createSearchSchema } from "../validators/searchValidation";
 
 function createSearchObject(body: IRawSearchObject): IRawSearchObject {
   return {
@@ -13,7 +14,10 @@ function createSearchObject(body: IRawSearchObject): IRawSearchObject {
 }
 
 export default async function createSearchHandler(req: ISearchRoute, res: Response) {
-  console.log("createSearchHandler");
+  const { error } = createSearchSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
   const rawSearchObject = createSearchObject(req.body);
   const searchObject = await insertSearch(rawSearchObject);
   return res.status(201).json(searchObject);

@@ -4,11 +4,11 @@ import execIndeedSearch from "@/searches/Indeed/indeedSearch";
 import execLinkedinSearch from "@/searches/Linkedin/linkedinSearch";
 import execMonsterSearch from "@/searches/Monster/monsterSearch";
 import execZipRecruiterSearch from "@/searches/ZipRecruiter/zipRecruiterSearch";
-import { ISearchObject } from "@/types/appInterfaces";
+import { IExecuteSearchObject } from "@/types/appInterfaces";
 
 const jobPlatforms = JOB_PLATFORMS.getHashMap();
 
-export async function executeSearches(searchObject: ISearchObject) {
+export async function executeSearches(searchObject: IExecuteSearchObject) {
   const { platforms } = searchObject;
   if (platforms.includes(jobPlatforms.GLASSDOOR)) {
     await executeGlassdoorSearch(searchObject);

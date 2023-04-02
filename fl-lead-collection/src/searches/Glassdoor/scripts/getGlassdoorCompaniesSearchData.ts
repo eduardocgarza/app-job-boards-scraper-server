@@ -27,19 +27,19 @@
       - Repeat for All Locations, All Roles, removing duplicates along the way and at the end.
 */
 
-import { ISearchObject } from "@/types/appInterfaces";
+import { IExecuteSearchObject } from "@/types/appInterfaces";
 
-async function getGlassdoorCompaniesSearchList(searchObject: ISearchObject) {
+async function getGlassdoorCompaniesSearchList(searchObject: IExecuteSearchObject) {
   return [];
 }
-async function getGlassdoorCompanyProfiles(searchId: string) {
+async function getGlassdoorCompanyProfiles(searchObject: IExecuteSearchObject) {
   return [];
 }
 
 export default async function getGlassdoorCompaniesSearchData(
-  searchObject: ISearchObject,
+  searchObject: IExecuteSearchObject,
 ) {
   const { searchId } = searchObject;
   await getGlassdoorCompaniesSearchList(searchObject);
-  await getGlassdoorCompanyProfiles(searchId);
+  await getGlassdoorCompanyProfiles(searchObject);
 }

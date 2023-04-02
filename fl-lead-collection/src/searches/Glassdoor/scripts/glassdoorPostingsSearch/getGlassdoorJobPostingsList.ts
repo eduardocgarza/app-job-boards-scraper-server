@@ -1,5 +1,5 @@
 import PuppBrowser from "@/helpers/PuppBrowser";
-import { IJobPostingsSearch, ISearchObject } from "@/types/appInterfaces";
+import { IJobPostingsSearch, IExecuteSearchObject } from "@/types/appInterfaces";
 import createJobSearches from "./createJobSearches";
 import getSearchResults from "./getSearchResults";
 import initJobBrowserSearch from "./initBrowserSearch";
@@ -18,7 +18,7 @@ async function execSingleSearch(searchId: string, options: IJobPostingsSearch) {
 }
 
 export default async function getGlassdoorJobPostingsSearchList(
-  searchObject: ISearchObject,
+  searchObject: IExecuteSearchObject,
 ) {
   const { searchId, locationName } = searchObject;
   const searches: IJobPostingsSearch[] = createJobSearches(locationName);

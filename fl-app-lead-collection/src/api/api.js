@@ -3,7 +3,7 @@ const BASE_URL = "http://localhost:5000"
 
 export async function fetchLocations() {
   try {
-    const response = await axios.get(`${BASE_URL}/locations`);
+    const response = await axios.get(`${BASE_URL}/data/locations`);
     if(response.data) return response.data
     else return []
   }
@@ -14,7 +14,7 @@ export async function fetchLocations() {
 
 export async function fetchRoles() {
   try {
-    const response = await axios.get(`${BASE_URL}/roles`);
+    const response = await axios.get(`${BASE_URL}/data/roles`);
     if(response.data) return response.data
     else return []
   }

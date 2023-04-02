@@ -1,5 +1,4 @@
 import express from "express";
-import executeSearchRouterHandler from "./handlers/executeSearches/executeSearchRouterHandler";
 import createSearchHandler from "./handlers/createSearchHandler";
 import jobsSearchCompleteNextHandler from "./handlers/jobsSearchCompleteNextHandler";
 import startVerificationHandler from "./handlers/startVerificationHandler";
@@ -12,7 +11,7 @@ import peopleSelectionCompleteNextHandler from "./handlers/peopleSelectionComple
 import startLeadsPreparationHandler from "./handlers/startLeadsPreparationHandler";
 import {
   createSearchRoute,
-  executeSearchRoute,
+  startJobsSearchRoute,
   jobsSearchCompleteNextRoute,
   startVerificationRoute,
   completeVerificationRoute,
@@ -25,43 +24,27 @@ import {
   startLeadsPreparationRoute,
 } from "../routes";
 import completePeopleSearchHandler from "./handlers/completePeopleSearchHandler";
+import startJobsSearchRouterHandler from "./handlers/executeSearches/startJobsSearchRouterHandler";
 
 const searchRouter = express.Router();
 
-// 0 to 1. Create Search
+// Stage 1-2
+searchRouter.post(startJobsSearchRoute, startJobsSearchRouterHandler);
+
 searchRouter.post(createSearchRoute, createSearchHandler);
-
-// 1 to 3. Initialize Jobs Search
-// searchRouter.post(executeSearchRoute, executeSearchRouterHandler);
-
-// 3 to 4. Mark "Next Stage" at 'Jobs Search Complete' to 'Start Verification'
 searchRouter.post(jobsSearchCompleteNextRoute, jobsSearchCompleteNextHandler);
-
-// 4. to 5. Start Verification Selection
 searchRouter.post(startVerificationRoute, startVerificationHandler);
-
-// 5 to 6. Complete Verification Selection
 searchRouter.post(completeVerificationRoute, completeVerificationHandler);
-
-// 6 to 7. Mark "Next Stage" at 'Verification Complete' to 'Start Decision Makers Search'
 searchRouter.post(verificationCompleteNextRoute, verificationCompleteNextHandler);
-
-// 8 to 9. Start Decision Makers Search
-searchRouter.post(startPeopleSearchRoute, startPeopleSearchHandler);
-
-// 9 to 10. Complete Decision Makers Search
 searchRouter.post(completePeopleSearchRoute, completePeopleSearchHandler);
-
-// 10 to 11. Start Decision Makers Selection
 searchRouter.post(startPeopleSelectionRoute, startPeopleSelectionHandler);
-
-// 11 to 12. Complete Decision Makers Selection
 searchRouter.post(completePeopleSelectionRoute, completePeopleSelectionHandler);
-
-// 12 to 13. Mark "Next Stage" at 'Decision Makers Selection Complete' to 'Start Leads Preparation'
 searchRouter.post(peopleSelectionCompleteNextRoute, peopleSelectionCompleteNextHandler);
 
-// 13 to 15. Start Leads Preparation
+// Stage 7-8
+searchRouter.post(startPeopleSearchRoute, startPeopleSearchHandler);
+
+// Stage 13-14
 searchRouter.post(startLeadsPreparationRoute, startLeadsPreparationHandler);
 
 export default searchRouter;

@@ -9,7 +9,7 @@ export const getRolesRoute = "/roles";
 export const getLocationsRoute = "/locations";
 
 // Routes - Search Router
-export const executeSearchRoute = "/";
+export const startJobsSearchRoute = "/";
 export const createSearchRoute = "/create";
 export const jobsSearchCompleteNextRoute = "/jobs-search-complete-next";
 export const startVerificationRoute = "/start-verification";

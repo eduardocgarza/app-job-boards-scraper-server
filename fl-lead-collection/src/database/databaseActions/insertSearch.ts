@@ -3,6 +3,10 @@ import { pool } from "../databaseConfiguration";
 import { searchesTable } from "../dbConstants";
 import { DB_SEARCH_STATUSES, DB_SEARCH_STATUSES_HASHMAP } from "@/appConstants";
 
+const searchNumber = 1;
+const searchIndex = searchNumber - 1;
+const searchStatus = DB_SEARCH_STATUSES[searchIndex].statusId;
+
 export default async function insertSearch(
   searchObject: IRawSearchObject,
 ): Promise<ISearchObject> {
@@ -22,7 +26,7 @@ export default async function insertSearch(
       locationName,
       roles,
       platforms,
-      DB_SEARCH_STATUSES[0].statusId,
+      searchStatus,
     ];
     const {
       rows: [searchItem],

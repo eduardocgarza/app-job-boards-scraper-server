@@ -103,3 +103,9 @@ export interface IRawCompanyDetailsInput {
 export interface ICompanyDetailsInput extends IRawCompanyDetailsInput {
   companyId: string;
 }
+
+export interface IExecuteSearchObject {
+  searchId: string;
+  locationName: string;
+  platforms: string[];
+}
