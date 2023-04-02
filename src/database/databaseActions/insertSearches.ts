@@ -19,8 +19,8 @@ export default async function insertSearches(
     );
     const query = `
     INSERT INTO ${searchesTable} (
-      campaign_name, campaign_description, location_name, roles, platforms, search_status_id) 
-      VALUES ($1, $2, $3, $4, $5, $6) 
+      campaign_name, campaign_description, location_name, roles, platforms) 
+      VALUES ($1, $2, $3, $4, $5) 
       RETURNING *
     `;
     const results = await Promise.all(values.map((v) => client.query(query, v)));

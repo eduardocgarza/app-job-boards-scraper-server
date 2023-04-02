@@ -23,7 +23,7 @@ export const createSearchesTableQuery = `
     roles TEXT[],
     platforms TEXT[],
     created_at TIMESTAMP DEFAULT NOW(),
-    search_status_id TEXT,
+    search_status_id TEXT DEFAULT 1,
     search_status_progress_percentage INTEGER DEFAULT 0,
     search_companies_airtable_id TEXT,  
     search_companies_airtable_primary_field_id TEXT,
