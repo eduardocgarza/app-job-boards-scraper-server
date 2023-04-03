@@ -1,7 +1,7 @@
 import { pool } from "@/database/databaseConfiguration";
 import { jobPostingsTable } from "@/database/dbConstants";
 
-export default async function updateJobPostingRecord(
+export default async function updatePostingRecord(
   jobPostingId: string,
   jobDescriptionText: string,
 ) {

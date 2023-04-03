@@ -7,6 +7,7 @@ function createFormattedPostings(
 ): IPreStoreJobPosting[] {
   return postings.map((posting) => ({
     ...posting,
+    platform: "Glassdoor",
     companyId: hashMap[posting.teamName].companyId,
     teamId: hashMap[posting.teamName].teamId,
   }));

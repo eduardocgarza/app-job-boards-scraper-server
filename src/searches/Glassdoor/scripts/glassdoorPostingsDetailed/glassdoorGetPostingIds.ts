@@ -2,6 +2,15 @@ import { pool } from "@/database/databaseConfiguration";
 import { IPostingDetailsInput } from "./getGlassdoorPostingsDetailedData";
 import { jobPostingsTable, searchJobPostingsTable } from "@/database/dbConstants";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function selectivePostingConverterOut(obj: any) {
+  return {
+    postingId: obj.posting_id,
+    postingURL: obj.posting_url,
+    companyId: obj.company_id,
+  };
+}
+
 export default async function glassdoorGetPostingIds(
   searchId: string,
 ): Promise<IPostingDetailsInput[]> {
@@ -18,11 +27,7 @@ export default async function glassdoorGetPostingIds(
 
   try {
     const result = await client.query(query, [searchId]);
-    return result.rows.map((row) => ({
-      postingId: row.posting_id,
-      postingURL: row.posting_url,
-      companyId: row.company_id,
-    }));
+    return result.rows.map(selectivePostingConverterOut);
   } catch (error) {
     console.error("Error executing query:", error);
     return [];

@@ -1,6 +1,6 @@
 import { Page } from "puppeteer";
 import updateCompanyRecord from "./updateCompanyRecord";
-import updateJobPostingRecord from "./updatePostingRecord";
+import updatePostingRecord from "./updatePostingRecord";
 import { IRawCompanyDetailsInput } from "@/types/appInterfaces";
 
 async function getJobDescriptionText(page: Page) {
@@ -70,6 +70,6 @@ export default async function getSinglePostingDetails(
   const jobDescriptionText = await getJobDescriptionText(page);
   const rawCompanyDetails: IRawCompanyDetailsInput = await getCompanyData(page);
   const companyDetails = { ...rawCompanyDetails, companyId };
-  await updateJobPostingRecord(postingId, jobDescriptionText);
+  await updatePostingRecord(postingId, jobDescriptionText);
   await updateCompanyRecord(companyDetails);
 }

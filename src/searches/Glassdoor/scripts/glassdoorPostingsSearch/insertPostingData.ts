@@ -4,7 +4,7 @@ import populateTeams from "@/database/testDatabase/testPopulateDatabase/populate
 import createTeamsHashMap from "@/database/helpers/createTeamsHashMap";
 import populateCompanies from "@/database/testDatabase/testPopulateDatabase/populateCompanies";
 import populateJobPostings from "@/database/testDatabase/testPopulateDatabase/populateJobPostings";
-import testPopulateSearchPostingRecords from "@/database/testDatabase/testPopulateDatabase/testPopulateSearchPostingRecords";
+import populateSearchPostingRecords from "@/database/testDatabase/testPopulateDatabase/populateSearchPostingRecords";
 import populateSearchCompanyRecords from "@/database/testDatabase/testPopulateDatabase/populateSearchCompanyRecords";
 import {
   getUniqueCompanyIds,
@@ -24,7 +24,7 @@ export default async function insertPostingsData(
     const uniqueCompanyIds = getUniqueCompanyIds(jobPostings);
     const uniquePostingIds = getUniquePostingIds(jobPostings);
     await populateSearchCompanyRecords(searchId, uniqueCompanyIds);
-    await testPopulateSearchPostingRecords(searchId, uniquePostingIds);
+    await populateSearchPostingRecords(searchId, uniquePostingIds);
   } catch (e) {
     console.log("-- ERROR in GLASSDOOR @insertData() --", e);
     throw e;

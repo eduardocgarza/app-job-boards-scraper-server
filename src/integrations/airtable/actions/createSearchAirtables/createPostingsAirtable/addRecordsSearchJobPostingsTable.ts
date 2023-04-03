@@ -1,4 +1,5 @@
 import axios from "axios";
+import convertToAirtableDate from "@/integrations/airtable/helpers/convertToAirtableDate";
 import { postingsFieldNames } from "@/integrations/airtable/schemas/searchJobPostingsAirtableSchema";
 import { companiesFieldNames } from "@/integrations/airtable/schemas/searchCompaniesAirtableSchema";
 import {
@@ -7,12 +8,11 @@ import {
   AIRTABLE_BASE_ID,
   AIRTABLE_TOKEN,
   API_SLEEP_AMOUNT,
-} from "../../../config/airtableConstants";
+} from "@/integrations/airtable/config/airtableConstants";
 import {
   IAirtableIds,
   IPreStoreSearchPostingAirtable,
-} from "../../../config/airtableInterfaces";
-import convertToAirtableDate from "@/integrations/airtable/helpers/convertToAirtableDate";
+} from "@/integrations/airtable/config/airtableInterfaces";
 
 function createJobPostingLists(postings: IPreStoreSearchPostingAirtable[]) {
   const lists = [];
@@ -36,11 +36,11 @@ function convertToAirtableFormat(list: IPreStoreSearchPostingAirtable[]) {
   return list.map((v) => ({
     fields: {
       [postingsFieldNames.jobPostingID.name]: clean(v.jobPostingId),
-      [postingsFieldNames.glassdoorJobPostingID.name]: clean(v.glassdoorJobPostingId),
+      [postingsFieldNames.glassdoorJobPostingID.name]: clean(v.glassdoorPostingId),
       [postingsFieldNames.roleName.name]: clean(v.roleName),
       [postingsFieldNames.roleLocation.name]: clean(v.roleLocation),
       [postingsFieldNames.salaryRange.name]: clean(v.salaryRange),
-      [postingsFieldNames.jobPostingURL.name]: clean(v.jobPostingURL),
+      [postingsFieldNames.postingURL.name]: clean(v.postingURL),
       [postingsFieldNames.datePosted.name]: convertToAirtableDate(clean(v.datePosted)),
       [postingsFieldNames.teamID.name]: clean(v.teamId),
       [companiesFieldNames.companyId.name]: clean(v.companyId),

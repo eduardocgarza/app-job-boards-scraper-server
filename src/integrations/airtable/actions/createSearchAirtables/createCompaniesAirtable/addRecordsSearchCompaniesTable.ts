@@ -1,17 +1,17 @@
 import axios, { AxiosError } from "axios";
+import convertToAirtableDate from "@/integrations/airtable/helpers/convertToAirtableDate";
 import { companiesFieldNames } from "@/integrations/airtable/schemas/searchCompaniesAirtableSchema";
+import {
+  IAirtableIds,
+  IPreStoreSearchCompanyAirtable,
+} from "@/integrations/airtable/config/airtableInterfaces";
 import {
   ADD_RECORDS_BATCH_SIZE,
   AIRTABLE_API,
   AIRTABLE_BASE_ID,
   AIRTABLE_TOKEN,
   API_SLEEP_AMOUNT,
-} from "../../../config/airtableConstants";
-import {
-  IAirtableIds,
-  IPreStoreSearchCompanyAirtable,
-} from "../../../config/airtableInterfaces";
-import convertToAirtableDate from "@/integrations/airtable/helpers/convertToAirtableDate";
+} from "@/integrations/airtable/config/airtableConstants";
 
 function createCompanyLists(companies: IPreStoreSearchCompanyAirtable[]) {
   const lists = [];

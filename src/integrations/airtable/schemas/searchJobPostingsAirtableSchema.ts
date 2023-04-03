@@ -26,7 +26,7 @@ export const postingsFieldNames = {
     description: "The range of salary offered for the role",
     type: "singleLineText",
   },
-  jobPostingURL: {
+  postingURL: {
     name: "Job Posting URL",
     description: "The URL to the job posting page",
     type: "url",
@@ -55,7 +55,7 @@ const searchJobPostingsAirtableSchema = [
   postingsFieldNames.roleName,
   postingsFieldNames.roleLocation,
   postingsFieldNames.salaryRange,
-  postingsFieldNames.jobPostingURL,
+  postingsFieldNames.postingURL,
   postingsFieldNames.datePosted,
   postingsFieldNames.teamID,
   companiesFieldNames.companyId,

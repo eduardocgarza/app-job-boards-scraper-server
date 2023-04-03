@@ -3,7 +3,7 @@ import testPopulateSearches from "./testPopulateSearches";
 import populateCompanies from "./populateCompanies";
 import populateJobPostings from "./populateJobPostings";
 import populateSearchCompanyRecords from "./populateSearchCompanyRecords";
-import testPopulateSearchPostingRecords from "./testPopulateSearchPostingRecords";
+import populateSearchPostingRecords from "./populateSearchPostingRecords";
 import populateTeams from "./populateTeams";
 import createTeamsHashMap from "@/database/helpers/createTeamsHashMap";
 
@@ -52,7 +52,7 @@ export default async function populateDatabase(rawPostings: IRawJobPosting[]) {
       const uniqueCompanyIds = getUniqueCompanyIds(searchPostings);
       const uniquePostingIds = getUniquePostingIds(searchPostings);
       await populateSearchCompanyRecords(searchId, uniqueCompanyIds);
-      await testPopulateSearchPostingRecords(searchId, uniquePostingIds);
+      await populateSearchPostingRecords(searchId, uniquePostingIds);
     }
     return searchRecords;
   } catch (e) {

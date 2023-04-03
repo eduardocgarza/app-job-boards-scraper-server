@@ -1,11 +1,11 @@
+import axios from "axios";
+import { IPreStoreAirtable } from "@/integrations/airtable/config/airtableInterfaces";
+import searchCompaniesAirtableSchema from "@/integrations/airtable/schemas/searchCompaniesAirtableSchema";
 import {
   AIRTABLE_API,
   AIRTABLE_BASE_ID,
   AIRTABLE_TOKEN,
 } from "@/integrations/airtable/config/airtableConstants";
-import { IPreStoreAirtable } from "@/integrations/airtable/config/airtableInterfaces";
-import searchCompaniesAirtableSchema from "@/integrations/airtable/schemas/searchCompaniesAirtableSchema";
-import axios from "axios";
 
 export default async function createSearchCompaniesTable(
   tableOptions: IPreStoreAirtable,
@@ -25,8 +25,7 @@ export default async function createSearchCompaniesTable(
     },
   };
   const response = await axios.post(createTableURL, payload, options);
-  const data = response.data;
-  const { id: airtableId, primaryFieldId } = data;
+  const { id: airtableId, primaryFieldId } = response.data;
   console.log(`Created Airtable: ID ${airtableId}, Field ID ${primaryFieldId}.`);
   return { airtableId, primaryFieldId };
 }

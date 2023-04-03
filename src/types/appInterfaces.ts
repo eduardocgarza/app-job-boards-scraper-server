@@ -13,8 +13,8 @@ export interface IRawJobPosting {
   roleLocation: string;
   salaryRange: string;
   datePosted: string;
-  jobPostingURL: string;
-  glassdoorJobPostingId: string;
+  postingURL: string;
+  glassdoorPostingId: string;
   companyRating: string;
   easyApply: boolean;
 }
@@ -27,8 +27,9 @@ export interface IPreStoreJobPosting {
   roleLocation: string;
   salaryRange: string;
   datePosted: string;
-  jobPostingURL: string;
-  glassdoorJobPostingId: string;
+  postingURL: string;
+  platform: string;
+  glassdoorPostingId: string;
 }
 
 // Complete Job Posting
@@ -81,7 +82,7 @@ export interface ITeam {
 
 export interface ISearchObject extends IRawSearchObject {
   searchId: string;
-  searchStatus: { statusId: number; statusName: string };
+  searchStatusId: number;
   createdAt: string;
 }
 

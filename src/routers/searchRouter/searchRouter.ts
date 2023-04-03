@@ -9,6 +9,8 @@ import startPeopleSelectionHandler from "./handlers/startPeopleSelectionHandler"
 import completePeopleSelectionHandler from "./handlers/completePeopleSelectionHandler";
 import peopleSelectionCompleteNextHandler from "./handlers/peopleSelectionCompleteNextHandler";
 import startLeadsPreparationHandler from "./handlers/startLeadsPreparationHandler";
+import completePeopleSearchHandler from "./handlers/completePeopleSearchHandler";
+import startJobsSearchRouterHandler from "./handlers/executeSearches/startJobsSearchRouterHandler";
 import {
   createSearchRoute,
   startJobsSearchRoute,
@@ -23,15 +25,11 @@ import {
   peopleSelectionCompleteNextRoute,
   startLeadsPreparationRoute,
 } from "../routes";
-import completePeopleSearchHandler from "./handlers/completePeopleSearchHandler";
-import startJobsSearchRouterHandler from "./handlers/executeSearches/startJobsSearchRouterHandler";
 
 const searchRouter = express.Router();
 
-// Stage 1-2
-searchRouter.post(startJobsSearchRoute, startJobsSearchRouterHandler);
-
 searchRouter.post(createSearchRoute, createSearchHandler);
+searchRouter.post(startJobsSearchRoute, startJobsSearchRouterHandler);
 searchRouter.post(jobsSearchCompleteNextRoute, jobsSearchCompleteNextHandler);
 searchRouter.post(startVerificationRoute, startVerificationHandler);
 searchRouter.post(completeVerificationRoute, completeVerificationHandler);

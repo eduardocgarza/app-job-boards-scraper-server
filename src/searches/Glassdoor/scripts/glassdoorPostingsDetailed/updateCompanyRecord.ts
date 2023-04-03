@@ -3,8 +3,6 @@ import { companiesTable } from "@/database/dbConstants";
 import { ICompanyDetailsInput } from "@/types/appInterfaces";
 
 export default async function updateCompanyRecord(companyDetails: ICompanyDetailsInput) {
-  const { companyName, companyProfileURL, companyUsername, hqLocation, companyId } =
-    companyDetails;
   const query = `
     UPDATE ${companiesTable}
     SET 
@@ -16,10 +14,10 @@ export default async function updateCompanyRecord(companyDetails: ICompanyDetail
       company_id = $5
   `;
   await pool.query(query, [
-    companyName,
-    companyProfileURL,
-    companyUsername,
-    hqLocation,
-    companyId,
+    companyDetails.companyName,
+    companyDetails.companyProfileURL,
+    companyDetails.companyUsername,
+    companyDetails.hqLocation,
+    companyDetails.companyId,
   ]);
 }

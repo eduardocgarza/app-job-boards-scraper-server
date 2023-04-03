@@ -1,46 +1,34 @@
 import { IRawSearchObject, ISearchObject } from "@/types/appInterfaces";
 import { pool } from "../databaseConfiguration";
 import { searchesTable } from "../dbConstants";
-import { DB_SEARCH_STATUSES, DB_SEARCH_STATUSES_HASHMAP } from "@/appConstants";
-
-const searchNumber = 1;
-const searchIndex = searchNumber - 1;
-const searchStatus = DB_SEARCH_STATUSES[searchIndex].statusId;
+import searchConverterOut from "../databaseDataConverters/searchConverterOut";
 
 export default async function insertSearch(
   searchObject: IRawSearchObject,
 ): Promise<ISearchObject> {
   const client = await pool.connect();
   try {
-    const { campaignName, campaignDescription, locationName, roles, platforms } =
-      searchObject;
     const query = `
       INSERT INTO ${searchesTable} 
-        (campaign_name, campaign_description, location_name, roles, platforms, search_status_id) 
-      VALUES ($1, $2, $3, $4, $5, $6) 
+        (
+          campaign_name, 
+          campaign_description, 
+          location_name, 
+          roles, 
+          platforms
+        ) 
+      VALUES ($1, $2, $3, $4, $5) 
       RETURNING *
     `;
     const values = [
-      campaignName,
-      campaignDescription,
-      locationName,
-      roles,
-      platforms,
-      searchStatus,
+      searchObject.campaignName,
+      searchObject.campaignDescription,
+      searchObject.locationName,
+      searchObject.roles,
+      searchObject.platforms,
     ];
-    const {
-      rows: [searchItem],
-    } = await client.query(query, values);
-    return {
-      searchId: searchItem.search_id,
-      campaignName: searchItem.campaign_name,
-      campaignDescription: searchItem.campaign_description,
-      locationName: searchItem.location_name,
-      roles: searchItem.roles,
-      platforms: searchItem.platforms,
-      createdAt: searchItem.created_at,
-      searchStatus: DB_SEARCH_STATUSES_HASHMAP[searchItem.search_status_id],
-    };
+    const response = await client.query(query, values);
+    return searchConverterOut(response.rows[0]);
   } catch (e) {
     console.error("Error creating search record:", e);
     throw e;

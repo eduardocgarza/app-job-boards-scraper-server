@@ -1,23 +1,11 @@
 import { PoolClient } from "pg";
 import { IPreStoreSearchCompanyAirtable } from "../../config/airtableInterfaces";
+import companyConverterOut from "@/database/databaseDataConverters/companyConverterOut";
 import {
   companiesTable,
   jobPostingsTable,
   searchCompaniesTable,
 } from "@/database/dbConstants";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function formatCompanies(companies: any[]) {
-  return companies.map((company) => {
-    return {
-      companyId: company.company_id,
-      companyName: company.company_name,
-      companyUsername: company.company_username,
-      companyProfileURL: company.company_profile_url,
-      headquartersLocation: company.headquarters_location,
-    };
-  });
-}
 
 export default async function getSearchCompanies(
   client: PoolClient,
@@ -33,22 +21,23 @@ export default async function getSearchCompanies(
       c.verified=true;
   `;
   const companiesResult = await client.query(companiesQuery, [searchId]);
-  const companies = formatCompanies(companiesResult.rows);
+  const companies = companiesResult.rows.map(companyConverterOut);
   const companyIds = companies.map((company) => company.companyId);
-  const query = `
+  const postingsQuery = `
     SELECT
       company_id,
       COUNT(DISTINCT posting_id) AS "numPostings",
       COUNT(DISTINCT team_id) AS "numTeams",
       MAX(date_posted) AS "latestPostingDate"
     FROM ${jobPostingsTable}
-    WHERE company_id = ANY($1)
-    GROUP BY company_id;
+    WHERE 
+      company_id = ANY($1)
+    GROUP BY 
+      company_id;
   `;
-
   try {
-    const result = await client.query(query, [companyIds]);
-    const statsByCompanyId = result.rows.reduce((acc, row) => {
+    const postingsResult = await client.query(postingsQuery, [companyIds]);
+    const statsByCompanyId = postingsResult.rows.reduce((acc, row) => {
       acc[row.company_id] = {
         numPostings: row.numPostings,
         numTeams: row.numTeams,
@@ -56,7 +45,6 @@ export default async function getSearchCompanies(
       };
       return acc;
     }, {});
-
     return companies.map((company) => ({
       ...company,
       ...statsByCompanyId[company.companyId],

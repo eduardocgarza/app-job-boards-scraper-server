@@ -1,6 +1,6 @@
 import { IPreStoreJobPosting } from "@/types/appInterfaces";
 import { pool } from "../databaseConfiguration";
-import postingsToCamelCase from "../databaseDataConverters/postingsToCamelCase";
+import postingConverterOut from "../databaseDataConverters/postingConverterOut";
 import { jobPostingsTable } from "../dbConstants";
 
 type TPostingsValues = Array<string | number>[];
@@ -8,9 +8,9 @@ function createValuesMap(values: TPostingsValues) {
   return values
     .map(
       (_, i) =>
-        `($${8 * i + 1}, $${8 * i + 2}, $${8 * i + 3}, $${8 * i + 4}, $${8 * i + 5}, $${
-          8 * i + 6
-        }, $${8 * i + 7}, $${8 * i + 8})`,
+        `($${9 * i + 1}, $${9 * i + 2}, $${9 * i + 3}, $${9 * i + 4}, $${9 * i + 5}, $${
+          9 * i + 6
+        }, $${9 * i + 7}, $${9 * i + 8}, $${9 * i + 9})`,
     )
     .join(",");
 }
@@ -20,11 +20,12 @@ export default async function insertPostings(postings: IPreStoreJobPosting[]) {
     posting.roleName,
     posting.roleLocation,
     posting.salaryRange,
-    posting.jobPostingURL,
+    posting.postingURL,
     posting.datePosted,
     posting.companyId,
     posting.teamId,
-    posting.glassdoorJobPostingId,
+    posting.glassdoorPostingId,
+    "Glassdoor",
   ]);
   const query = `
     INSERT INTO ${jobPostingsTable} 
@@ -36,7 +37,8 @@ export default async function insertPostings(postings: IPreStoreJobPosting[]) {
       date_posted, 
       company_id,
       team_id,
-      glassdoor_posting_id
+      glassdoor_posting_id,
+      platform
     )
     VALUES ${createValuesMap(values)}
     ON CONFLICT 
@@ -53,5 +55,5 @@ export default async function insertPostings(postings: IPreStoreJobPosting[]) {
     RETURNING *
   `;
   const { rows } = await pool.query(query, values.flat());
-  return rows.map(postingsToCamelCase);
+  return rows.map(postingConverterOut);
 }

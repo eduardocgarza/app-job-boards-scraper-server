@@ -1,11 +1,14 @@
 import axios from "axios";
-import { IAirtableIds, IPreStoreAirtable } from "../../../config/airtableInterfaces";
-import searchJobPostingsAirtableSchema from "../../../schemas/searchJobPostingsAirtableSchema";
+import searchJobPostingsAirtableSchema from "@/integrations/airtable/schemas/searchJobPostingsAirtableSchema";
 import {
   AIRTABLE_API,
   AIRTABLE_BASE_ID,
   AIRTABLE_TOKEN,
 } from "../../../config/airtableConstants";
+import {
+  IAirtableIds,
+  IPreStoreAirtable,
+} from "@/integrations/airtable/config/airtableInterfaces";
 
 export default async function createSearchJobPostingsTable(
   tableOptions: IPreStoreAirtable,

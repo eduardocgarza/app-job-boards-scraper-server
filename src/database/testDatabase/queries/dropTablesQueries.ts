@@ -1,6 +1,8 @@
 import {
   companiesTable,
   jobPostingsTable,
+  peopleSequencesTable,
+  peopleTable,
   searchCompaniesTable,
   searchJobPostingsTable,
   searchesTable,
@@ -31,6 +33,15 @@ export const dropSearchesQuery = `
   DROP TABLE IF EXISTS ${searchesTable} CASCADE;
 `;
 
+export const dropPeopleTable = `
+  DROP TABLE IF EXISTS ${peopleTable} CASCADE;
+`;
+export const dropPeopleSequencesTable = `
+  DROP TABLE IF EXISTS ${peopleSequencesTable} CASCADE;
+`;
+
+// --
+
 export const deleteSearchCompaniesQuery = `
   DELETE FROM ${searchCompaniesTable};
 `;
@@ -54,3 +65,12 @@ export const deleteTeamsQuery = `
 export const deleteSearchesQuery = `
   DELETE FROM ${searchesTable};
 `;
+
+export const deletePeopleTable = `
+  DELETE FROM ${peopleTable};
+`;
+export const deletePeopleSequencesTable = `
+  DELETE FROM ${peopleSequencesTable};
+`;
+
+// --

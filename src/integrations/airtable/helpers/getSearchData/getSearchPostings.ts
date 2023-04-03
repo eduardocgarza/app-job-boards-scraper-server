@@ -12,11 +12,11 @@ function formatPostings(postings: any[]) {
   return postings.map((posting) => {
     return {
       jobPostingId: posting.posting_id,
-      glassdoorJobPostingId: posting.glassdoor_posting_id,
+      glassdoorPostingId: posting.glassdoor_posting_id,
       roleName: posting.role_name,
       roleLocation: posting.role_location,
       salaryRange: posting.salary_range,
-      jobPostingURL: posting.posting_url,
+      postingURL: posting.posting_url,
       datePosted: posting.date_posted,
       companyId: posting.company_id,
       companyName: posting.company_name,

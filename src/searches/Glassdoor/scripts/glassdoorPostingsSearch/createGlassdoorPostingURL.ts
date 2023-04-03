@@ -11,7 +11,7 @@ export default function createGlassdoorPostingURL(
 ) {
   const { locationName, roleName, companySize } = options;
   const baseURL = "https://www.glassdoor.com/Job";
-  const urlEncode = (url: string) => url.replaceAll(" ", "-").toLowerCase();
+  const urlEncode = (url: string) => (url ? url.replaceAll(" ", "-").toLowerCase() : "");
   const formattedLocationName = urlEncode(locationName);
   const formattedRoleName = urlEncode(roleName);
   const jobType = "fulltime";

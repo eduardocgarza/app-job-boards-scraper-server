@@ -1,17 +1,9 @@
-import { IRawTeam, ITeam } from "@/types/appInterfaces";
+import { IRawTeam } from "@/types/appInterfaces";
 import { pool } from "../databaseConfiguration";
 import { teamsTable } from "../dbConstants";
+import teamsConverterOut from "../databaseDataConverters/teamsConverterOut";
 
 type TTeamsValues = Array<string>[];
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function convertToCamelCase(obj: any): ITeam {
-  return {
-    teamId: obj.team_id,
-    teamName: obj.team_name,
-    companyId: obj.company_id,
-  };
-}
 
 function createValuesMap(values: TTeamsValues) {
   return values.map((_, i) => `($${2 * i + 1}, $${2 * i + 2})`).join(",");
@@ -34,5 +26,5 @@ export default async function insertTeams(teams: IRawTeam[]) {
     RETURNING *
   `;
   const { rows } = await pool.query(query, values.flat());
-  return rows.map(convertToCamelCase);
+  return rows.map(teamsConverterOut);
 }

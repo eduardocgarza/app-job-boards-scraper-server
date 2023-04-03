@@ -15,8 +15,8 @@ export default async function getJobPostPage(page: Page): Promise<IRawJobPosting
     roleName,
     roleLocation,
     salaryRange,
-    jobPostingURL,
-    glassdoorJobPostingId,
+    postingURL,
+    glassdoorPostingId,
     companyRating,
     easyApply,
     datePosted;
@@ -37,7 +37,7 @@ export default async function getJobPostPage(page: Page): Promise<IRawJobPosting
           ((el.textContent ? el.textContent.split("(")[0] : "") || "").trim(),
         )
       : "";
-    jobPostingURL = (await element.$(".jobLink"))
+    postingURL = (await element.$(".jobLink"))
       ? await element.$eval(".jobLink", (el: Element) => {
           const anchorElement = el as HTMLAnchorElement;
           return anchorElement.href;
@@ -56,15 +56,15 @@ export default async function getJobPostPage(page: Page): Promise<IRawJobPosting
       ? await element.$eval("div[data-test='job-age']", (el) => el.textContent || "")
       : "";
     datePosted = convertGlassdoorDate(datePosted);
-    glassdoorJobPostingId = getJobPostingId(jobPostingURL);
+    glassdoorPostingId = getJobPostingId(postingURL);
 
     jobListings.push({
       teamName,
       roleName,
       roleLocation,
       salaryRange,
-      jobPostingURL,
-      glassdoorJobPostingId,
+      postingURL,
+      glassdoorPostingId,
       companyRating,
       easyApply,
       datePosted,

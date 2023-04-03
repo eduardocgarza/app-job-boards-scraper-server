@@ -6,11 +6,6 @@ import {
   jobPostingsTable,
   companiesTable,
   searchesTable,
-  peopleDepartmentsTable,
-  peopleSubDepartmentsTable,
-  peopleFunctionsTable,
-  peopleEmailsTable,
-  peoplePhonesTable,
   peopleSequencesTable,
 } from "@/database/dbConstants";
 
@@ -25,14 +20,14 @@ export const createSearchesTableQuery = `
     created_at TIMESTAMP DEFAULT NOW(),
     search_status_id TEXT DEFAULT 1,
     search_status_progress_percentage INTEGER DEFAULT 0,
-    search_companies_airtable_id TEXT,  
-    search_companies_airtable_primary_field_id TEXT,
-    search_postings_airtable_id TEXT,
-    search_postings_airtable_primary_field_id TEXT,
-    people_airtable_id TEXT,
-    people_airtable_primary_field_id TEXT,
-    leads_airtable_id TEXT,
-    leads_airtable_primary_field_id TEXT
+    search_companies_airtable_id TEXT DEFAULT '', 
+    search_companies_airtable_primary_field_id TEXT DEFAULT '',
+    search_postings_airtable_id TEXT DEFAULT '',
+    search_postings_airtable_primary_field_id TEXT DEFAULT '',
+    people_airtable_id TEXT DEFAULT '',
+    people_airtable_primary_field_id TEXT DEFAULT '',
+    leads_airtable_id TEXT DEFAULT '',
+    leads_airtable_primary_field_id TEXT DEFAULT ''
   );
 `;
 
@@ -44,20 +39,18 @@ export const createCompaniesTableQuery = `
     company_profile_url TEXT,
     headquarters_location TEXT,
     verified BOOLEAN DEFAULT FALSE,
-    website_url VARCHAR(255),
-    linkedin_url VARCHAR(255),
-    twitter_url VARCHAR(255),
+    crunchbase_url VARCHAR(255),
     facebook_url VARCHAR(255),
-    primary_phone VARCHAR(255),
-    phone VARCHAR(255),
+    linkedin_url VARCHAR(255),
     linkedin_uid VARCHAR(255),
+    twitter_url VARCHAR(255),
+    website_url VARCHAR(255),
+    phones VARCHAR(255)[],
+    primary_phone VARCHAR(255),
     founded_year VARCHAR(255),
     publicly_traded_symbol VARCHAR(255),
     publicly_traded_exchange VARCHAR(255),
-    logo_url VARCHAR(255),
-    crunchbase_url VARCHAR(255),
-    primary_domain VARCHAR(255),
-    sanitized_phone VARCHAR(255)
+    logo_url VARCHAR(255)
   );
 `;
 
@@ -81,29 +74,26 @@ export const createJobPostingsTableQuery = `
     date_posted TEXT,
     verified BOOLEAN DEFAULT FALSE,
     job_description TEXT DEFAULT '',
+    platform TEXT NOT NULL,
     company_id INTEGER
       REFERENCES ${companiesTable} (company_id),
     team_id INTEGER
-      references ${teamsTable} (team_id)    
+      REFERENCES ${teamsTable} (team_id)    
   );
 `;
 
 export const createSearchPostingsTableQuery = `
   CREATE TABLE IF NOT EXISTS ${searchJobPostingsTable} (
-    search_id INTEGER REFERENCES ${searchesTable}
-      (search_id),
-    posting_id INTEGER REFERENCES ${jobPostingsTable}
-      (posting_id),
+    search_id INTEGER REFERENCES ${searchesTable} (search_id),
+    posting_id INTEGER REFERENCES ${jobPostingsTable} (posting_id),
     PRIMARY KEY(search_id, posting_id)
   );
 `;
 
 export const createSearchCompaniesTableQuery = `
   CREATE TABLE IF NOT EXISTS ${searchCompaniesTable} (
-    search_id INTEGER REFERENCES ${searchesTable}
-      (search_id),
-    company_id INTEGER REFERENCES ${companiesTable}
-      (company_id),
+    search_id INTEGER REFERENCES ${searchesTable} (search_id),
+    company_id INTEGER REFERENCES ${companiesTable} (company_id),
     PRIMARY KEY(search_id, company_id)
   );
 `;
@@ -114,11 +104,14 @@ export const createPeopleTableQuery = `
     apollo_id VARCHAR(255) UNIQUE,
     first_name VARCHAR(255),
     last_name VARCHAR(255),
-    email VARCHAR(255),
     title VARCHAR(255),
     headline VARCHAR(255),
     seniority VARCHAR(255),
-    email_status VARCHAR(255),
+    emails VARCHAR(255)[],
+    departments VARCHAR(255)[],
+    sub_departments VARCHAR(255)[],
+    functions VARCHAR(255)[],
+    phones VARCHAR(255)[],
     facebook_url VARCHAR(255),
     github_url VARCHAR(255),
     linkedin_url VARCHAR(255),
@@ -127,61 +120,14 @@ export const createPeopleTableQuery = `
     city VARCHAR(255),
     state VARCHAR(255),
     country VARCHAR(255),
-    company_id FOREIGN KEY REFERENCES ${companiesTable}
-      (company_id)
-  );
-`;
-
-export const createPeopleDepartmentsTableQuery = `
-  CREATE TABLE IF NOT EXISTS ${peopleDepartmentsTable}(
-    id SERIAL PRIMARY KEY,
-    people_id FOREIGN KEY REFERENCES ${peopleTable}
-      (people_id),
-    department VARCHAR(255)
-  );
-`;
-
-export const createPeopleSubDepartmentsTableQuery = `
-  CREATE TABLE IF NOT EXISTS ${peopleSubDepartmentsTable}(
-    id SERIAL PRIMARY KEY,
-    people_id FOREIGN KEY REFERENCES ${peopleTable}
-      (people_id),
-    sub_department VARCHAR(255)
-  );
-`;
-
-export const createPeopleFunctionsTableQuery = `
-  CREATE TABLE IF NOT EXISTS ${peopleFunctionsTable}(
-    id SERIAL PRIMARY KEY,
-    people_id FOREIGN KEY REFERENCES ${peopleTable}
-      (people_id),
-    function VARCHAR(255)
-  );
-`;
-
-export const createPeopleEmailsTableQuery = `
-  CREATE TABLE IF NOT EXISTS ${peopleEmailsTable}(
-    id SERIAL PRIMARY KEY,
-    people_id FOREIGN KEY REFERENCES ${peopleTable}
-      (people_id),
-    email VARCHAR(255)
-  );
-`;
-
-export const createPeoplePhonesTableQuery = `
-  CREATE TABLE IF NOT EXISTS ${peoplePhonesTable}(
-    id SERIAL PRIMARY KEY,
-    people_id FOREIGN KEY REFERENCES ${peopleTable}
-      (people_id),
-    phone VARCHAR(255)
+    company_id INTEGER REFERENCES ${companiesTable} (company_id)
   );
 `;
 
 export const createPeopleSequencesTableQuery = `
   CREATE TABLE IF NOT EXISTS ${peopleSequencesTable}(
     id SERIAL PRIMARY KEY,
-    people_id FOREIGN KEY REFERENCES ${peopleTable} 
-      (people_id),
+    people_id INTEGER REFERENCES ${peopleTable} (people_id),
     sequence_1 TEXT,
     sequence_2 TEXT,
     sequence_3 TEXT,

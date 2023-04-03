@@ -9,8 +9,9 @@ export const getRolesRoute = "/roles";
 export const getLocationsRoute = "/locations";
 
 // Routes - Search Router
-export const startJobsSearchRoute = "/";
+export const searchRoute = "/next";
 export const createSearchRoute = "/create";
+export const startJobsSearchRoute = "/jobs-search-start";
 export const jobsSearchCompleteNextRoute = "/jobs-search-complete-next";
 export const startVerificationRoute = "/start-verification";
 export const completeVerificationRoute = "/complete-verification";
