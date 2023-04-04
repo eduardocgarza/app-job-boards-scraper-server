@@ -25,8 +25,8 @@ export default async function getGlassdoorJobPostingsSearchList(
   for (const [index, searchOptions] of Object.entries(searches)) {
     await execSingleSearch(searchId, searchOptions);
     console.log("Completed 1 Search");
-    if (Number(index) == 1) {
-      break;
-    }
+    // if (Number(index) == 1) {
+    //   break;
+    // }
   }
 }
