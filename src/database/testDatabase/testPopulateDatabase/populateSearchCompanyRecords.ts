@@ -11,17 +11,14 @@ export default async function populateSearchCompanyRecords(
   searchId: string,
   companyIds: string[],
 ) {
+  if (!companyIds.length) return;
   const values: TValuesMap = companyIds.map((companyId) => [companyId, searchId]);
   const valuesMap = createValuesMap(values);
   const searchCompaniesQuery = `
     INSERT INTO ${searchCompaniesTable} 
       (company_id, search_id)
     VALUES ${valuesMap}
-    ON CONFLICT 
-      (company_id, search_id)
-    DO UPDATE SET
-      company_id = excluded.company_id,
-      search_id = excluded.search_id
+    ON CONFLICT DO NOTHING;
   `;
   await pool.query(searchCompaniesQuery, values.flat());
 }

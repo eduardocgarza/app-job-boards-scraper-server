@@ -22,7 +22,7 @@ export default async function insertSearches(
     INSERT INTO ${searchesTable} (
       campaign_name, campaign_description, location_name, roles, platforms) 
       VALUES ($1, $2, $3, $4, $5) 
-      RETURNING *
+      RETURNING *;
     `;
     const results = await Promise.all(values.map((v) => client.query(query, v)));
     return results.map(({ rows: [searchItem] }) => searchConverterOut(searchItem));

@@ -1,5 +1,5 @@
-import { searchSchema } from "../../validators/searchValidation";
 import { Response } from "express";
+import { searchSchema } from "../../validators/searchValidation";
 import { executeSearches } from "./executeSearches";
 import { ISearchRequest } from "@/types/requestInterfaces";
 import getSearchObject from "@/database/databaseActions/getSearchObject";
@@ -15,6 +15,7 @@ export default async function startJobsSearchRouterHandler(
   }
   const searchObject = await getSearchObject(req.body.searchId);
   await executeSearches(searchObject);
-  const airtableIds = await createSearchAirtables(searchObject.searchId);
-  return res.json(airtableIds);
+  return res.json({ message: "Fuck You" });
+  // const airtableIds = await createSearchAirtables(searchObject.searchId);
+  // return res.json(airtableIds);
 }

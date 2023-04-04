@@ -67,7 +67,7 @@ export async function resetTables() {
   try {
     await dropTables();
     await createTables();
-    await populateDatabase(testDataJobPostings);
+    // await populateDatabase(testDataJobPostings);
     console.log("Tables reset successfully");
   } catch (e) {
     console.error("Error resetting tables:", e);

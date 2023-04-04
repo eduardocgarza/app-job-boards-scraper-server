@@ -11,7 +11,7 @@ function selectivePostingConverterOut(obj: any) {
   };
 }
 
-export default async function glassdoorGetPostingIds(
+export default async function glassdoorGetPostingsData(
   searchId: string,
 ): Promise<IPostingDetailsInput[]> {
   const client = await pool.connect();

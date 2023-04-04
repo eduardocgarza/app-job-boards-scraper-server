@@ -37,6 +37,7 @@ export interface IJobPosting extends IPreStoreJobPosting {
   postingId: string;
   verified: boolean;
   jobDescription: string;
+  expired: boolean;
 }
 
 export type IAJobPosting = IRawJobPosting | IJobPosting;
@@ -98,7 +99,7 @@ export interface IRawCompanyDetailsInput {
   companyName: string;
   companyProfileURL: string;
   companyUsername: string;
-  hqLocation: string;
+  headquartersLocation: string;
 }
 
 export interface ICompanyDetailsInput extends IRawCompanyDetailsInput {

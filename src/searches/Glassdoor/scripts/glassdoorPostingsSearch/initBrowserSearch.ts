@@ -1,13 +1,20 @@
 import { Page } from "puppeteer";
 
+async function addDelay(milliseconds: number) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
 async function setInputValue(page: Page, selector: string, value: string) {
   await page.waitForSelector(selector);
   await page.focus(selector);
-  await page.keyboard.down("Control");
-  await page.keyboard.press("A");
-  await page.keyboard.up("Control");
-  await page.keyboard.press("Backspace");
-  await page.keyboard.type(value);
+  // Clear the input using page.evaluate()
+  await page.evaluate((selector) => {
+    const inputElement = document.querySelector(selector) as HTMLInputElement;
+    inputElement.value = "";
+  }, selector);
+  await addDelay(100); // Add a small delay here
+  await page.keyboard.type(value, { delay: 100 });
+  await addDelay(100); // Add a small delay here
 }
 
 export default async function initJobBrowserSearch(

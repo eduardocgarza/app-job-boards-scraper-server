@@ -11,13 +11,13 @@ export default async function updateCompanyRecord(companyDetails: ICompanyDetail
       company_username = $3,
       headquarters_location = $4
     WHERE 
-      company_id = $5
+      company_id = $5 AND company_name IS NULL;
   `;
   await pool.query(query, [
     companyDetails.companyName,
     companyDetails.companyProfileURL,
     companyDetails.companyUsername,
-    companyDetails.hqLocation,
+    companyDetails.headquartersLocation,
     companyDetails.companyId,
   ]);
 }

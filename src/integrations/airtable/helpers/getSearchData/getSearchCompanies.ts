@@ -17,9 +17,9 @@ export default async function getSearchCompanies(
     JOIN ${searchCompaniesTable} AS sc 
       ON c.company_id = sc.company_id
     WHERE 
-      sc.search_id = $1 AND
-      c.verified=true;
-  `;
+      sc.search_id = $1;
+    `;
+  // c.verified=true;
   const companiesResult = await client.query(companiesQuery, [searchId]);
   const companies = companiesResult.rows.map(companyConverterOut);
   const companyIds = companies.map((company) => company.companyId);

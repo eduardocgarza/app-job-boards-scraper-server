@@ -35,7 +35,7 @@ export const createCompaniesTableQuery = `
   CREATE TABLE IF NOT EXISTS ${companiesTable} (
     company_id SERIAL PRIMARY KEY,
     company_name TEXT,
-    company_username TEXT UNIQUE,
+    company_username TEXT,
     company_profile_url TEXT,
     headquarters_location TEXT,
     verified BOOLEAN DEFAULT FALSE,
@@ -75,6 +75,7 @@ export const createJobPostingsTableQuery = `
     verified BOOLEAN DEFAULT FALSE,
     job_description TEXT DEFAULT '',
     platform TEXT NOT NULL,
+    expired boolean DEFAULT FALSE, 
     company_id INTEGER
       REFERENCES ${companiesTable} (company_id),
     team_id INTEGER

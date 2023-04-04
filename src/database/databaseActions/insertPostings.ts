@@ -41,18 +41,9 @@ export default async function insertPostings(postings: IPreStoreJobPosting[]) {
       platform
     )
     VALUES ${createValuesMap(values)}
-    ON CONFLICT 
-      (glassdoor_posting_id)
-    DO UPDATE SET
-      role_name = excluded.role_name,
-      role_location = excluded.role_location,
-      salary_range = excluded.salary_range,
-      posting_url = excluded.posting_url,
-      date_posted = excluded.date_posted,
-      company_id = excluded.company_id,
-      team_id = excluded.team_id,
-      glassdoor_posting_id = excluded.glassdoor_posting_id
-    RETURNING *
+    ON CONFLICT (glassdoor_posting_id)
+    DO NOTHING
+    RETURNING *;
   `;
   const { rows } = await pool.query(query, values.flat());
   return rows.map(postingConverterOut);

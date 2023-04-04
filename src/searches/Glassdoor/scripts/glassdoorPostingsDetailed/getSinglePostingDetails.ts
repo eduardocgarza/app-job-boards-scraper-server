@@ -1,7 +1,8 @@
 import { Page } from "puppeteer";
 import updateCompanyRecord from "./updateCompanyRecord";
-import updatePostingRecord from "./updatePostingRecord";
+import updatePostingRecord, { updatePostingRecordAsExpired } from "./updatePostingRecord";
 import { IRawCompanyDetailsInput } from "@/types/appInterfaces";
+import fs from "fs";
 
 async function getJobDescriptionText(page: Page) {
   const jobDescriptionElement = await page.$("#JobDescriptionContainer .desc");
@@ -55,11 +56,11 @@ async function getCompanyData(page: Page): Promise<IRawCompanyDetailsInput> {
   const companyUsername = getCompanyUsername(companyProfileURL);
   const companyName = companyUsername.replaceAll("-", " ");
   const locationElement = await page.$("[data-test='location']");
-  const hqLocation = await page.evaluate(
+  const headquartersLocation = await page.evaluate(
     (el) => (el && el.textContent ? el.textContent.trim() : ""),
     locationElement,
   );
-  return { companyName, companyProfileURL, companyUsername, hqLocation };
+  return { companyName, companyProfileURL, companyUsername, headquartersLocation };
 }
 
 export default async function getSinglePostingDetails(
@@ -67,9 +68,26 @@ export default async function getSinglePostingDetails(
   companyId: string,
   postingId: string,
 ) {
+  console.log("Start -- @getJobDescriptionText");
   const jobDescriptionText = await getJobDescriptionText(page);
+  console.log("End -- @getJobDescriptionText");
+  console.log("\n\n\n");
+
+  console.log("Start -- @getCompanyData");
   const rawCompanyDetails: IRawCompanyDetailsInput = await getCompanyData(page);
+  console.log("End -- @getCompanyData");
+  console.log("\n\n\n");
+
   const companyDetails = { ...rawCompanyDetails, companyId };
-  await updatePostingRecord(postingId, jobDescriptionText);
+
+  console.log("Start -- @updateCompanyRecord");
   await updateCompanyRecord(companyDetails);
+  console.log("End -- @updateCompanyRecord");
+  console.log("\n\n\n");
+
+  if (!jobDescriptionText) {
+    await updatePostingRecordAsExpired(postingId);
+  } else {
+    await updatePostingRecord(postingId, jobDescriptionText);
+  }
 }

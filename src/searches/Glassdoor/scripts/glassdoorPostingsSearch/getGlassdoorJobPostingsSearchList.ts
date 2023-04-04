@@ -22,11 +22,10 @@ export default async function getGlassdoorJobPostingsSearchList(
 ) {
   const { searchId, locationName } = searchObject;
   const searches: IJobPostingsSearch[] = createJobSearches(locationName);
-  const index = 3;
-  for (const searchOptions of searches) {
+  for (const [index, searchOptions] of Object.entries(searches)) {
     await execSingleSearch(searchId, searchOptions);
     console.log("Completed 1 Search");
-    if (index === 3) {
+    if (Number(index) == 1) {
       break;
     }
   }

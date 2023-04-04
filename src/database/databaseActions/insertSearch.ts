@@ -18,7 +18,7 @@ export default async function insertSearch(
           platforms
         ) 
       VALUES ($1, $2, $3, $4, $5) 
-      RETURNING *
+      RETURNING *;
     `;
     const values = [
       searchObject.campaignName,
