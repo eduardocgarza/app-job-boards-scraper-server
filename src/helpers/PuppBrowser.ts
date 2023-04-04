@@ -1,5 +1,8 @@
 import puppeteer, { Browser } from "puppeteer";
 
+const VIEWPORT_WIDTH_PCT = 0.9;
+const VIEWPORT_HEIGHT_PCT = 0.9;
+
 export default async function PuppBrowser() {
   let browser: Browser;
   async function launchBrowser() {
@@ -7,7 +10,12 @@ export default async function PuppBrowser() {
       headless: false,
       defaultViewport: null,
     });
-    return await browser.newPage();
+    const page = await browser.newPage();
+    await page.setViewport({
+      height: 1920,
+      width: 1080,
+    });
+    return page;
   }
   async function closeBrowser() {
     await browser.close();
