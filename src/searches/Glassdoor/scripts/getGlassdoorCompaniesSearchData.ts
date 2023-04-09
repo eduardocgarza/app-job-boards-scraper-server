@@ -27,19 +27,107 @@
       - Repeat for All Locations, All Roles, removing duplicates along the way and at the end.
 */
 
+import { pool } from "@/database/databaseConfiguration";
+import { companiesTable, searchCompaniesTable } from "@/database/dbConstants";
+import PuppBrowser from "@/helpers/PuppBrowser";
 import { IExecuteSearchObject } from "@/types/appInterfaces";
 
 async function getGlassdoorCompaniesSearchList(searchObject: IExecuteSearchObject) {
   return [];
 }
-async function getGlassdoorCompanyProfiles(searchObject: IExecuteSearchObject) {
-  return [];
+
+async function updateCompaniesToVerified(companyIds: number[], searchId: string) {
+  if (!companyIds.length) {
+    console.log("No companies to update to verified");
+    return;
+  }
+
+  // Generate the dynamic IN clause with the appropriate placeholders
+  const placeholders = companyIds.map((_, index) => `$${index + 1}`).join(", ");
+  const query = `
+    UPDATE ${companiesTable}
+    SET verified = true
+    WHERE company_id IN 
+      (${placeholders}) OR 
+      (verified = false AND company_id IN (
+        SELECT company_id 
+        FROM ${searchCompaniesTable} 
+        WHERE search_id = ${searchId}
+      )
+    );
+  `;
+
+  const client = await pool.connect();
+  try {
+    await client.query(query, companyIds);
+    console.log("Updated companies to verified:", companyIds);
+  } catch (error) {
+    throw new Error("Failed to update companies to verified: " + error);
+  } finally {
+    client.release();
+  }
 }
 
-export default async function getGlassdoorCompaniesSearchData(
-  searchObject: IExecuteSearchObject,
-) {
+async function getGlassdoorCompanyProfiles(searchObject: IExecuteSearchObject) {
+  const client = await pool.connect();
+
+  const query = `
+    SELECT company_id, company_profile_url
+    FROM ${companiesTable}
+    WHERE verified = false;
+  `;
+  try {
+    const { rows } = await client.query(query);
+    const companies = rows.filter((v) => !!v.company_profile_url);
+    console.log("Retrieved: ", rows.length, " @getGlassdoorCompanyProfiles");
+    console.log("Filtered: ", companies.length, " @getGlassdoorCompanyProfiles");
+
+    const { page, closeBrowser } = await PuppBrowser();
+
+    for (const company of companies) {
+      console.log("---- NEXT ELEMENT: ", company.company_profile_url);
+      await page.goto(company.company_profile_url);
+
+      const selector = "a[data-test='employer-website']";
+      const elementHandle = await page.$(selector);
+      if (elementHandle) {
+        // If the element exists, perform desired actions
+        const href = await page.evaluate((el) => el.getAttribute("href"), elementHandle);
+        if (href && !href.includes("undefined")) {
+          await client.query(
+            `
+            UPDATE ${companiesTable}
+            SET website_url = $1
+            WHERE company_id = $2;
+          `,
+            [href, company.company_id],
+          );
+          console.log("** UPDATED COMPANY SUCCESSFULLY.");
+        }
+        console.log("** Element found with href:", href);
+
+        // You can also click the link if needed
+        // await elementHandle.click();
+      } else {
+        console.log("Element not found");
+      }
+    }
+
+    const companyIds = rows.map((v) => v.company_id);
+    await updateCompaniesToVerified(companyIds, searchObject.searchId);
+
+    await closeBrowser();
+  } catch (error) {
+    console.error("Error @getGlassdoorCompanyProfiles: ", error);
+  } finally {
+    client.release();
+  }
+}
+
+export default async function getGlassdoorCompaniesSearchData(searchObject: IExecuteSearchObject) {
+  console.log("Starting @getGlassdoorCompaniesSearchData");
   const { searchId } = searchObject;
-  await getGlassdoorCompaniesSearchList(searchObject);
+  // await getGlassdoorCompaniesSearchList(searchObject);
   await getGlassdoorCompanyProfiles(searchObject);
+  console.log("Ending @getGlassdoorCompaniesSearchData");
 }

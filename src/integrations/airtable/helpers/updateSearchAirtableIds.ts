@@ -2,10 +2,7 @@ import { searchesTable } from "@/database/dbConstants";
 import { ISearchAirtableIds } from "../config/airtableInterfaces";
 import { pool } from "@/database/databaseConfiguration";
 
-export default async function updateSearchAirtableIds(
-  searchId: string,
-  airtableIds: ISearchAirtableIds,
-) {
+export default async function updateSearchAirtableIds(searchId: string, airtableIds: ISearchAirtableIds) {
   const { companiesAirtableId, postingsAirtableId } = airtableIds;
   const query = `
     UPDATE ${searchesTable}
@@ -17,11 +14,18 @@ export default async function updateSearchAirtableIds(
     WHERE 
       search_id = $5
   `;
-  await pool.query(query, [
-    companiesAirtableId.airtableId,
-    companiesAirtableId.primaryFieldId,
-    postingsAirtableId.airtableId,
-    postingsAirtableId.primaryFieldId,
-    searchId,
-  ]);
+  const client = await pool.connect();
+  try {
+    await client.query(query, [
+      companiesAirtableId.airtableId,
+      companiesAirtableId.primaryFieldId,
+      postingsAirtableId.airtableId,
+      postingsAirtableId.primaryFieldId,
+      searchId,
+    ]);
+  } catch (error) {
+    throw new Error("Failed to updateSearchAirtableIds: " + error);
+  } finally {
+    client.release();
+  }
 }

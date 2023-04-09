@@ -4,7 +4,7 @@ import { IJobPosting } from "@/types/appInterfaces";
 export default function postingConverterOut(obj: any): IJobPosting {
   return {
     postingId: obj.posting_id,
-    glassdoorPostingId: obj.glassdoor_posting_id,
+    platformPostingId: obj.platform_posting_id,
     roleName: obj.role_name,
     roleLocation: obj.role_location,
     salaryRange: obj.salary_range,

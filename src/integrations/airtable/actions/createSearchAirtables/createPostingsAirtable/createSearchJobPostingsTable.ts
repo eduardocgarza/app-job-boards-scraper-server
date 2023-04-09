@@ -1,18 +1,9 @@
 import axios from "axios";
 import searchJobPostingsAirtableSchema from "@/integrations/airtable/schemas/searchJobPostingsAirtableSchema";
-import {
-  AIRTABLE_API,
-  AIRTABLE_BASE_ID,
-  AIRTABLE_TOKEN,
-} from "../../../config/airtableConstants";
-import {
-  IAirtableIds,
-  IPreStoreAirtable,
-} from "@/integrations/airtable/config/airtableInterfaces";
+import { AIRTABLE_API, AIRTABLE_BASE_ID, AIRTABLE_TOKEN } from "../../../config/airtableConstants";
+import { IAirtableIds, IPreStoreAirtable } from "@/integrations/airtable/config/airtableInterfaces";
 
-export default async function createSearchJobPostingsTable(
-  tableOptions: IPreStoreAirtable,
-): Promise<IAirtableIds> {
+export default async function createSearchJobPostingsTable(tableOptions: IPreStoreAirtable): Promise<IAirtableIds> {
   const { tableName, tableDescription } = tableOptions;
   const { baseURL } = AIRTABLE_API;
   const createTableURL = `${baseURL}/meta/bases/${AIRTABLE_BASE_ID}/tables`;

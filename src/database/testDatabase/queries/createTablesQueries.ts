@@ -66,15 +66,15 @@ export const createTeamsTableQuery = `
 export const createJobPostingsTableQuery = `
   CREATE TABLE IF NOT EXISTS ${jobPostingsTable} (
     posting_id SERIAL PRIMARY KEY,
-    glassdoor_posting_id TEXT UNIQUE NOT NULL,
+    platform_posting_id TEXT UNIQUE,
     role_name TEXT NOT NULL,
     role_location TEXT NOT NULL,
-    salary_range TEXT,
     posting_url TEXT NOT NULL,
+    platform TEXT NOT NULL,
+    salary_range TEXT,
     date_posted TEXT,
     verified BOOLEAN DEFAULT FALSE,
     job_description TEXT DEFAULT '',
-    platform TEXT NOT NULL,
     expired boolean DEFAULT FALSE, 
     company_id INTEGER
       REFERENCES ${companiesTable} (company_id),

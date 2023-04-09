@@ -1,11 +1,7 @@
 import { PoolClient } from "pg";
 import { IPreStoreSearchCompanyAirtable } from "../../config/airtableInterfaces";
 import companyConverterOut from "@/database/databaseDataConverters/companyConverterOut";
-import {
-  companiesTable,
-  jobPostingsTable,
-  searchCompaniesTable,
-} from "@/database/dbConstants";
+import { companiesTable, jobPostingsTable, searchCompaniesTable } from "@/database/dbConstants";
 
 export default async function getSearchCompanies(
   client: PoolClient,

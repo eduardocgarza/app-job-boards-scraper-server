@@ -6,9 +6,14 @@ export const postingsFieldNames = {
     description: "The unique identifier for the job posting",
     type: "singleLineText",
   },
-  glassdoorJobPostingID: {
-    name: "Glassdoor Job Posting ID",
+  platformJobPostingID: {
+    name: "Platform Job Posting ID",
     description: "The unique identifier for the job posting on Glassdoor",
+    type: "singleLineText",
+  },
+  approved: {
+    name: "Approved",
+    description: "The field to edit as Approved or Not Approved",
     type: "singleLineText",
   },
   roleName: {
@@ -51,7 +56,8 @@ export const postingsFieldNames = {
 
 const searchJobPostingsAirtableSchema = [
   postingsFieldNames.jobPostingID,
-  postingsFieldNames.glassdoorJobPostingID,
+  postingsFieldNames.platformJobPostingID,
+  postingsFieldNames.approved,
   postingsFieldNames.roleName,
   postingsFieldNames.roleLocation,
   postingsFieldNames.salaryRange,

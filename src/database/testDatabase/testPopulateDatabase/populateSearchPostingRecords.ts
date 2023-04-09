@@ -7,10 +7,7 @@ function createValuesMap(values: TValuesMap) {
   return values.map((_, i) => `($${2 * i + 1}, $${2 * i + 2})`).join(",");
 }
 
-export default async function populateSearchPostingRecords(
-  searchId: string,
-  postingIds: string[],
-) {
+export default async function populateSearchPostingRecords(searchId: string, postingIds: string[]) {
   if (!postingIds.length) return;
   const values = postingIds.map((postingId) => [postingId, searchId]);
   const valuesMap = createValuesMap(values);
@@ -19,5 +16,12 @@ export default async function populateSearchPostingRecords(
       (posting_id, search_id)
     VALUES ${valuesMap};
   `;
-  await pool.query(searchPostingsQuery, values.flat());
+  const client = await pool.connect();
+  try {
+    await client.query(searchPostingsQuery, values.flat());
+  } catch (error) {
+    throw new Error("Failed to populateSearchPostingRecords: " + error);
+  } finally {
+    client.release();
+  }
 }

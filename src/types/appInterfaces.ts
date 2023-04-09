@@ -14,7 +14,7 @@ export interface IRawJobPosting {
   salaryRange: string;
   datePosted: string;
   postingURL: string;
-  glassdoorPostingId: string;
+  platformPostingId: string;
   companyRating: string;
   easyApply: boolean;
 }
@@ -29,7 +29,7 @@ export interface IPreStoreJobPosting {
   datePosted: string;
   postingURL: string;
   platform: string;
-  glassdoorPostingId: string;
+  platformPostingId: string;
 }
 
 // Complete Job Posting
@@ -90,7 +90,8 @@ export interface ISearchObject extends IRawSearchObject {
 export interface IJobPostingsSearch {
   locationName: string;
   roleName: string;
-  companySize: number;
+  datePosted: boolean;
+  // companySize: number;
 }
 
 export type ITeamHashMap = { [key: string]: ITeam };

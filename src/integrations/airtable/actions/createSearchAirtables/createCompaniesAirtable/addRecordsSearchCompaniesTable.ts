@@ -1,10 +1,7 @@
 import axios, { AxiosError } from "axios";
 import convertToAirtableDate from "@/integrations/airtable/helpers/convertToAirtableDate";
 import { companiesFieldNames } from "@/integrations/airtable/schemas/searchCompaniesAirtableSchema";
-import {
-  IAirtableIds,
-  IPreStoreSearchCompanyAirtable,
-} from "@/integrations/airtable/config/airtableInterfaces";
+import { IAirtableIds, IPreStoreSearchCompanyAirtable } from "@/integrations/airtable/config/airtableInterfaces";
 import {
   ADD_RECORDS_BATCH_SIZE,
   AIRTABLE_API,
@@ -41,9 +38,7 @@ function convertToAirtableFormat(list: IPreStoreSearchCompanyAirtable[]) {
       [companiesFieldNames.headquartersLocation.name]: clean(v.headquartersLocation),
       [companiesFieldNames.numTeams.name]: Number(v.numTeams),
       [companiesFieldNames.numPostings.name]: Number(v.numPostings),
-      [companiesFieldNames.latestPostingDate.name]: convertToAirtableDate(
-        clean(v.latestPostingDate),
-      ),
+      [companiesFieldNames.latestPostingDate.name]: convertToAirtableDate(clean(v.latestPostingDate)),
     },
   }));
 }
@@ -55,7 +50,7 @@ export default async function addRecordsSearchCompaniesTable(
   const { airtableId } = airtableIds;
   const addRecordsURL = `${AIRTABLE_API.baseURL}/${AIRTABLE_BASE_ID}/${airtableId}`;
   const companyLists = createCompanyLists(companies);
-  console.log("companyLists: ", companyLists);
+  // console.log("companyLists: ", companyLists);
   for (const list of companyLists) {
     const companyRecords = convertToAirtableFormat(list);
     const payload = { records: companyRecords };
@@ -73,7 +68,7 @@ export default async function addRecordsSearchCompaniesTable(
         console.log(`1 == Error status: ${axiosError.response?.status}`);
         console.log(`2 == Error message: ${axiosError.message}`);
       } else {
-        console.log(`3==Error message: ${(error as Error).message}`);
+        console.log(`3 ==Error message: ${(error as Error).message}`);
       }
       throw error;
     }

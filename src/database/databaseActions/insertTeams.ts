@@ -3,6 +3,8 @@ import { teamsTable } from "../dbConstants";
 import teamsConverterOut from "../databaseDataConverters/teamsConverterOut";
 
 export default async function insertTeams(teams: string[]) {
+  const client = await pool.connect();
+
   const values = teams.map((_, index) => `($${index + 1})`).join(",");
   const insertQuery = `
     INSERT INTO ${teamsTable} (team_name)
@@ -11,18 +13,24 @@ export default async function insertTeams(teams: string[]) {
     DO NOTHING
     RETURNING *;
   `;
-
   const params = [...teams];
-  const newTeamsResponse = await pool.query(insertQuery, params);
-  const newTeams = newTeamsResponse.rows.map(teamsConverterOut);
 
-  const placeholders = teams.map((_, i) => `$${i + 1}`).join(",");
-  const query = `
-    SELECT * FROM ${teamsTable}
-    WHERE team_name IN (${placeholders});
-  `;
-  const allTeamsResponse = await pool.query(query, teams);
-  const allTeams = allTeamsResponse.rows.map(teamsConverterOut);
+  try {
+    const newTeamsResponse = await client.query(insertQuery, params);
+    const newTeams = newTeamsResponse.rows.map(teamsConverterOut);
 
-  return { allTeams, newTeams };
+    const placeholders = teams.map((_, i) => `$${i + 1}`).join(",");
+    const query = `
+      SELECT * FROM ${teamsTable}
+      WHERE team_name IN (${placeholders});
+    `;
+    const allTeamsResponse = await pool.query(query, teams);
+    const allTeams = allTeamsResponse.rows.map(teamsConverterOut);
+
+    return { allTeams, newTeams };
+  } catch (error) {
+    throw new Error("Error inside insertTeams: " + error);
+  } finally {
+    client.release();
+  }
 }

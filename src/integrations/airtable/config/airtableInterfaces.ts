@@ -33,7 +33,7 @@ export interface IPreStoreSearchCompanyAirtable {
 
 export interface IPreStoreSearchPostingAirtable extends IPreStoreSearchCompanyAirtable {
   jobPostingId: string;
-  glassdoorPostingId: string;
+  platformPostingId: string;
   roleName: string;
   roleLocation: string;
   salaryRange: string;

@@ -3,9 +3,7 @@ import { pool } from "../databaseConfiguration";
 import { searchesTable } from "../dbConstants";
 import searchConverterOut from "../databaseDataConverters/searchConverterOut";
 
-export default async function getSearchObject(
-  searchId: string,
-): Promise<IExecuteSearchObject> {
+export default async function getSearchObject(searchId: string): Promise<IExecuteSearchObject> {
   const client = await pool.connect();
   try {
     const query = `

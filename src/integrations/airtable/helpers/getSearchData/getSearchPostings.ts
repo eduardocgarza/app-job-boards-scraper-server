@@ -1,18 +1,13 @@
 import { PoolClient } from "pg";
 import { IPreStoreSearchPostingAirtable } from "../../config/airtableInterfaces";
-import {
-  companiesTable,
-  jobPostingsTable,
-  searchJobPostingsTable,
-  teamsTable,
-} from "@/database/dbConstants";
+import { companiesTable, jobPostingsTable, searchJobPostingsTable, teamsTable } from "@/database/dbConstants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function formatPostings(postings: any[]) {
   return postings.map((posting) => {
     return {
       jobPostingId: posting.posting_id,
-      glassdoorPostingId: posting.glassdoor_posting_id,
+      platformPostingId: posting.platform_posting_id,
       roleName: posting.role_name,
       roleLocation: posting.role_location,
       salaryRange: posting.salary_range,
@@ -32,10 +27,7 @@ function formatPostings(postings: any[]) {
   });
 }
 
-export default async function getSearchPostings(
-  client: PoolClient,
-  searchId: string,
-): Promise<IPreStoreSearchPostingAirtable[]> {
+export default async function getSearchPostings(client: PoolClient, searchId: string): Promise<IPreStoreSearchPostingAirtable[]> {
   const jobPostingsQuery = `
     SELECT
       jp.*,

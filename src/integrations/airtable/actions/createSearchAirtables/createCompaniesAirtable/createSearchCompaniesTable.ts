@@ -1,15 +1,9 @@
 import axios from "axios";
 import { IPreStoreAirtable } from "@/integrations/airtable/config/airtableInterfaces";
 import searchCompaniesAirtableSchema from "@/integrations/airtable/schemas/searchCompaniesAirtableSchema";
-import {
-  AIRTABLE_API,
-  AIRTABLE_BASE_ID,
-  AIRTABLE_TOKEN,
-} from "@/integrations/airtable/config/airtableConstants";
+import { AIRTABLE_API, AIRTABLE_BASE_ID, AIRTABLE_TOKEN } from "@/integrations/airtable/config/airtableConstants";
 
-export default async function createSearchCompaniesTable(
-  tableOptions: IPreStoreAirtable,
-) {
+export default async function createSearchCompaniesTable(tableOptions: IPreStoreAirtable) {
   const { tableName, tableDescription } = tableOptions;
   const { baseURL } = AIRTABLE_API;
   const createTableURL = `${baseURL}/meta/bases/${AIRTABLE_BASE_ID}/tables`;

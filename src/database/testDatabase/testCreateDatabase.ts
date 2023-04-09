@@ -31,36 +31,42 @@ import {
 } from "./queries/dropTablesQueries";
 
 async function createTables() {
-  await pool.query(createSearchesTableQuery);
-  await pool.query(createCompaniesTableQuery);
-  await pool.query(createTeamsTableQuery);
-  await pool.query(createJobPostingsTableQuery);
-  await pool.query(createSearchPostingsTableQuery);
-  await pool.query(createSearchCompaniesTableQuery);
-  await pool.query(createPeopleTableQuery);
-  await pool.query(createPeopleSequencesTableQuery);
+  const client = await pool.connect();
+  await client.query(createSearchesTableQuery);
+  await client.query(createCompaniesTableQuery);
+  await client.query(createTeamsTableQuery);
+  await client.query(createJobPostingsTableQuery);
+  await client.query(createSearchPostingsTableQuery);
+  await client.query(createSearchCompaniesTableQuery);
+  await client.query(createPeopleTableQuery);
+  await client.query(createPeopleSequencesTableQuery);
+  client.release();
 }
 
 async function dropTables() {
-  await pool.query(dropSearchCompaniesQuery);
-  await pool.query(dropSearchPostingsQuery);
-  await pool.query(dropTeamsQuery);
-  await pool.query(dropJobPostingsQuery);
-  await pool.query(dropCompaniesQuery);
-  await pool.query(dropSearchesQuery);
-  await pool.query(dropPeopleTable);
-  await pool.query(dropPeopleSequencesTable);
+  const client = await pool.connect();
+  await client.query(dropSearchCompaniesQuery);
+  await client.query(dropSearchPostingsQuery);
+  await client.query(dropTeamsQuery);
+  await client.query(dropJobPostingsQuery);
+  await client.query(dropCompaniesQuery);
+  await client.query(dropSearchesQuery);
+  await client.query(dropPeopleTable);
+  await client.query(dropPeopleSequencesTable);
+  client.release();
 }
 
 export async function clearTables() {
-  await pool.query(deleteSearchCompaniesQuery);
-  await pool.query(deleteSearchPostingsQuery);
-  await pool.query(deleteJobPostingsQuery);
-  await pool.query(deleteCompaniesQuery);
-  await pool.query(deleteTeamsQuery);
-  await pool.query(deleteSearchesQuery);
-  await pool.query(deletePeopleTable);
-  await pool.query(deletePeopleSequencesTable);
+  const client = await pool.connect();
+  await client.query(deleteSearchCompaniesQuery);
+  await client.query(deleteSearchPostingsQuery);
+  await client.query(deleteJobPostingsQuery);
+  await client.query(deleteCompaniesQuery);
+  await client.query(deleteTeamsQuery);
+  await client.query(deleteSearchesQuery);
+  await client.query(deletePeopleTable);
+  await client.query(deletePeopleSequencesTable);
+  client.release();
 }
 
 export async function resetTables() {

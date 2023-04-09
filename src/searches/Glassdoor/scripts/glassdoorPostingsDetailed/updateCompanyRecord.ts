@@ -11,13 +11,21 @@ export default async function updateCompanyRecord(companyDetails: ICompanyDetail
       company_username = $3,
       headquarters_location = $4
     WHERE 
-      company_id = $5 AND company_name IS NULL;
+      company_id = $5;
   `;
-  await pool.query(query, [
-    companyDetails.companyName,
-    companyDetails.companyProfileURL,
-    companyDetails.companyUsername,
-    companyDetails.headquartersLocation,
-    companyDetails.companyId,
-  ]);
+  const client = await pool.connect();
+  try {
+    await client.query(query, [
+      companyDetails.companyName,
+      companyDetails.companyProfileURL,
+      companyDetails.companyUsername,
+      companyDetails.headquartersLocation,
+      companyDetails.companyId,
+    ]);
+    console.log("-- Updated CompanyRecord -- ID: ", companyDetails.companyId, " and URL :", companyDetails.companyProfileURL);
+  } catch (error) {
+    throw new Error("Failed to updateCompanyRecord: " + error);
+  } finally {
+    client.release();
+  }
 }

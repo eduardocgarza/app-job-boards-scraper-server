@@ -3,6 +3,21 @@ import { APOLLO_API } from "../config/apolloConstants";
 import { IRawApolloObject } from "../config/apolloInterfaces";
 const { APOLLO_API_TOKEN } = process.env;
 
+/**
+ * Limitations
+ *
+ * 300 Per Day
+ * 100 Per Hour
+ * 50 per Minute
+ *
+ * --
+ *
+ * 10 People per Search
+ *
+ *
+ *
+ */
+
 export default async function getApolloData(rawApolloObject: IRawApolloObject) {
   const { domains, titles, page } = rawApolloObject;
   const peopelSearchEndpoint = `${APOLLO_API.baseURL}${APOLLO_API.peopleSearchURL}`;

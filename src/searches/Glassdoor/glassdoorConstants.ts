@@ -47,9 +47,11 @@ export const GLASSDOOR_JOBS_COMPANY_SIZES = [
 export const COMPANY_SIZES = [];
 
 export const SEARCH_ROLES = [
-  "frontend software engineer",
-  "backend software engineer",
-  "fullstack software engineer",
+  "software",
+  "software engineer",
+  "front end software engineer",
+  "back end software engineer",
+  "full stack software engineer",
   "senior software engineer",
   "software engineering manager ",
   "iOS software engineer",

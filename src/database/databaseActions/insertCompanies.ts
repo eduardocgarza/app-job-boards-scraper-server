@@ -2,21 +2,19 @@ import { pool } from "../databaseConfiguration";
 import companyConverterOut from "../databaseDataConverters/companyConverterOut";
 import { companiesTable } from "../dbConstants";
 
-export async function insertCompanies(numCompanies: number) {
-  if (numCompanies === 0) return [];
+export async function insertCompanies(teams: string[]) {
+  if (teams.length === 0) return [];
+  const values = teams.map((_, index) => `($${index + 1})`).join(",");
   const query = `
     INSERT INTO ${companiesTable} (company_name) 
-    VALUES(NULL)
+    VALUES ${values}
     RETURNING *;
   `;
+  const params = [...teams];
   const client = await pool.connect();
   try {
-    const companyObjects = [];
-    for (let index = 0; index < numCompanies; index++) {
-      const result = await client.query(query);
-      companyObjects.push(result.rows[0]);
-    }
-    return companyObjects.map(companyConverterOut);
+    const newCompaniesResponse = await client.query(query, params);
+    return newCompaniesResponse.rows.map(companyConverterOut);
   } catch (error) {
     throw new Error(":: Database Error -- @insertCompanies ::" + error);
   } finally {

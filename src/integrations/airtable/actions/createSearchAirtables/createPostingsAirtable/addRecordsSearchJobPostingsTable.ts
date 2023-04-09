@@ -9,10 +9,7 @@ import {
   AIRTABLE_TOKEN,
   API_SLEEP_AMOUNT,
 } from "@/integrations/airtable/config/airtableConstants";
-import {
-  IAirtableIds,
-  IPreStoreSearchPostingAirtable,
-} from "@/integrations/airtable/config/airtableInterfaces";
+import { IAirtableIds, IPreStoreSearchPostingAirtable } from "@/integrations/airtable/config/airtableInterfaces";
 
 function createJobPostingLists(postings: IPreStoreSearchPostingAirtable[]) {
   const lists = [];
@@ -36,7 +33,8 @@ function convertToAirtableFormat(list: IPreStoreSearchPostingAirtable[]) {
   return list.map((v) => ({
     fields: {
       [postingsFieldNames.jobPostingID.name]: clean(v.jobPostingId),
-      [postingsFieldNames.glassdoorJobPostingID.name]: clean(v.glassdoorPostingId),
+      [postingsFieldNames.platformJobPostingID.name]: clean(v.platformPostingId),
+      [postingsFieldNames.approved.name]: "Approved",
       [postingsFieldNames.roleName.name]: clean(v.roleName),
       [postingsFieldNames.roleLocation.name]: clean(v.roleLocation),
       [postingsFieldNames.salaryRange.name]: clean(v.salaryRange),
@@ -50,9 +48,7 @@ function convertToAirtableFormat(list: IPreStoreSearchPostingAirtable[]) {
       [companiesFieldNames.headquartersLocation.name]: clean(v.headquartersLocation),
       [companiesFieldNames.numTeams.name]: Number(v.numTeams),
       [companiesFieldNames.numPostings.name]: Number(v.numPostings),
-      [companiesFieldNames.latestPostingDate.name]: convertToAirtableDate(
-        clean(v.latestPostingDate),
-      ),
+      [companiesFieldNames.latestPostingDate.name]: convertToAirtableDate(clean(v.latestPostingDate)),
     },
   }));
 }

@@ -12,10 +12,7 @@ export async function updatePostingRecordAsExpired(jobPostingId: string) {
   await pool.query(query, [jobPostingId]);
 }
 
-export default async function updatePostingRecord(
-  jobPostingId: string,
-  jobDescriptionText: string,
-) {
+export default async function updatePostingRecord(jobPostingId: string, jobDescriptionText: string) {
   const query = `
     UPDATE ${jobPostingsTable}
     SET 
@@ -24,5 +21,12 @@ export default async function updatePostingRecord(
     WHERE 
       posting_id = $2
   `;
-  await pool.query(query, [jobDescriptionText, jobPostingId]);
+  const client = await pool.connect();
+  try {
+    await client.query(query, [jobDescriptionText, jobPostingId]);
+  } catch (error) {
+    throw new Error("Failed to updatePostingRecord: " + error);
+  } finally {
+    client.release();
+  }
 }
