@@ -43,13 +43,7 @@ export const companiesFieldNames = {
   latestPostingDate: {
     name: "Latest Job Posting Date",
     description: "The date of the most recent job posting from the company",
-    type: "date",
-    options: {
-      dateFormat: {
-        format: "M/D/YYYY",
-        name: "us",
-      },
-    },
+    type: "singleLineText",
   },
 };
 

@@ -39,13 +39,7 @@ export const postingsFieldNames = {
   datePosted: {
     name: "Date Posted",
     description: "The date when the job posting was posted",
-    type: "date",
-    options: {
-      dateFormat: {
-        format: "M/D/YYYY",
-        name: "us",
-      },
-    },
+    type: "singleLineText",
   },
   teamID: {
     name: "Team ID",

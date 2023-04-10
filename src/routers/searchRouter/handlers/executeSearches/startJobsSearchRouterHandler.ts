@@ -12,6 +12,6 @@ export default async function startJobsSearchRouterHandler(req: ISearchRequest, 
   }
   const searchObject = await getSearchObject(req.body.searchId);
   await executeSearches(searchObject);
-  // const airtableIds = await createSearchAirtables(searchObject.searchId);
-  // return res.json(airtableIds);
+  const airtableIds = await createSearchAirtables(searchObject.searchId);
+  return res.json(airtableIds);
 }

@@ -1,23 +1,18 @@
 import { IRawSearchObject, ISearchObject } from "@/types/appInterfaces";
 import { pool } from "../databaseConfiguration";
 import { searchesTable } from "../dbConstants";
-import { DB_SEARCH_STATUSES_HASHMAP } from "@/appConstants";
 import searchConverterOut from "../databaseDataConverters/searchConverterOut";
 
-export default async function insertSearches(
-  searchObjects: IRawSearchObject[],
-): Promise<ISearchObject[]> {
+export default async function insertSearches(searchObjects: IRawSearchObject[]): Promise<ISearchObject[]> {
   const client = await pool.connect();
   try {
-    const values = searchObjects.map(
-      ({ campaignName, campaignDescription, locationName, roles, platforms }) => [
-        campaignName,
-        campaignDescription,
-        locationName,
-        roles,
-        platforms,
-      ],
-    );
+    const values = searchObjects.map(({ campaignName, campaignDescription, locationName, roles, platforms }) => [
+      campaignName,
+      campaignDescription,
+      locationName,
+      roles,
+      platforms,
+    ]);
     const query = `
     INSERT INTO ${searchesTable} (
       campaign_name, campaign_description, location_name, roles, platforms) 

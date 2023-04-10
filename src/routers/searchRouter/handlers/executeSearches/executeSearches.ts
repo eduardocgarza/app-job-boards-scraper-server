@@ -14,15 +14,15 @@ export async function executeSearches(searchObject: IExecuteSearchObject) {
     await executeGlassdoorSearch(searchObject);
   }
   if (platforms.includes(jobPlatforms.INDEED)) {
-    // await execIndeedSearch(searchObject);
+    await execIndeedSearch(searchObject);
   }
   if (platforms.includes(jobPlatforms.LINKEDIN)) {
-    // await execLinkedinSearch(searchObject);
+    await execLinkedinSearch(searchObject);
   }
   if (platforms.includes(jobPlatforms.MONSTER)) {
-    // await execMonsterSearch(searchObject);
+    await execMonsterSearch(searchObject);
   }
   if (platforms.includes(jobPlatforms.ZIPRECRUITER)) {
-    // await execZipRecruiterSearch(searchObject);
+    await execZipRecruiterSearch(searchObject);
   }
 }

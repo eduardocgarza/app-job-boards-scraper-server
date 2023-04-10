@@ -4,9 +4,6 @@ import express from "express";
 import cors from "cors";
 import apiRoutes from "./routers/appRouter/appRouter";
 import { apiBaseRoute } from "./routers/routes";
-import PuppBrowser from "./helpers/PuppBrowser";
-import initJobBrowserSearch from "./searches/Glassdoor/scripts/glassdoorPostingsSearch/initBrowserSearch";
-import execIndeedSearch from "./searches/Indeed/indeedSearch";
 
 const SERVER_PORT = 5000;
 const app = express();

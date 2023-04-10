@@ -1,6 +1,6 @@
 import { pool } from "../databaseConfiguration";
-import companyConverterOut from "../databaseDataConverters/companyConverterOut";
 import { companiesTable } from "../dbConstants";
+import companyConverterOut from "../databaseDataConverters/companyConverterOut";
 
 export async function insertCompanies(teams: string[]) {
   if (teams.length === 0) return [];

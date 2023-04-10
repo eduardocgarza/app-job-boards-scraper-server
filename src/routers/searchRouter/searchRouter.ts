@@ -1,29 +1,15 @@
 import express from "express";
+import nextStageSearchHandler from "./handlers/nextStageSearchHandler";
 import createSearchHandler from "./handlers/createSearchHandler";
-import jobsSearchCompleteNextHandler from "./handlers/jobsSearchCompleteNextHandler";
-import startVerificationHandler from "./handlers/startVerificationHandler";
-import completeVerificationHandler from "./handlers/completeVerificationHandler";
-import verificationCompleteNextHandler from "./handlers/verificationCompleteNextHandler";
 import startPeopleSearchHandler from "./handlers/startPeopleSearchHandler";
-import startPeopleSelectionHandler from "./handlers/startPeopleSelectionHandler";
-import completePeopleSelectionHandler from "./handlers/completePeopleSelectionHandler";
-import peopleSelectionCompleteNextHandler from "./handlers/peopleSelectionCompleteNextHandler";
-import startLeadsPreparationHandler from "./handlers/startLeadsPreparationHandler";
-import completePeopleSearchHandler from "./handlers/completePeopleSearchHandler";
+import startLeadsPreparationHandler from "./handlers/nextStageSearchHandler";
 import startJobsSearchRouterHandler from "./handlers/executeSearches/startJobsSearchRouterHandler";
 import {
   createSearchRoute,
   startJobsSearchRoute,
-  jobsSearchCompleteNextRoute,
-  startVerificationRoute,
-  completeVerificationRoute,
-  verificationCompleteNextRoute,
   startPeopleSearchRoute,
-  completePeopleSearchRoute,
-  startPeopleSelectionRoute,
-  completePeopleSelectionRoute,
-  peopleSelectionCompleteNextRoute,
   startLeadsPreparationRoute,
+  nextSearchStageRoute,
 } from "../routes";
 
 const searchRouter = express.Router();
@@ -44,21 +30,11 @@ const searchRouter = express.Router();
  *
  */
 
-searchRouter.post(createSearchRoute, createSearchHandler);
 searchRouter.post(startJobsSearchRoute, startJobsSearchRouterHandler);
-searchRouter.post(jobsSearchCompleteNextRoute, jobsSearchCompleteNextHandler);
-
-searchRouter.post(startVerificationRoute, startVerificationHandler);
-searchRouter.post(completeVerificationRoute, completeVerificationHandler);
-searchRouter.post(verificationCompleteNextRoute, verificationCompleteNextHandler);
-
 searchRouter.post(startPeopleSearchRoute, startPeopleSearchHandler);
-searchRouter.post(completePeopleSearchRoute, completePeopleSearchHandler);
-
-searchRouter.post(startPeopleSelectionRoute, startPeopleSelectionHandler);
-searchRouter.post(completePeopleSelectionRoute, completePeopleSelectionHandler);
-searchRouter.post(peopleSelectionCompleteNextRoute, peopleSelectionCompleteNextHandler);
-
 searchRouter.post(startLeadsPreparationRoute, startLeadsPreparationHandler);
+
+searchRouter.post(createSearchRoute, createSearchHandler);
+searchRouter.post(nextSearchStageRoute, nextStageSearchHandler);
 
 export default searchRouter;

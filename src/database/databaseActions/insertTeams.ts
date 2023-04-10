@@ -8,10 +8,9 @@ export default async function insertTeams(teams: string[]) {
   const values = teams.map((_, index) => `($${index + 1})`).join(",");
   const insertQuery = `
     INSERT INTO ${teamsTable} (team_name)
-    VALUES ${values}
-    ON CONFLICT (team_name) 
-    DO NOTHING
-    RETURNING *;
+    SELECT DISTINCT team_name FROM (VALUES ${values}) AS v(team_name)
+    ON CONFLICT (team_name) DO NOTHING
+    RETURNING team_id, team_name;
   `;
   const params = [...teams];
 
